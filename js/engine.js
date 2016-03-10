@@ -15,6 +15,9 @@
  */
 
 var Engine = (function(global) {
+
+    "use strict";
+
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
@@ -23,11 +26,57 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
     doc.body.appendChild(canvas);
+
+    resizeCanvas();
+
+    window.addEventListener('resize', resizeCanvas, false);
+    window.addEventListener('orientationchange', resizeCanvas, false);
+
+    function redraw() {
+        ctx.strokeStyle = 'blue';
+        ctx.lineWidth = '5';
+        ctx.strokeRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+
+    function resizeCanvas(){
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        redraw();
+    }
+
+    function toggleFullScreen() {
+
+        /*if (!document.fullscreenElement &&    // alternative standard method
+            !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+        */
+    }
+
+
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -64,6 +113,8 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
+
+
         reset();
         lastTime = Date.now();
         main();
@@ -91,10 +142,12 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
+       /* allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        */
+        player.update(dt);
+
     }
 
     /* This function initially draws the "game level", it will then call
@@ -107,16 +160,23 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
+       /*
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/tiles/grass.png',
+                'images/tiles/pavers.png',
+                'images/tiles/pavers.png',
+                'images/tiles/grass.png',
+                'images/tiles/grass.png',
+                'images/tiles/grass.png',
+                'images/tiles/pavers.png',
+                'images/tiles/pavers.png',
+                'images/tiles/grass.png',
+                'images/tiles/grass.png',
+                'images/tiles/pavers.png',
+                'images/tiles/pavers.png'
             ],
-            numRows = 6,
-            numCols = 5,
+            numRows = 12,
+            numCols = 12,
             row, col;
 
         /* Loop through the number of rows and columns we've defined above
@@ -132,9 +192,10 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]),row*64,col*64,64,64);
             }
         }
+        */
 
         renderEntities();
     }
@@ -147,11 +208,12 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
+        /*allEnemies.forEach(function(enemy) {
             enemy.render();
         });
+         */
+        player.render(ctx);
 
-        player.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -167,11 +229,26 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
-        'images/stone-block.png',
-        'images/water-block.png',
-        'images/grass-block.png',
-        'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/start_screen.png',
+        'images/win_screen.png',
+        'images/lose_screen.png',
+        'images/tiles/grass.png',
+        'images/tiles/pavers.png',
+        'images/tiles/rock.png',
+        'images/artifacts/birth_certificate.png',
+        'images/artifacts/debate_stand.png',
+        'images/artifacts/mail_server.png',
+        'images/artifacts/playbill.png',
+        'images/artifacts/socialist_pin.png',
+        'images/artifacts/water_bottle.png',
+        'images/player/trump.png',
+        'images/enemies/carson.png',
+        'images/enemies/cruz.png',
+        'images/enemies/hillary.png',
+        'images/enemies/romney.png',
+        'images/enemies/rubio.png',
+        'images/enemies/sanders.png'
+
     ]);
     Resources.onReady(init);
 
