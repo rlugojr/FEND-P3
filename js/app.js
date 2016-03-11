@@ -57,8 +57,8 @@ Animate.prototype.update = function (dt) {
             if (this.x + vector <= 0) {
                 this.x = 0;
                 console.log(this.name + " stopped at left edge: " + this.x)
-            } else if (this.x + vector >= ctx.maxWidth) {
-                this.x = ctx.maxWidth;
+            } else if (this.x + vector >= map.maxX) {
+                this.x = map.maxX;
                 console.log(this.name + " stopped at rightmost edge: " + this.x)
             } else {
                 this.x = this.x + vector;
@@ -67,8 +67,8 @@ Animate.prototype.update = function (dt) {
             if (this.y + vector <= 0) {
                 this.y = 0;
                 console.log(this.name + " stopped at topmost edge: " + this.y)
-            } else if (this.y + vector >= ctx.maxHeight) {
-                this.y = ctx.maxHeight;
+            } else if (this.y + vector >= map.maxY) {
+                this.y = map.maxY;
                 console.log(this.name + " stopped at bottommost edge: " + this.y)
             } else {
                 this.y = this.y + vector;

@@ -24,12 +24,14 @@ var Engine = (function(global) {
      */
     var doc = global.document,
         win = global.window,
-        canvas = doc.createElement('canvas'),
-        ctx = canvas.getContext('2d'),
-
+        cGeo = doc.getElementById('cGeo'),
+        ctxGeo = cGeo.getContext('2d'),
+        cAction = doc.getElementById('cAction'),
+        ctxAction = cAction.getContext('2d'),
         lastTime;
 
-    doc.body.appendChild(canvas);
+    doc.body.appendChild(cGeo);
+    doc.body.appendChild(cAction);
 
     resizeCanvas();
 
@@ -37,14 +39,16 @@ var Engine = (function(global) {
     window.addEventListener('orientationchange', resizeCanvas, false);
 
     function redraw() {
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = '5';
-        ctx.strokeRect(0, 0, window.innerWidth, window.innerHeight);
+        ctxGeo.strokeStyle = 'blue';
+        ctxGeo.lineWidth = '5px';
+        ctxGeo.strokeRect(0, 0, window.innerWidth, window.innerHeight);
     }
 
     function resizeCanvas(){
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        cGeo.width = window.innerWidth;
+        cGeo.height = window.innerHeight;
+        cAction.width = window.innerWidth;
+        cAction.height = window.innerHeight;
 
         redraw();
     }
@@ -157,47 +161,15 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
-        /* This array holds the relative URL to the image used
-         * for that particular row of the game level.
-         */
-       /*
-        var rowImages = [
-                'images/tiles/grass.png',
-                'images/tiles/pavers.png',
-                'images/tiles/pavers.png',
-                'images/tiles/grass.png',
-                'images/tiles/grass.png',
-                'images/tiles/grass.png',
-                'images/tiles/pavers.png',
-                'images/tiles/pavers.png',
-                'images/tiles/grass.png',
-                'images/tiles/grass.png',
-                'images/tiles/pavers.png',
-                'images/tiles/pavers.png'
-            ],
-            numRows = 12,
-            numCols = 12,
-            row, col;
 
-        /* Loop through the number of rows and columns we've defined above
-         * and, using the rowImages array, draw the correct image for that
-         * portion of the "grid"
-         */
-        for (row = 0; row < numRows; row++) {
-            for (col = 0; col < numCols; col++) {
-                /* The drawImage function of the canvas' context element
-                 * requires 3 parameters: the image to draw, the x coordinate
-                 * to start drawing and the y coordinate to start drawing.
-                 * We're using our Resources helpers to refer to our images
-                 * so that we get the benefits of caching these images, since
-                 * we're using them over and over.
-                 */
-                ctx.drawImage(Resources.get(rowImages[row]),row*64,col*64,64,64);
-            }
-        }
-        */
+        ctxGeo.clearRect(0, 0, ctxGeo.canvas.width, ctxGeo.canvas.height);
+        ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
+
+        map._drawLayer(0,ctxGeo);
 
         renderEntities();
+
+        map._drawLayer(1,ctxAction);
     }
 
     /* This function is called by the render function and is called on each game
@@ -212,7 +184,7 @@ var Engine = (function(global) {
             enemy.render();
         });
          */
-        player.render(ctx);
+        player.render(ctxAction);
 
     }
 
@@ -229,12 +201,15 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
-        'images/start_screen.png',
-        'images/win_screen.png',
-        'images/lose_screen.png',
+        'images/intro/start_screen.png',
+        'images/outro/win_screen.png',
+        'images/outro/lose_screen.png',
         'images/tiles/grass.png',
         'images/tiles/pavers.png',
         'images/tiles/rock.png',
+        'images/tiles/tree.png',
+        'images/tiles/pink_tree.png',
+        'images/tiles/green_tree.png',
         'images/artifacts/birth_certificate.png',
         'images/artifacts/debate_stand.png',
         'images/artifacts/mail_server.png',
@@ -256,5 +231,6 @@ var Engine = (function(global) {
      * object when run in a browser) so that developers can use it more easily
      * from within their app.js files.
      */
-    global.ctx = ctx;
+    window.ctxGeo = ctxGeo;
+    window.ctxAction = ctxAction;
 })(this);

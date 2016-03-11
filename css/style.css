@@ -7,4 +7,12 @@ canvas {
     top: 0;
     left: 0;
     display: block;
+    background-color: transparent;
+}
+#cGeo{
+    z-index: 0;
+}
+
+#cAction{
+    z-index: 1
 }
