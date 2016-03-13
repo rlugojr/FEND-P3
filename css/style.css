@@ -1,5 +1,7 @@
 body {
     overflow: hidden;
+    margin:0;
+    padding: 0;
 }
 
 canvas {
@@ -14,5 +16,10 @@ canvas {
 }
 
 #cAction{
-    z-index: 1
+    z-index: 1;
+}
+
+#cUI{
+    z-index: 2;
+    background-color: black;
 }

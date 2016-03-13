@@ -1,45 +1,61 @@
-var Intro = (function(global) {
+var gameIntro = (function(global) {
 
-var currentScene;
+    "use strict";
 
-var drawScene1 = function() {
-    currentScene = 1;
-    background(235, 247, 255);
-    fill(0, 85, 255);
-    textSize(39);
-    text(" ", 10, height/2);
-    image(getImage(" "), width/2, height/2);
-};
+    var cUI = doc.getElementById("cUI");
+    var ctxUI = cUI.getContext('2d');
+    ctxUI.fillStyle = "#FFFFFF";
 
-var drawScene2 = function() {
-    currentScene = 2;
-    background(173, 239, 255);
-    fill(7, 14, 145);
-    textSize(39);
-    text("", 10, 100);
-    image(getImage(" "), width/2, height/2);
-};
+    var intro = function intro() {
+        var currentScene;
+        drawScene0 = function () {
+            currentScene = 1;
+            ctxUI.drawImage(Resources.get('images/intro/intro_0.png'), 0, 0);
+        };
 
-var drawScene3 = function() {
-    currentScene = 3;
-    background(173, 239, 255);
-    fill(7, 14, 145);
-    textSize(39);
-    text("", 10, 100);
-    image(getImage(" "), width/2, height/2);
-};
+        this.drawScene1 = function () {
+            currentScene = 2;
+            ctxUI.drawImage(Resources.get('images/intro/intro_1.png'), 0, 0);
+        };
 
-mouseClicked = function() {
-    if (currentScene === 1) {
-        drawScene2();
-    } else if (currentScene === 2) {
-        drawScene3();
-    } else if (currentScene === 3) {
-        drawScene1();
-    }
-};
+        this.drawScene2 = function () {
+            currentScene = 3;
+            ctxUI.drawImage(Resources.get('images/intro/intro_2.png'), 0, 0);
+        };
 
-drawScene1();
-//drawScene2();
+        this.drawScene3 = function () {
+            currentScene = 4;
+            ctxUI.drawImage(Resources.get('images/intro/intro_3.png'), 0, 0);
+        };
+
+        this.drawScene4 = function () {
+            currentScene = 5;
+            ctxUI.drawImage(Resources.get('images/intro/intro_4.png'), 0, 0);
+        };
+
+        this.startScreen = function () {
+            currentScene = 6;
+            ctxUI.drawImage(Resources.get('images/intro/start_screen.png'), 0, 0);
+        };
+
+        this.mouseClicked = function() {
+            if (currentScene === 1) {
+                drawScene0();
+            } else if (currentScene === 2) {
+                drawScene1();
+            } else if (currentScene === 3) {
+                drawScene2();
+            } else if (currentScene === 4) {
+                drawScene3();
+            } else if (currentScene === 5) {
+                drawScene4();
+            } else if (currentScene === 6) {
+                startScreen();
+            }
+        }
+    };
+
+    drawScene0();
+
 
 })(this);

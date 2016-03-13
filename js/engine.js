@@ -28,10 +28,10 @@ var Engine = (function(global) {
         ctxGeo = cGeo.getContext('2d'),
         cAction = doc.getElementById('cAction'),
         ctxAction = cAction.getContext('2d'),
+        cUI = doc.getElementById('cUI'),
+        ctxUI = cUI.getContext('2d'),
         lastTime;
 
-    doc.body.appendChild(cGeo);
-    doc.body.appendChild(cAction);
 
     resizeCanvas();
 
@@ -49,7 +49,10 @@ var Engine = (function(global) {
         cGeo.height = window.innerHeight;
         cAction.width = window.innerWidth;
         cAction.height = window.innerHeight;
+        cUI.width = window.innerWidth;
+        cUI.height = window.innerHeight;
 
+        //uncomment this for debugging
         redraw();
     }
 
@@ -118,6 +121,7 @@ var Engine = (function(global) {
      */
     function init() {
 
+        drawScene0();
 
         reset();
         lastTime = Date.now();
@@ -150,7 +154,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         */
-        player.update(dt);
+        player.update(dt,map);
 
     }
 
@@ -185,6 +189,7 @@ var Engine = (function(global) {
         });
          */
         player.render(ctxAction);
+        //console.log(map.getCol(player.x),map.getRow(player.y))
 
     }
 
@@ -201,6 +206,11 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
+        'images/intro/intro_0.png',
+        'images/intro/intro_1.png',
+        'images/intro/intro_2.png',
+        'images/intro/intro_3.png',
+        'images/intro/intro_4.png',
         'images/intro/start_screen.png',
         'images/outro/win_screen.png',
         'images/outro/lose_screen.png',
@@ -233,4 +243,5 @@ var Engine = (function(global) {
      */
     window.ctxGeo = ctxGeo;
     window.ctxAction = ctxAction;
+    window.ctxUI = ctxUI;
 })(this);
