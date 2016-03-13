@@ -33,16 +33,19 @@ var Engine = (function(global) {
         lastTime;
 
 
-    resizeCanvas();
 
     window.addEventListener('resize', resizeCanvas, false);
     window.addEventListener('orientationchange', resizeCanvas, false);
 
-    function redraw() {
-        ctxGeo.strokeStyle = 'blue';
-        ctxGeo.lineWidth = '5px';
-        ctxGeo.strokeRect(0, 0, window.innerWidth, window.innerHeight);
+    function drawMap(layer,ctxGeo){
+        ctxGeo.clearRect(0, 0, ctxGeo.canvas.width, ctxGeo.canvas.height);
+        map._drawLayer(layer,ctxGeo);
     }
+    function drawAction(layer,ctxAction){
+        ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
+        map._drawLayer(layer,ctxAction);
+    }
+
 
     function resizeCanvas(){
         cGeo.width = window.innerWidth;
@@ -52,36 +55,8 @@ var Engine = (function(global) {
         cUI.width = window.innerWidth;
         cUI.height = window.innerHeight;
 
-        //uncomment this for debugging
-        redraw();
     }
 
-    function toggleFullScreen() {
-
-        /*if (!document.fullscreenElement &&    // alternative standard method
-            !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) {
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-            }
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
-        }
-        */
-    }
 
 
 
@@ -121,10 +96,12 @@ var Engine = (function(global) {
      */
     function init() {
 
-        drawScene0();
+        //drawScene0();
 
         reset();
+
         lastTime = Date.now();
+
         main();
     }
 
@@ -166,14 +143,16 @@ var Engine = (function(global) {
      */
     function render() {
 
-        ctxGeo.clearRect(0, 0, ctxGeo.canvas.width, ctxGeo.canvas.height);
-        ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
+        //ctxGeo.clearRect(0, 0, ctxGeo.canvas.width, ctxGeo.canvas.height);
+        //ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
 
-        map._drawLayer(0,ctxGeo);
+        //map._drawLayer(0,ctxGeo);
+        drawAction(1,ctxAction);
 
         renderEntities();
 
-        map._drawLayer(1,ctxAction);
+
+        //map._drawLayer(1,ctxAction);
     }
 
     /* This function is called by the render function and is called on each game
@@ -199,7 +178,14 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+
+        resizeCanvas();
+
+        drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
+
+
     }
+
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when

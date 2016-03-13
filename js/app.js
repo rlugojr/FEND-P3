@@ -159,12 +159,16 @@ var App = (function(global){
     //2nd Level of inheritance
 
     //artifacts inherit from Inanimate
-    var Artifact = function Artifact(sprite, x, y, width, height){
-        //Inanimate.call(name, x, y, width, height);
-
+    var Artifact = function Artifact(name,sprite, x, y, width, height, enemyEffected){
+        Inanimate.call(sprite, x, y, width, height);
+        this.name = name;
     };
     Artifact.prototype = Object.create(Inanimate.prototype);
     Artifact.prototype.constructor = Artifact;
+
+    Artifact.prototype.captured = function captured(enemy){
+        console.log("Destroyed Enemy: " + enemy.name)
+    };
 
 
 
@@ -205,8 +209,9 @@ var App = (function(global){
 
 
     //define class for monster actors - which the player must avoid.
-    var Monster = function Monster(sprite, x, y, width, height){
-        //Animate.call(this,name, x, y, width, height);
+    var Monster = function Monster(name,sprite, x, y, width, height){
+        //Animate.call(this,sprite, x, y, width, height);
+        this.name = name;
     };
     Monster.prototype = Object.create(Animate.prototype);
     Monster.prototype.constructor = Monster;
@@ -217,6 +222,24 @@ var App = (function(global){
     // Now instantiate your objects.
     // Place all enemy objects in an array called allEnemies
     // Place the player object in a variable called player
+
+    //create artifact objects
+    var artifacts = [
+        ["Birth Certificate",'images/artifacts/birth_certificate.png',map.getRow(),map.getCol(),'cruz'],
+        ["Debate Stand",'images/artifacts/debate_stand.png',map.getRow(),map.getCol(),'cruz'],
+        ["Mail Server",'images/artifacts/mail_server.png',map.getRow(),map.getCol(),'cruz'],
+        ["Playbill",'images/artifacts/playbill.png',map.getRow(),map.getCol(),'cruz'],
+        ["Socialist Pin",'images/artifacts/socialist_pin.png',map.getRow(),map.getCol(),'cruz'],
+        ["Water Bottle",'images/artifacts/water_bottle.png',map.getRow(),map.getCol(),'cruz']
+    ]
+
+
+
+    //create artifact array
+
+    //create enemy objects
+
+    //create enemy array
 
     var player = new Player('images/player/trump.png',64,576 - (96 + 32));  //set initial y-pos so feet are center tile.
         player.x = 75;
