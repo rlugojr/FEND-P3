@@ -96,7 +96,7 @@ var Engine = (function(global) {
      */
     function init() {
 
-        //drawScene0();
+        playIntro();
 
         reset();
 

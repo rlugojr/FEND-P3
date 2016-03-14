@@ -226,11 +226,11 @@ var App = (function(global){
     //create artifact objects
     var artifacts = [
         ["Birth Certificate",'images/artifacts/birth_certificate.png',map.getRow(),map.getCol(),'cruz'],
-        ["Debate Stand",'images/artifacts/debate_stand.png',map.getRow(),map.getCol(),'cruz'],
-        ["Mail Server",'images/artifacts/mail_server.png',map.getRow(),map.getCol(),'cruz'],
-        ["Playbill",'images/artifacts/playbill.png',map.getRow(),map.getCol(),'cruz'],
-        ["Socialist Pin",'images/artifacts/socialist_pin.png',map.getRow(),map.getCol(),'cruz'],
-        ["Water Bottle",'images/artifacts/water_bottle.png',map.getRow(),map.getCol(),'cruz']
+        ["Debate Stand",'images/artifacts/debate_stand.png',map.getRow(),map.getCol(),'carson'],
+        ["Mail Server",'images/artifacts/mail_server.png',map.getRow(),map.getCol(),'hillary'],
+        ["Playbill",'images/artifacts/playbill.png',map.getRow(),map.getCol(),'romney'],
+        ["Socialist Pin",'images/artifacts/socialist_pin.png',map.getRow(),map.getCol(),'sanders'],
+        ["Water Bottle",'images/artifacts/water_bottle.png',map.getRow(),map.getCol(),'rubio']
     ]
 
 
