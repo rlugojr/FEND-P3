@@ -32,10 +32,38 @@ var Engine = (function(global) {
         ctxUI = cUI.getContext('2d'),
         lastTime;
 
+    //track game states.
+    var gameState = function(){
+        this.init = false;
+        this.loading = false;
+        this.startScreen = false;
+        this.newGame = false;
+        this.paused = false;
+        this.won = true;
+        this.lost = false;
+        this.reset = false;
+    };
 
+    function setGameState(setting) {
+        for (var i in gameState) {
+            if (gameState.hasOwnProperty(i)) {
+                if(gameState[i]===objName) {
+                    gameState[i] = true
+                }else{
+                    gameState[i] = false
+                }
+            }
+        }
+    }
 
     window.addEventListener('resize', resizeCanvas, false);
     window.addEventListener('orientationchange', resizeCanvas, false);
+
+    function getRes(){
+        console.log(win.innerWidth);
+        console.log(win.innerHieght);
+    }
+
 
     function drawMap(layer,ctxGeo){
         ctxGeo.clearRect(0, 0, ctxGeo.canvas.width, ctxGeo.canvas.height);
@@ -96,7 +124,8 @@ var Engine = (function(global) {
      */
     function init() {
 
-        playIntro();
+        //setGameState('init');
+        //playIntro(e);
 
         reset();
 
@@ -143,16 +172,10 @@ var Engine = (function(global) {
      */
     function render() {
 
-        //ctxGeo.clearRect(0, 0, ctxGeo.canvas.width, ctxGeo.canvas.height);
-        //ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
-
-        //map._drawLayer(0,ctxGeo);
         drawAction(1,ctxAction);
 
         renderEntities();
 
-
-        //map._drawLayer(1,ctxAction);
     }
 
     /* This function is called by the render function and is called on each game

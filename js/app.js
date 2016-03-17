@@ -203,8 +203,12 @@ var App = (function(global){
     };
     Player.prototype.render = function render(ctx){
         //Draws the sprite using the canvas context specified by the parameter.
-        //Parameter: ctx, a canvas context.
+        //Also, applied a translation so that the origin(x,y) of the image
+        //align with the sprite's feet.
+        ctx.save();
+        ctx.translate(0,-96);
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 56.7, 96);
+        ctx.restore();
     };
 
 
@@ -224,26 +228,79 @@ var App = (function(global){
     // Place the player object in a variable called player
 
     //create artifact objects
-    var artifacts = [
-        ["Birth Certificate",'images/artifacts/birth_certificate.png',map.getRow(),map.getCol(),'cruz'],
-        ["Debate Stand",'images/artifacts/debate_stand.png',map.getRow(),map.getCol(),'carson'],
-        ["Mail Server",'images/artifacts/mail_server.png',map.getRow(),map.getCol(),'hillary'],
-        ["Playbill",'images/artifacts/playbill.png',map.getRow(),map.getCol(),'romney'],
-        ["Socialist Pin",'images/artifacts/socialist_pin.png',map.getRow(),map.getCol(),'sanders'],
-        ["Water Bottle",'images/artifacts/water_bottle.png',map.getRow(),map.getCol(),'rubio']
-    ]
+    //TODO: fill in Row and Col values
+    var artifactList = {item:[
+        {
+            "name": "Birth Certificate",
+            "src": 'images/artifacts/birth_certificate.png',
+            "x": map.getRow(),
+            "y": map.getCol(),
+            "width":52,
+            "height":30,
+            "enemyAffected": 'cruz'
+        },
+        {
+            "name": "Debate Stand",
+            "src": 'images/artifacts/debate_stand.png',
+            "x": map.getRow(),
+            "y": map.getCol(),
+            "width":52,
+            "height":30,
+            "enemyAffected": 'carson'
+        },
+        {
+            "name": "Mail Server",
+            "src": 'images/artifacts/mail_server.png',
+            "x": map.getRow(),
+            "y": map.getCol(),
+            "width":52,
+            "height":30,
+            "enemyAffected": 'hillary'
+        },
+        {
+            "name": "Playbill",
+            "src": 'images/artifacts/playbill.png',
+            "x": map.getRow(),
+            "y": map.getCol(),
+            "width":52,
+            "height":30,
+            "enemyAffected": 'romney'
+        },
+        {
+            "name": "Socialist Pin",
+            "src": 'images/artifacts/socialist_pin.png',
+            "x": map.getRow(),
+            "y": map.getCol(),
+            "width":52,
+            "height":30,
+            "enemyAffected": 'sanders'
+        },
+        {
+            "name": "Water Bottle",
+            "src": 'images/artifacts/water_bottle.png',
+            "x": map.getRow(),
+            "y": map.getCol(),
+            "width":52,
+            "height":30,
+            "enemyAffected": 'rubio'
+        }
+    ]};
 
+    //create artifact objects from array using Factory pattern
 
+    var artifacts = [];
 
-    //create artifact array
+    function createArtifacts(element,index,)
+    artifacteList.forEach()
+
 
     //create enemy objects
 
     //create enemy array
 
-    var player = new Player('images/player/trump.png',64,576 - (96 + 32));  //set initial y-pos so feet are center tile.
+    var player = new Player('images/player/trump.png',64,560 + 32);  //set initial y-pos so feet are center tile.
         player.x = 75;
-        player.y = 448;
+        player.y = 592;
         player.width = 56.7;
         player.height = 96;
         player.speed = 512;
@@ -261,7 +318,8 @@ var App = (function(global){
             39: 'right',    //arrow right
             68: 'right',    //'D' key
             40: 'down',     //arrow down
-            83: 'down'      //'S' key
+            83: 'down',      //'S' key
+            32: 'space'
         };
 
     window.addEventListener('keyup', function(e) {

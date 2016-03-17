@@ -4,73 +4,46 @@ var gameScenes = (function(global) {
 
     var exitLoop = false;
 
-     var introScenes =  {
-         "scenes" :[
-            {
-                "img" : "Resources.get('images/intro/intro_0.png')",
-                "caption":""
-            },
-            {
-                 "img" : "Resources.get('images/intro/intro_1.png')",
-                 "caption":""
-            },
-            {
-                 "img" : "Resources.get('images/intro/intro_2.png')",
-                 "caption":""
-            },
-            {
-                 "img" : "Resources.get('images/intro/intro_3.png')",
-                 "caption":""
-            },
-            {
-                 "img" : "Resources.get('images/intro/intro_4.png')",
-                 "caption":""
-            },
-            {
-                 "img" : "Resources.get('images/intro/start_screen.png')",
-                 "caption":""
-            }
-         ]
+     var introScenes = [
+        ["images/intro/intro_0.png","caption text"],
+        ["images/intro/intro_1.png","caption text"],
+        ["images/intro/intro_2.png","caption text"],
+        ["images/intro/intro_3.png","caption text"],
+        ["images/intro/intro_4.png","caption text"],
+        ["images/intro/intro_5.png","caption text"],
+        ["images/intro/start_screen.png","caption text"]
+     ];
 
+
+     var playIntro = function playIntro(e) {
+         var cUI = document.getElementById('cUI');
+         var ctxUI = cUI.getContext('2d');
+         for(var i=0;i<introScenes.length;i++){
+             for(var j=0;j<introScenes[i].length;j++) {
+
+                 do {
+                     ctxUI.drawImage(introScenes[i][j],0,0);
+                     if (e.keyCode === 32) {
+                         exitLoop = true
+                     }
+                 } while (exitLoop = false);
+
+                 exitLoop = false;
+             }
+         }
      };
 
-     var currentScene;
-
-     function playIntro(event) {
-         for(currentScene in introScenes.scenes){
-             console.log(currentScene.img);
-             console.log(currentScene.caption);
-
-             do{
-                 console.log("waiting for Mr.Spacebar")
-             }while (exitLoop = false);
-
-             exitLoop = false;
-         }
-     }
-
-    playIntro();
-
-
-    Window.addEventListener('keydown', function(e) {
+    window.addEventListener('keydown', function(e) {
         var allowedKeys = {
-            32: 'spacebar'
-
+            32: 'space'
         };
 
-        Window.addEventListener('keyup', function(e) {
+        window.addEventListener('keyup', function(e) {
             delete e.keyCode;
         });
 
-        if(e.keycode === 'Spacebar') {
-            console.log(e.keycode);
-            exitLoop = true
-        }
-        });
-
-
-
-     global.playIntro = playIntro();
+        playIntro(allowedKeys[e.keyCode]);
+    });
 
 
 })(this);
