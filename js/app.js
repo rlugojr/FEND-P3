@@ -290,9 +290,9 @@ var App = (function(global){
 
     var artifacts = [];
 
-    function createArtifacts(element,index,)
+    /* function createArtifacts(element,index,array)
     artifacteList.forEach()
-
+    */
 
     //create enemy objects
 

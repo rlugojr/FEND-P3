@@ -30,6 +30,8 @@ var Engine = (function(global) {
         ctxAction = cAction.getContext('2d'),
         cUI = doc.getElementById('cUI'),
         ctxUI = cUI.getContext('2d'),
+        origCanvasWidth = cGeo.width,
+        origCanvasHeight = cGeo.height,
         lastTime;
 
     //track game states.
@@ -47,7 +49,7 @@ var Engine = (function(global) {
     function setGameState(setting) {
         for (var i in gameState) {
             if (gameState.hasOwnProperty(i)) {
-                if(gameState[i]===objName) {
+                if(gameState[i]===setting) {
                     gameState[i] = true
                 }else{
                     gameState[i] = false
@@ -58,11 +60,6 @@ var Engine = (function(global) {
 
     window.addEventListener('resize', resizeCanvas, false);
     window.addEventListener('orientationchange', resizeCanvas, false);
-
-    function getRes(){
-        console.log(win.innerWidth);
-        console.log(win.innerHieght);
-    }
 
 
     function drawMap(layer,ctxGeo){
@@ -76,13 +73,24 @@ var Engine = (function(global) {
 
 
     function resizeCanvas(){
-        cGeo.width = window.innerWidth;
-        cGeo.height = window.innerHeight;
-        cAction.width = window.innerWidth;
-        cAction.height = window.innerHeight;
-        cUI.width = window.innerWidth;
-        cUI.height = window.innerHeight;
+        var resX = Math.floor(window.innerWidth);
+        var resY = Math.floor(window.innerHeight);
 
+        cGeo.width = resX;
+        cGeo.height = resY;
+        cAction.width = resX;
+        cAction.height = resY;
+        cUI.width = resX;
+        cUI.height = resY;
+
+        var scaleX = (cGeo.width/origCanvasWidth);
+        var scaleY = (cGeo.height/origCanvasHeight);
+
+        ctxGeo.scale(scaleX,scaleY);
+        ctxAction.scale(scaleX,scaleY);
+        ctxUI.scale(scaleX,scaleY);
+
+        drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
     }
 
 
