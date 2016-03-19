@@ -248,7 +248,7 @@ var Engine = (function(global) {
         'images/artifacts/debate_stand.png',
         'images/artifacts/mail_server.png',
         'images/artifacts/playbill.png',
-        'images/artifacts/socialist_pin.png',
+        'images/artifacts/bleeding_heart.png',
         'images/artifacts/water_bottle.png',
         'images/player/trump.png',
         'images/enemies/carson.png',
