@@ -128,7 +128,7 @@ var gameMap = (function(global) {
         'images/artifacts/debate_stand.png', //8
         'images/artifacts/mail_server.png', //9
         'images/artifacts/playbill.png', //10
-        'images/artifacts/socialist_pin.png', //11
+        'images/artifacts/bleeding_heart.png', //11
         'images/artifacts/water_bottle.png', //12
         'spacer' //13 [transparent spacer to prevent movement]
     ]
