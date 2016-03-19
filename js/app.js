@@ -294,11 +294,11 @@ var App = (function(global){
     //create artifact objects
     var artifactList =[
         {Artifact: {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "cruz","level":3}},
-        {Artifact: {"name" : "Debate Stand","imgSrc" : "images//artifacts//debate_stand.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "carson","level":1}},
-        {Artifact: {"name" : "Mail Server","imgSrc" : "images//artifacts//mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5}},
-        {Artifact: {"name" : "Playbill","imgSrc" : "images//artifacts//playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4}},
-        {Artifact: {"name" : "Socialist Pin","imgSrc" : "images//artifacts//socialist_pin.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2}},
-        {Artifact: {"name" : "Water Bottle","imgSrc" : "images//artifacts//water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":4}}
+        {Artifact: {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "carson","level":1}},
+        {Artifact: {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5}},
+        {Artifact: {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4}},
+        {Artifact: {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2}},
+        {Artifact: {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":4}}
     ];
 
     //create an array of objects from a JSON array and the constructor object using a Pseudo-Factory pattern
