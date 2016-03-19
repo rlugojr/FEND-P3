@@ -30,9 +30,16 @@ var Engine = (function(global) {
         ctxAction = cAction.getContext('2d'),
         cUI = doc.getElementById('cUI'),
         ctxUI = cUI.getContext('2d'),
-        origCanvasWidth = cGeo.width,
         origCanvasHeight = cGeo.height,
         lastTime;
+
+    cGeo.width=1024;
+    cGeo.height=768;
+    cAction.width=1024;
+    cAction.height=768;
+    cUI.width=1024;
+    cUI.height=768;
+
 
     //track game states.
     var gameState = function(){
@@ -58,8 +65,8 @@ var Engine = (function(global) {
         }
     }
 
-    window.addEventListener('resize', resizeCanvas, false);
-    window.addEventListener('orientationchange', resizeCanvas, false);
+    //window.addEventListener('resize', resizeCanvas, false);
+    //window.addEventListener('orientationchange', resizeCanvas, false);
 
 
     function drawMap(layer,ctxGeo){
@@ -71,7 +78,7 @@ var Engine = (function(global) {
         map._drawLayer(layer,ctxAction);
     }
 
-
+/*
     function resizeCanvas(){
         var resX = Math.floor(window.innerWidth);
         var resY = Math.floor(window.innerHeight);
@@ -92,7 +99,7 @@ var Engine = (function(global) {
 
         drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
     }
-
+*/
 
 
 
@@ -198,7 +205,7 @@ var Engine = (function(global) {
             enemy.render();
         });
          */
-        player.render(ctxAction);
+        player.render(ctxAction,true);
         //console.log(map.getCol(player.x),map.getRow(player.y))
 
     }
@@ -210,7 +217,7 @@ var Engine = (function(global) {
     function reset() {
         // noop
 
-        resizeCanvas();
+        //resizeCanvas();
 
         drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
 

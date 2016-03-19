@@ -3,31 +3,44 @@ var App = (function(global){
     "use strict";
 //BASE CLASS DEFINITION
     //define base object "actor", with common methods and properties, used by all character objects for inheritance
-    var Actor = function Actor(sprite, x, y, width, height) {
-        this.sprite = sprite;
+    var Actor = function Actor(name,imgSrc, x, y, width, height) {
+        this.name = name;
+        this.imgSrc = imgSrc;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     };
-    //Create initial link in the inheritance chain for base class Actor prototype
-    Actor.prototype.render = function render(ctx){
-        //Draws the sprite using the canvas context specified by the parameter.
-        //Parameter: ctx, a canvas context.
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    };
+    //This creates the initial link in the inheritance chain for the canvas object prototypes
     //Set the constructor for this object
     Actor.prototype.constructor = Actor;
+    Actor.prototype.name = "";
+    Actor.prototype.imgSrc = "";
+    Actor.prototype.x = 0;
+    Actor.prototype.y = 0;
+    Actor.prototype.width=0;
+    Actor.prototype.height=0;
+    Actor.prototype.render = function render(ctx,originFeet){
+        if(originFeet) {
+            ctx.save();
+            ctx.translate(0, -1*this.height);
+        }
+        ctx.drawImage(Resources.get(this.imgSrc), this.x, this.y, this.width, this.height);
+
+        if(originFeet) {ctx.restore()}
+
+    };
+
 
 
 //1ST LEVEL OF INHERITANCE
 
     //define class for inanimate game actors
-    var Inanimate = function Inanimate(sprite, x, y, width, height){
+    var Inanimate = function Inanimate(name,imgSrc, x, y, width, height){
         //Ensure that any reference to "this" references the current object and not the prototype
         // Actor.call(name, x, y, width, height);
         //add properties specific to Inanimate objects;
-        Actor.call(this, sprite, x, y, width, height);
+        Actor.call(this,name,imgSrc, x, y, width, height);
     };
     //Create inheritance chain through prototype to base class Actor prototype
     Inanimate.prototype = Object.create(Actor.prototype);
@@ -36,12 +49,13 @@ var App = (function(global){
 
 
 
+
     //define class for animated actors
-    var Animate = function Animate(sprite, x, y, width, height) {
+    var Animate = function Animate(name,imgSrc, x, y, width, height) {
         //Ensure that any reference to "this" references the current object and not the prototype
         // Actor.call(name, x, y, width, height);
         //add properties specific to Inanimate objects;
-        Actor.call(this, sprite, x, y, width, height);
+        Actor.call(this,name, imgSrc, x, y, width, height);
     };
     //Create inheritance chain through prototype to base class Actor prototype
     Animate.prototype = Object.create(Actor.prototype);
@@ -56,13 +70,20 @@ var App = (function(global){
     Animate.prototype.direction = 1;
     Animate.prototype.speed = 256;
     Animate.prototype.moved = false;
+    //Draws the sprite using the canvas context specified by the parameter.
+    //Also, applied a translation so that the origin(x,y) of the image
+    //align with the sprite's feet if "originFeet" is "true".
+
+
     //TODO: method to locate the collision points based on body coordinate and not image boundaries.
+   /*
     Animate.prototype.update_posParts = function (){
         this.posHead = this.y; //pixels from top of sprite to character's head
         this.posRight = this.x + this.width; //pixels from left side of sprite to character's rightmost side
         this.posLeft = this.x; //pixels from left side of sprite to character's left-most side
         this.posFeet = this.y + this.height; //pixels from top of sprite to character's feet
     };
+    */
     //method to update the object's location based on current position, velocity and collisions.
     Animate.prototype.update = function (dt) {
         var bUp,bDown,bLeft,bRight;
@@ -170,10 +191,9 @@ var App = (function(global){
 //2ND LEVEL OF INHERITANCE
 
     //artifacts inherits from Inanimate
-    var Artifact = function Artifact(name,sprite, x, y, width, height, enemyEffected, level){
+    var Artifact = function Artifact(name, imgSrc, x, y, width, height, enemyEffected, level){
         //Ensure that any reference to "this" references the current object and not the prototype
-        Inanimate.call(sprite, x, y, width, height);
-        this.name = name;
+        Inanimate.call(this,name,imgSrc, x, y, width, height);
         this.enemyEffected = enemyEffected;
         this.level = level;
     };
@@ -182,7 +202,6 @@ var App = (function(global){
     //Set the constructor for this object
     Artifact.prototype.constructor = Artifact;
     //Add any additional properties specific to this object or its children to the prototype.
-    Artifact.prototype.name="";
     Artifact.prototype.enemyEffected ="";
     Artifact.prototype.level="";
     //TODO: method to destroy enemy associate with the artifact upon the artifact's capture (collision)
@@ -194,9 +213,9 @@ var App = (function(global){
 
 
     //define class for player actors
-    var Player = function Player(sprite, x, y, width, height){
+    var Player = function Player(name,imgSrc, x, y, width, height){
        //Ensure that any reference to "this" references the current object and not the prototype
-       Animate.call(this,sprite, x, y, width, height);
+       Animate.call(this,name,imgSrc, x, y, width, height);
     };
     //Create inheritance chain through prototype to parent class Animate prototype
     Player.prototype = Object.create(Animate.prototype);
@@ -226,7 +245,7 @@ var App = (function(global){
         this.moved = true;
     };
     //method to render the player sprite on the ctxAction canvas.
-    //TODO: Move this to parent object so that all can use the same render style.
+    /*
     Player.prototype.render = function render(ctx){
         //Draws the sprite using the canvas context specified by the parameter.
         //Also, applied a translation so that the origin(x,y) of the image
@@ -236,12 +255,12 @@ var App = (function(global){
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 56.7, 96);
         ctx.restore();
     };
-
+    */
 
     //define class for monster actors - which the player must avoid.
-    var Monster = function Monster(name,sprite, x, y, width, height){
+    var Monster = function Monster(name,imgSrc, x, y, width, height){
         //Ensure that any reference to "this" references the current object and not the prototype
-        Animate.call(this,sprite, x, y, width, height);
+        Animate.call(this,name,imgSrc, x, y, width, height);
         this.name = name;
     };
     //Create inheritance chain through prototype to parent class Animate prototype
@@ -256,31 +275,30 @@ var App = (function(global){
     // Now instantiate your objects.
     // Place all enemy objects in an array called allEnemies
     //create enemy objects
-
+    //TODO:
     //create enemy array
-
+    //TODO:
 
     // Place the player object in a variable called player
-    var player = new Player('images/player/trump.png',64,560 + 32);  //set initial y-pos so feet are center tile.
-    player.x = 75;
-    player.y = 592;
-    player.width = 56.7;
-    player.height = 96;
-    player.speed = 512;
-    player.update_posParts();
+    var player = new Player('The Donald','images/player/trump.png',75,592,56.7,96);  //set initial y-pos so feet are center tile.
     //Create inheritance chain through prototype to parent class
     player.prototype = Player.prototype;
     //Set the constructor for this object
     player.prototype.constructor = Player;
+    //set properties
+    player.speed = 512;
+    //player.update_posParts();
+
+
 
     //create artifact objects
     var artifactList =[
-        {Artifacts: {"name" : "Birth Certificate","sprite" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "cruz","level":3}},
-        {Artifacts: {"name" : "Debate Stand","sprite" : "images/artifacts/debate_stand.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "carson","level":1}},
-        {Artifacts: {"name" : "Mail Server","sprite" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5}},
-        {Artifacts: {"name" : "Playbill","sprite" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4}},
-        {Artifacts: {"name" : "Socialist Pin","sprite" : "images/artifacts/socialist_pin.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2}},
-        {Artifacts: {"name" : "Water Bottle","sprite" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":4}}
+        {Artifact: {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "cruz","level":3}},
+        {Artifact: {"name" : "Debate Stand","imgSrc" : "images//artifacts//debate_stand.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "carson","level":1}},
+        {Artifact: {"name" : "Mail Server","imgSrc" : "images//artifacts//mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5}},
+        {Artifact: {"name" : "Playbill","imgSrc" : "images//artifacts//playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4}},
+        {Artifact: {"name" : "Socialist Pin","imgSrc" : "images//artifacts//socialist_pin.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2}},
+        {Artifact: {"name" : "Water Bottle","imgSrc" : "images//artifacts//water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":4}}
     ];
 
     //create an array of objects from a JSON array and the constructor object using a Pseudo-Factory pattern
@@ -288,19 +306,35 @@ var App = (function(global){
         var results = [];
 
         for (var i=0; i<arrayElement.length;i++) {
-            var currItem = arrayElement[i].Artifacts;
-            var newArtifact = new protoObj(currItem.name,currItem.sprite,currItem.x,currItem.y,currItem.width,currItem.height,currItem.enemyEffected);
-            newArtifact.prototype = protoObj.prototype;
-            newArtifact.prototype.constructor = protoObj;
-            results.push(newArtifact)
+            var currItem = arrayElement[i].Artifact;
+            var newObj = Object.create(protoObj.prototype);
+            console.log("first round: " + newObj.prototype);
+            newObj.prototype = protoObj.prototype;
+            newObj.prototype.constructor = protoObj;
+
+            newObj.name = currItem.name;
+            newObj.imgSrc = currItem.imgSrc;
+            newObj.x = currItem.x;
+            newObj.y = currItem.y;
+            newObj.width = currItem.width;
+            newObj.height = currItem.height;
+            newObj.enemyAffected = currItem.enemyEffected;
+            newObj.level = currItem.level;
+            console.log("second round: " + newObj.prototype);
+            results.push(newObj)
         }
 
         return results
     }
 
-    //use array to hold all artifacts created through the factory method.
-    var artifacts = objectFactory(artifactList);
+    //create an instance of Artifact to run the objectFactory
+    var artifact = new Artifact();
+    artifact.prototype = Artifact.prototype;
+    artifact.prototype.constructor = Artifact;
 
+
+    //use array to hold all artifacts created through the factory method.
+   var artifacts = objectFactory(artifactList,artifact);
 
     // This listens for key presses and sends the keys to your
     // Player.handleInput() method.
@@ -326,5 +360,6 @@ var App = (function(global){
 
     //expose specific objects to the global scope.
     global.player = player;
+    global.artifacts = artifacts;
 
 })(this);
