@@ -83,8 +83,8 @@ var Engine = (function(global) {
         cUI.width = resX;
         cUI.height = resY;
 
-        var scaleX = (cGeo.width/origCanvasWidth);
-        var scaleY = (cGeo.height/origCanvasHeight);
+        var scaleX =(cGeo.width/origCanvasWidth);
+        var scaleY =(cGeo.height/origCanvasHeight);
 
         ctxGeo.scale(scaleX,scaleY);
         ctxAction.scale(scaleX,scaleY);
