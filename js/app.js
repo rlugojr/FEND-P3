@@ -70,11 +70,6 @@ var App = (function(global){
     Animate.prototype.direction = 1;
     Animate.prototype.speed = 256;
     Animate.prototype.moved = false;
-    //Draws the sprite using the canvas context specified by the parameter.
-    //Also, applied a translation so that the origin(x,y) of the image
-    //align with the sprite's feet if "originFeet" is "true".
-
-
     //TODO: method to locate the collision points based on body coordinate and not image boundaries.
    /*
     Animate.prototype.update_posParts = function (){
@@ -190,26 +185,19 @@ var App = (function(global){
 
 //2ND LEVEL OF INHERITANCE
 
-    //artifacts inherits from Inanimate
-    var Artifact = function Artifact(name, imgSrc, x, y, width, height, enemyEffected, level){
+    //define class for enemy actors - which the player must avoid.
+    var Enemy = function Enemy(name, imgSrc, x, y, width, height, attackPattern, level){
         //Ensure that any reference to "this" references the current object and not the prototype
-        Inanimate.call(this,name,imgSrc, x, y, width, height);
-        this.enemyEffected = enemyEffected;
-        this.level = level;
+        Animate.call(this,name,imgSrc, x, y, width, height);
     };
-    //Create inheritance chain through prototype to parent class Inanimate prototype
-    Artifact.prototype = Object.create(Inanimate.prototype);
+    //Create inheritance chain through prototype to parent class Animate prototype
+    Enemy.prototype = Object.create(Animate.prototype);
     //Set the constructor for this object
-    Artifact.prototype.constructor = Artifact;
-    //Add any additional properties specific to this object or its children to the prototype.
-    Artifact.prototype.enemyEffected ="";
-    Artifact.prototype.level="";
-    //TODO: method to destroy enemy associate with the artifact upon the artifact's capture (collision)
-    Artifact.prototype.captured = function captured(){
-        console.log("Destroyed Enemy: " + this.enemyEffected)
-    };
-
-
+    Enemy.prototype.constructor = Enemy;
+    Enemy.prototype.name = "";
+    Enemy.prototype.level = "";
+    Enemy.prototype.attackPattern = "";
+    //TODO: Override "update" method to use attackPatterns to determine movement.
 
 
     //define class for player actors
@@ -257,27 +245,75 @@ var App = (function(global){
     };
     */
 
-    //define class for monster actors - which the player must avoid.
-    var Monster = function Monster(name,imgSrc, x, y, width, height){
+    //artifacts inherits from Inanimate
+    var Artifact = function Artifact(name, imgSrc, x, y, width, height, enemyEffected, level){
         //Ensure that any reference to "this" references the current object and not the prototype
-        Animate.call(this,name,imgSrc, x, y, width, height);
-        this.name = name;
+        Inanimate.call(this,name,imgSrc, x, y, width, height);
+        this.enemyEffected = enemyEffected;
+        this.level = level;
     };
-    //Create inheritance chain through prototype to parent class Animate prototype
-    Monster.prototype = Object.create(Animate.prototype);
+    //Create inheritance chain through prototype to parent class Inanimate prototype
+    Artifact.prototype = Object.create(Inanimate.prototype);
     //Set the constructor for this object
-    Monster.prototype.constructor = Monster;
-    //TODO: Override update method to provide different patterns of movement rules depending on monster name.
+    Artifact.prototype.constructor = Artifact;
+    //Add any additional properties specific to this object or its children to the prototype.
+    Artifact.prototype.enemyEffected ="";
+    Artifact.prototype.level="";
+    //TODO: method to destroy enemy associate with the artifact upon the artifact's capture (collision)
+    Artifact.prototype.captured = function captured(){
+        console.log("Destroyed Enemy: " + this.enemyEffected)
+    };
+
 
 
 //3RD LEVEL OF INHERITANCE
 
-    // Now instantiate your objects.
-    // Place all enemy objects in an array called allEnemies
+    //method that creates an array of objects from a JSON array and an instantiated object - "Pseudo-Factory" pattern
+    function objectFactory(arrayElement,protoObj){
+        var results = [];
+
+        for (var i=0; i<arrayElement.length;i++) {
+            var currItem = arrayElement[i];
+            var newObj = Object.create(protoObj.prototype);
+            console.log("first round: " + newObj.prototype);
+            newObj.prototype = protoObj.prototype;
+            newObj.prototype.constructor = protoObj;
+
+            newObj.name = currItem.name;
+            newObj.imgSrc = currItem.imgSrc;
+            newObj.x = currItem.x;
+            newObj.y = currItem.y;
+            newObj.width = currItem.width;
+            newObj.height = currItem.height;
+            if(newObj.enemyEffected!==undefined){newObj.enemyEffected = currItem.enemyEffected;}
+            if(newObj.attackPattern!==undefined){newObj.attackPattern = currItem.attackPattern;}
+            newObj.level = currItem.level;
+            console.log("second round: " + newObj.prototype);
+            results.push(newObj)
+        }
+
+        return results
+    }
+
     //create enemy objects
-    //TODO:
+    var enemyList =[
+        {"name" : "Carson","imgSrc" : "images/enemies/carson.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "sittingDuck","level":1},
+        {"name" : "Cruz","imgSrc" : "images/enemies/cruz.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "gangUp","level":3},
+        {"name" : "Hillary","imgSrc" : "images/enemies/hillary.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "barkingMad","level":5},
+        {"name" : "Romney","imgSrc" : "images/enemies/romney.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "usurper","level":4},
+        {"name" : "Rubio","imgSrc" : "images/enemies/rubio.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "gangUp","level":3},
+        {"name" : "sanders","imgSrc" : "images/enemies/sanders.png","x" : 0,"y" : 0,"width" : 100.5,"height" : 85.93,"attackPattern" : "barely","level":2}
+    ];
     //create enemy array
-    //TODO:
+    //create an instance of Enemy to run in the objectFactory
+    var enemy = new Enemy();
+    enemy.prototype = Enemy.prototype;
+    enemy.prototype.constructor = Enemy;
+
+    //use array to hold all artifacts created through the factory method.
+    // Place all enemy objects in an array called allEnemies
+    var allEnemies = objectFactory(enemyList,enemy);
+
 
     // Place the player object in a variable called player
     var player = new Player('The Donald','images/player/trump.png',75,592,56.7,96);  //set initial y-pos so feet are center tile.
@@ -293,41 +329,17 @@ var App = (function(global){
 
     //create artifact objects
     var artifactList =[
-        {Artifact: {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "cruz","level":3}},
-        {Artifact: {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "carson","level":1}},
-        {Artifact: {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5}},
-        {Artifact: {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4}},
-        {Artifact: {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2}},
-        {Artifact: {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":4}}
+        {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "cruz","level":3},
+        {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "carson","level":1},
+        {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5},
+        {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4},
+        {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2},
+        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":4}
     ];
 
-    //create an array of objects from a JSON array and the constructor object using a Pseudo-Factory pattern
-    function objectFactory(arrayElement,protoObj){
-        var results = [];
 
-        for (var i=0; i<arrayElement.length;i++) {
-            var currItem = arrayElement[i].Artifact;
-            var newObj = Object.create(protoObj.prototype);
-            console.log("first round: " + newObj.prototype);
-            newObj.prototype = protoObj.prototype;
-            newObj.prototype.constructor = protoObj;
 
-            newObj.name = currItem.name;
-            newObj.imgSrc = currItem.imgSrc;
-            newObj.x = currItem.x;
-            newObj.y = currItem.y;
-            newObj.width = currItem.width;
-            newObj.height = currItem.height;
-            newObj.enemyAffected = currItem.enemyEffected;
-            newObj.level = currItem.level;
-            console.log("second round: " + newObj.prototype);
-            results.push(newObj)
-        }
-
-        return results
-    }
-
-    //create an instance of Artifact to run the objectFactory
+    //create an instance of Artifact to run in the objectFactory
     var artifact = new Artifact();
     artifact.prototype = Artifact.prototype;
     artifact.prototype.constructor = Artifact;
@@ -361,5 +373,6 @@ var App = (function(global){
     //expose specific objects to the global scope.
     global.player = player;
     global.artifacts = artifacts;
+    global.allEnemies = allEnemies;
 
 })(this);
