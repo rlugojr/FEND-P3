@@ -20,8 +20,9 @@ var gameMap = (function(global) {
         var col = Math.floor(x / this.tsize);
         var row = Math.floor(y / this.tsize);
 
-        // tiles 3 and 5 are solid -- the rest are walkable
-        // loop through all layers and return TRUE if any tile is solid
+        // impassible tiles are in the array map.blockedTiles -- the rest are walkable.
+        // Keeping that in an array makes the assignment of new or existing tiles as blocked dynamic.
+        // Loop through each map layer and return TRUE if any tile is in map.blockedTiles
         return this.layers.reduce(function (result, layer, index) {
             var tile = this.getTile(index, col, row);
             var isSolid = this.blockedTiles.indexOf(tile) >=0;
@@ -49,71 +50,92 @@ var gameMap = (function(global) {
         var cMap;
         var ctx;
 
-        switch(layer){
+        switch (layer) {
             case 0:
-                cMap = document.getElementById('cGeo');
-                ctx = cMap.getContext('2d');
+                var ctxGeo = global.ctxGeo;
                 break;
             case 1:
-                cMap = document.getElementById('cAction');
-                ctx = cMap.getContext('2d');
+                var ctxAction = global.ctxAction;
                 break;
         }
-        for (var c = 0; c <= this.cols-1; c++) {
-            for (var r = 0; r <= this.rows-1; r++) {
+        for (var c = 0; c <= this.cols - 1; c++) {
+            for (var r = 0; r <= this.rows - 1; r++) {
                 var tile = this.getTile(layer, c, r);
                 var x = c * this.tsize;
                 var y = r * this.tsize;
+
+                //Iterate through tiles and handle per case.
                 if (tile !== 0) { // 1 => empty tile
-                    if(tile<4){
-                        ctx.drawImage(
-                            Resources.get(this.tiles[tile]), // image
-                            0, // source x
-                            0, // source y
-                            this.tsize, // source width
-                            this.tsize, // source height
-                            x,  // target x
-                            y, // target y
-                            this.tsize, // target width
-                            this.tsize);// target height
-                        //enable the next 3 lines to draw a debugging grid for collision checks and
-                        // placement of objects in the Action layer.
-                            ctx.font = "10pt sans-serif";
-                            ctx.strokeText(r+", "+c, x + 20,y + 34);
-                            ctx.strokeRect(x, y, 64,64);
-                    }else if(tile===4||tile===5||tile===6) {
-                        ctx.drawImage(
-                            Resources.get(this.tiles[tile]), // image
-                            0, // source x
-                            0, // source y
-                            101, // source width
-                            171, // source height
-                            x-20,  // target x
-                            y-120, // target y
-                            101, // target width
-                            171);// target height
-                    }else if(tile>=7 && tile < 13){
-                        ctx.drawImage(
-                            Resources.get(this.tiles[tile]), // image
-                            0, // source x
-                            0, // source y
-                            101, // source width
-                            171, // source height
-                            x,  // target x
-                            y, // target y
-                            50, // target width
-                            85);// target height
+                    switch (tile) {
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 13:
+                        case 14:
+                        case 15:
+                        case 16:
+                            ctxGeo.drawImage(
+                                Resources.get(this.tiles[tile]), // image
+                                0, // source x
+                                0, // source y
+                                this.tsize, // source width
+                                this.tsize, // source height
+                                x,  // target x
+                                y, // target y
+                                this.tsize, // target width
+                                this.tsize);// target height
+                            break;
+                        case 4:
+                        case 5:
+                        case 6:
+                            ctxAction.drawImage(
+                                Resources.get(this.tiles[tile]), // image
+                                0, // source x
+                                0, // source y
+                                101, // source width
+                                171, // source height
+                                x - 20,  // target x
+                                y - 120, // target y
+                                101, // target width
+                                171);// target height
+                            break;
+                        case 7:
+                        case 8:
+                        case 9:
+                        case 10:
+                        case 11:
+                        case 12:
+                            ctxAction.drawImage(
+                                Resources.get(this.tiles[tile]), // image
+                                0, // source x
+                                0, // source y
+                                101, // source width
+                                171, // source height
+                                x + 20,  // target x
+                                y + 20, // target y
+                                50, // target width
+                                85);// target height
+                            break;
+                    }
+
+                    //enable the next 5 lines to draw a debugging grid for collision checks and
+                    // placement of objects in the Action layer.
+                    if(layer === 0) {
+                        ctxGeo.font = "9pt sans-serif";
+                        ctxGeo.strokeText(r + ", " + c, x +20, y + 36);
+                        ctxGeo.strokeRect(x, y, 64, 64);
                     }
                 }
             }
         }
-    };
+    }
+
 
 
     var map = new Map();
 
-    map.cols = 24;
-    map.rows = 18;
+    map.cols = 20;
+    map.rows = 16;
     map.tsize = 64;
     map.maxX = map.cols * map.tsize;
     map.maxY = map.rows * map.tsize;
@@ -130,47 +152,48 @@ var gameMap = (function(global) {
         'images/artifacts/playbill.png', //10
         'images/artifacts/bleeding_heart.png', //11
         'images/artifacts/water_bottle.png', //12
-        'spacer' //13 [transparent spacer to prevent movement]
-    ]
-    map.blockedTiles = [3,4,5,6,13];
+        'images/tiles/wall_corner.png', //13
+        'images/tiles/wall_vertical.png', //14
+        'images/tiles/wall_horizontal.png', //15
+        'images/tiles/grass.png'   //16 blocked version of grass to place under trees and rocks
+    ];
+
+    map.blockedTiles = [3,4,5,6,13,14,15,16];
 
     map.layers = [[
-        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3,
-        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+       13,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,13,
+       14, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,14,
+       14, 2,16,16,16, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1,16,16,16, 2,14,
+       14, 2,16, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1,16, 2,14,
+       14, 2,16, 1, 1, 1,13,15,15, 2, 2,15,15,13, 1, 1, 1,16, 2,14,
+       14, 2, 1, 1, 1, 1,14, 1, 1, 2, 2, 1, 1,14, 1, 1, 1, 1, 2,14,
+       14, 2, 1, 1, 1, 1,14, 1, 1, 2, 2, 1, 1,14, 1, 1, 1, 1, 2,14,
+       14, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,14,
+       14, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,14,
+       14, 2, 1, 1, 1, 1,14, 1, 1, 2, 2, 1, 1,14, 1, 1, 1, 1, 2,14,
+       14, 2, 1, 1, 1, 1,14, 1, 1, 2, 2, 1, 1,14, 1, 1, 1, 1, 2,14,
+       14, 2, 1, 1, 1, 1,13,15,15, 2, 2,15,15,13, 1, 1, 1, 1, 2,14,
+       14, 2,16, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1,16, 2,14,
+       14, 2,16, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1,16, 2,14,
+       14, 2,16,16,16, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1,16,16,16, 2,14,
+       13,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,13
     ], [
-       13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,
-       13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 4, 0, 0,10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0,13,
-       13, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 8, 0, 0, 0, 0, 0, 5, 5, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 0, 0,11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 9, 0, 0, 0, 0, 0, 5, 5, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 0, 0,12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0,13,
-       13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,13,
-       13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 5, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 5, 0, 0,
+       0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0,
+       0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0,
+       0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0,
+       0, 0, 5, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 5, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     ]];
 
 

@@ -25,23 +25,26 @@ var Engine = (function(global) {
     var doc = global.document,
         win = global.window,
         cGeo = doc.getElementById('cGeo'),
-        ctxGeo = cGeo.getContext('2d'),
         cAction = doc.getElementById('cAction'),
-        ctxAction = cAction.getContext('2d'),
         cUI = doc.getElementById('cUI'),
-        ctxUI = cUI.getContext('2d'),
-        origCanvasHeight = cGeo.height,
         lastTime;
 
-    cGeo.width=1024;
-    cGeo.height=768;
-    cAction.width=1024;
-    cAction.height=768;
-    cUI.width=1024;
-    cUI.height=768;
+    cGeo.Width = 1280;
+    cGeo.Height=1024;
+    cAction.Width= 1280;
+    cAction.Height= 1024;
+    cUI.Width=1280;
+    cUI.Height=1024;
+    var ctxGeo = cGeo.getContext('2d');
+    var ctxAction = cAction.getContext('2d');
+    var ctxUI = cUI.getContext('2d');
+    /*
+    ctxGeo.scale(1,1);
+    ctxAction.scale(1,1);
+    ctxUI.scale(1,1);
+    */
 
-
-    //track game states.
+    //TODO: track game states.
     var gameState = function(){
         this.init = false;
         this.loading = false;
@@ -66,6 +69,7 @@ var Engine = (function(global) {
     }
 
     //window.addEventListener('resize', resizeCanvas, false);
+    //TODO: Handle change in device orientation;
     //window.addEventListener('orientationchange', resizeCanvas, false);
 
 
@@ -82,6 +86,10 @@ var Engine = (function(global) {
     function resizeCanvas(){
         var resX = Math.floor(window.innerWidth);
         var resY = Math.floor(window.innerHeight);
+
+        select case resX {
+
+        }
 
         cGeo.width = resX;
         cGeo.height = resY;
@@ -187,10 +195,11 @@ var Engine = (function(global) {
      */
     function render() {
 
-        drawAction(1,ctxAction);
+        drawMap(0,ctxGeo);
 
         renderEntities();
 
+        drawAction(1,ctxAction);
     }
 
     /* This function is called by the render function and is called on each game
@@ -205,7 +214,7 @@ var Engine = (function(global) {
             enemy.render();
         });
          */
-        player.render(ctxAction,true);
+        player.render(ctxGeo,true);
         //console.log(map.getCol(player.x),map.getRow(player.y))
 
     }
@@ -244,6 +253,9 @@ var Engine = (function(global) {
         'images/tiles/tree.png',
         'images/tiles/pink_tree.png',
         'images/tiles/green_tree.png',
+        'images/tiles/wall_vertical.png', //20
+        'images/tiles/wall_horizontal.png', //21
+        'images/tiles/wall_corner.png', //22
         'images/artifacts/birth_certificate.png',
         'images/artifacts/debate_stand.png',
         'images/artifacts/mail_server.png',

@@ -85,35 +85,36 @@ var App = (function(global){
 
         if(this.moved) {
             //DEBUG: uncomment next 8 lines to debug
-            console.log("Current X: " + this.x);
+           /* console.log("Current X: " + this.x);
             console.log("Current Y: " + this.y);
             console.log("Grid Loc: " + map.getCol(this.x) + ", " +map.getRow(this.y));
             console.log("On Tile: " + map.getTile(1, map.getCol(this.x),map.getRow(this.y)) );
             console.log("Left Tile: " + map.getTile(1, map.getCol(this.x - 64),map.getRow(this.y)));
             console.log("Right Tile: " + map.getTile(1, map.getCol(this.x + 64),map.getRow(this.y)));
             console.log("Top Tile: " + map.getTile(1, map.getCol(this.x),map.getRow(this.y - 64)));
-            console.log("Bottom Tile: " + map.getTile(1, map.getCol(this.x),map.getRow(this.y + 64)));
+            console.log("Bottom Tile: " + map.getTile(1, map.getCol(this.x),map.getRow(this.y + 64)));*/
 
-            //Find blocked nearby tiles
-            var tileUp = map.blockedTiles.indexOf(map.getTile(1, map.getCol(this.x), map.getRow(this.y - 64)))>=0;
-            var tileDown = map.blockedTiles.indexOf(map.getTile(1, map.getCol(this.x),map.getRow(this.y + 64)))>=0;
-            var tileLeft = map.blockedTiles.indexOf(map.getTile(1, map.getCol(this.x - 64),map.getRow(this.y)))>=0;
-            var tileRight = map.blockedTiles.indexOf(map.getTile(1, map.getCol(this.x + 64),map.getRow(this.y)))>=0;
+            //Check each possible move for blocked tiles listed in map.blockedTiles
+            var tileUp = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x), map.getRow(this.y - 64)))>=0;
+            var tileDown = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x),map.getRow(this.y + 64)))>=0;
+            var tileLeft = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x - 64),map.getRow(this.y)))>=0;
+            var tileRight = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x + 64),map.getRow(this.y)))>=0;
 
             //DEBUG: uncomment to debug
             console.log("Blocks: " + tileUp,tileDown,tileLeft,tileRight);
 
             //get tile boundaries in pixels
-            bUp = map.getRow(this.y) * 64;
-            bDown = bUp + 64;
-            bLeft = map.getCol(this.x) * 64;
-            bRight= bLeft + 64;
+            //
+            bUp = (map.getRow(this.y) * 64) + (this.height/2);//Using 1/2 of sprite's height allows the sprite to move to the top unblocked
+            bDown = (map.getRow(this.y) * 64) + (this.height/2);//row and also have half their body over the top or under the bottom bounds for 3d-ish effect.
+            bLeft = (map.getCol(this.x) * 64);
+            bRight= bLeft + 64 - 65;
 
             //DEBUG: uncomment to debug
-            console.log("bUp: " + bUp);
-            console.log("bDown: " + bDown);
-            console.log("bLeft: " + bLeft);
-            console.log("bRight: " + bRight);
+            //console.log("bUp: " + bUp);
+            //console.log("bDown: " + bDown);
+            //console.log("bLeft: " + bLeft);
+            //console.log("bRight: " + bRight);
 
             //create vector to hold the speed and direction of movement.
             var vector = Math.round(this.speed * this.direction * dt);
@@ -185,7 +186,7 @@ var App = (function(global){
 
 //2ND LEVEL OF INHERITANCE
 
-    //define class for enemy actors - which the player must avoid.
+    //define class for enemy - which the player must avoid.  This inherits from Animate.
     var Enemy = function Enemy(name, imgSrc, x, y, width, height, attackPattern, level){
         //Ensure that any reference to "this" references the current object and not the prototype
         Animate.call(this,name,imgSrc, x, y, width, height);
@@ -200,7 +201,7 @@ var App = (function(global){
     //TODO: Override "update" method to use attackPatterns to determine movement.
 
 
-    //define class for player actors
+    //define class for player character.  This inherits from Animate.
     var Player = function Player(name,imgSrc, x, y, width, height){
        //Ensure that any reference to "this" references the current object and not the prototype
        Animate.call(this,name,imgSrc, x, y, width, height);
@@ -232,18 +233,8 @@ var App = (function(global){
         }
         this.moved = true;
     };
-    //method to render the player sprite on the ctxAction canvas.
-    /*
-    Player.prototype.render = function render(ctx){
-        //Draws the sprite using the canvas context specified by the parameter.
-        //Also, applied a translation so that the origin(x,y) of the image
-        //align with the sprite's feet.
-        ctx.save();
-        ctx.translate(0,-96);
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 56.7, 96);
-        ctx.restore();
-    };
-    */
+
+
 
     //artifacts inherits from Inanimate
     var Artifact = function Artifact(name, imgSrc, x, y, width, height, enemyEffected, level){
@@ -275,7 +266,7 @@ var App = (function(global){
         for (var i=0; i<arrayElement.length;i++) {
             var currItem = arrayElement[i];
             var newObj = Object.create(protoObj.prototype);
-            console.log("first round: " + newObj.prototype);
+
             newObj.prototype = protoObj.prototype;
             newObj.prototype.constructor = protoObj;
 
@@ -288,7 +279,7 @@ var App = (function(global){
             if(newObj.enemyEffected!==undefined){newObj.enemyEffected = currItem.enemyEffected;}
             if(newObj.attackPattern!==undefined){newObj.attackPattern = currItem.attackPattern;}
             newObj.level = currItem.level;
-            console.log("second round: " + newObj.prototype);
+
             results.push(newObj)
         }
 
@@ -316,13 +307,13 @@ var App = (function(global){
 
 
     // Place the player object in a variable called player
-    var player = new Player('The Donald','images/player/trump.png',75,592,56.7,96);  //set initial y-pos so feet are center tile.
+    var player = new Player('The Donald','images/player/trump.png',92,518,65,110);  //set initial y-pos so feet are center tile.
     //Create inheritance chain through prototype to parent class
     player.prototype = Player.prototype;
     //Set the constructor for this object
     player.prototype.constructor = Player;
     //set properties
-    player.speed = 512;
+    player.speed = 1024;
     //player.update_posParts();
 
 
