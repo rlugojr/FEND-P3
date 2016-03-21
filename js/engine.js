@@ -44,6 +44,15 @@ var Engine = (function(global) {
     ctxUI.scale(1,1);
     */
 
+    var intro_loop = new Howl({
+        src: ['audio/intro_loop.mp3','audio/intro_loop.ogg'],
+        autoplay: false,
+        loop: true,
+        volume: 0.8
+    });
+
+
+
     //TODO: track game states.
     var gameState = function(){
         this.init = false;
@@ -153,6 +162,16 @@ var Engine = (function(global) {
         reset();
 
         lastTime = Date.now();
+
+        var game_loop = new Howl({
+            src: ['audio/gameplay_loop.mp3','audio/gameplay_loop.ogg'],
+            autoplay: true,
+            loop: true,
+            volume: 0.5,
+            onload: function() {
+                console.log('Finished loading game_loop!');
+            }
+        });
 
         main();
     }

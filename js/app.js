@@ -94,7 +94,8 @@ var App = (function(global){
             console.log("Top Tile: " + map.getTile(1, map.getCol(this.x),map.getRow(this.y - 64)));
             console.log("Bottom Tile: " + map.getTile(1, map.getCol(this.x),map.getRow(this.y + 64)));*/
 
-            //Check each possible move for blocked tiles listed in map.blockedTiles
+            //Check each possible move for blocked tiles listed in map.blockedTiles.
+            //Returns a boolean: "true" = blocked, "false" = walkable.
             var tileUp = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x), map.getRow(this.y - 64)))>=0;
             var tileDown = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x),map.getRow(this.y + 64)))>=0;
             var tileLeft = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x - 64),map.getRow(this.y)))>=0;
