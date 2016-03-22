@@ -258,6 +258,15 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
+        'images/keys/a.png',
+        'images/keys/d.png',
+        'images/keys/s.png',
+        'images/keys/w.png',
+        'images/keys/up.png',
+        'images/keys/down.png',
+        'images/keys/left.png',
+        'images/keys/right.png',
+        'images/keys/space.png',
         'images/intro/intro_0.png',
         'images/intro/intro_1.png',
         'images/intro/intro_2.png',
@@ -288,6 +297,7 @@ var Engine = (function(global) {
         'images/enemies/romney.png',
         'images/enemies/rubio.png',
         'images/enemies/sanders.png'
+
 
     ]);
     Resources.onReady(init);
