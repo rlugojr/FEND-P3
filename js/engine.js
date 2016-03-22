@@ -29,32 +29,32 @@ var Engine = (function(global) {
         cUI = doc.getElementById('cUI'),
         lastTime;
 
-    cGeo.Width = 1280;
-    cGeo.Height=1024;
-    cAction.Width= 1280;
-    cAction.Height= 1024;
-    cUI.Width=1280;
-    cUI.Height=1024;
+    /*cGeo.Width = 1280;
+     cGeo.Height=1024;
+     cAction.Width= 1280;
+     cAction.Height= 1024;
+     cUI.Width=1280;
+     cUI.Height=1024;*/
     var ctxGeo = cGeo.getContext('2d');
     var ctxAction = cAction.getContext('2d');
     var ctxUI = cUI.getContext('2d');
+
     /*
-    ctxGeo.scale(1,1);
-    ctxAction.scale(1,1);
-    ctxUI.scale(1,1);
-    */
+     ctxGeo.scale(1,1);
+     ctxAction.scale(1,1);
+     ctxUI.scale(1,1);
+     */
 
     var intro_loop = new Howl({
-        src: ['audio/intro_loop.mp3','audio/intro_loop.ogg'],
+        src: ['audio/intro_loop.mp3', 'audio/intro_loop.ogg'],
         autoplay: false,
         loop: true,
         volume: 0.8
     });
 
 
-
     //TODO: track game states.
-    var gameState = function(){
+    var gameState = function () {
         this.init = false;
         this.loading = false;
         this.startScreen = false;
@@ -68,56 +68,75 @@ var Engine = (function(global) {
     function setGameState(setting) {
         for (var i in gameState) {
             if (gameState.hasOwnProperty(i)) {
-                if(gameState[i]===setting) {
+                if (gameState[i] === setting) {
                     gameState[i] = true
-                }else{
+                } else {
                     gameState[i] = false
                 }
             }
         }
     }
 
-    //window.addEventListener('resize', resizeCanvas, false);
-    //TODO: Handle change in device orientation;
-    //window.addEventListener('orientationchange', resizeCanvas, false);
+    window.addEventListener('resize', resizeCanvas, false);
+    window.addEventListener('orientationChange', resizeCanvas, false);
 
 
-    function drawMap(layer,ctxGeo){
+    function drawMap(layer, ctxGeo) {
         ctxGeo.clearRect(0, 0, ctxGeo.canvas.width, ctxGeo.canvas.height);
-        map._drawLayer(layer,ctxGeo);
+        map._drawLayer(layer, ctxGeo);
     }
-    function drawAction(layer,ctxAction){
+
+    function drawAction(layer, ctxAction) {
         ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
-        map._drawLayer(layer,ctxAction);
+        map._drawLayer(layer, ctxAction);
     }
 
-/*
-    function resizeCanvas(){
-        var resX = Math.floor(window.innerWidth);
-        var resY = Math.floor(window.innerHeight);
 
-        select case resX {
+    function resizeCanvas() {
+        var worldView = document.getElementById('worldView');
 
+        var aspectRatio = 4 / 3;
+
+        var newWidth = window.innerWidth;
+        var newHeight = window.innerHeight;
+
+        var newAspectRatio = newWidth / newHeight;
+
+        if (newAspectRatio > aspectRatio) {
+            newWidth = newHeight * aspectRatio;
+            worldView.style.height = newHeight + 'px';
+            worldView.style.width = newWidth + 'px';
+        } else {
+            newHeight = newWidth / aspectRatio;
+            worldView.style.width = newWidth + 'px';
+            worldView.style.height = newHeight + 'px';
         }
 
-        cGeo.width = resX;
-        cGeo.height = resY;
-        cAction.width = resX;
-        cAction.height = resY;
-        cUI.width = resX;
-        cUI.height = resY;
+        worldView.style.marginTop = (-newHeight / 2) + 'px';
+        worldView.style.marginLeft = (-newWidth / 2) + 'px';
 
-        var scaleX =(cGeo.width/origCanvasWidth);
-        var scaleY =(cGeo.height/origCanvasHeight);
+        var cGeoResize = doc.getElementById('cGeo');
+        var cActionResize = doc.getElementById('cAction');
+        var cUIResize = doc.getElementById('cUI');
 
-        ctxGeo.scale(scaleX,scaleY);
-        ctxAction.scale(scaleX,scaleY);
-        ctxUI.scale(scaleX,scaleY);
+        cGeoResize.width = newWidth;
+        cGeoResize.height = newHeight;
+        cActionResize.width = newWidth;
+        cActionResize.height = newHeight;
+        cUIResize.width = newWidth;
+        cUIResize.height = newHeight;
 
-        drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
-    }
-*/
+        var scaleRatio = (newWidth/400)*.30;
 
+        var ctxGeoResize = cGeoResize.getContext("2d");
+        var ctxActionResize = cActionResize.getContext("2d");
+        var ctxUIResize = cUIResize.getContext("2d");
+
+        ctxGeoResize.scale(scaleRatio,scaleRatio);
+        ctxActionResize.scale(scaleRatio,scaleRatio);
+        ctxUIResize.scale(scaleRatio,scaleRatio);
+
+}
 
 
     /* This function serves as the kickoff point for the game loop itself
