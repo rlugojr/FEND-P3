@@ -1,4 +1,11 @@
+/*font-family: 'Black Ops One', cursive;
+font-family: 'Press Start 2P', monospace;;
+font-family: 'Architects Daughter', cursive;
+font-family: 'VT323', ;
+*/
+
 body {
+    font-family: 'Press Start 2P', monospace;;
     overflow: hidden;
     margin:0;
     padding: 0;
