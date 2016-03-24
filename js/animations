@@ -1,0 +1,142 @@
+/**
+ * Created by rlugojr on 3/23/2016.
+ */
+/**
+ A simple animation object.
+ */
+function AnimationData(frames, options) {
+    this.frames = frames || [{ x: 0, y: 0, w: 0, h: 0, length: 0 }];
+    this.options = options || {
+            repeats: false,
+            keyframe: 0
+        };
+}
+
+/**
+ Each object would have one of these to play any animation back.
+ */
+function AnimationPlayer(animation) {
+    var ani = animation || new AnimationData();
+    this.length = 0;
+    this.frame = undefined;
+    this.index = 0;
+    this.elapsed = 0;
+
+    this.setAnimation(ani);
+    this.reset();
+}
+
+AnimationPlayer.prototype.reset = function() {
+    this.elapsed = 0;
+    this.index = 0;
+    this.frame = this.animation.frames[this.index];
+};
+
+AnimationPlayer.prototype.update = function(dt) {
+    this.elapsed = this.elapsed + dt;
+
+    if(this.elapsed >= this.frame.length) {
+        this.index++;
+        this.elapsed = this.elapsed - this.frame.length;
+    }
+
+    if(this.index >= this.length) {
+        if(this.animation.options.repeats) {
+            this.index = this.animation.options.keyframe;
+        } else {
+            this.index--;
+        }
+    }
+
+    this.frame = this.animation.frames[this.index];
+};
+
+AnimationPlayer.prototype.setAnimation = function(animation, reset) {
+    this.animation = animation;
+    this.length = this.animation.frames.length;
+};
+
+var explodeFrames = [
+    {
+        "frame": {"x":656,"y":33,"w":17,"h":16,"length":1}
+    },
+    {
+        "frame": {"x":687,"y":1,"w":26,"h":25,"length":1}
+    },
+    {
+        "frame": {"x":656,"y":1,"w":30,"h":29,"length":1}
+    },
+    {
+        "frame": {"x":620,"y":1,"w":35,"h":34,"length":1}
+    },
+    {
+        "frame": {"x":581,"y":1,"w":38,"h":37,"length":1}
+    },
+    {
+        "frame": {"x":537,"y":1,"w":43,"h":42,"length":1}
+    },
+    {
+        "frame": {"x":491,"y":1,"w":44,"h":46,"length":1}
+    },
+    {
+        "frame": {"x":442,"y":1,"w":48,"h":47,"length":1}
+    },
+    {
+        "frame": {"x":390,"y":1,"w":50,"h":50,"length":1}
+    },
+    {
+        "frame": {"x":228,"y":1,"w":52,"h":50,"length":1}
+    },
+    {
+        "frame": {"x":282,"y":1,"w":52,"h":50,"length":1}
+    },
+    {
+        "frame": {"x":58,"y":1,"w":52,"h":51,"length":1}
+    },
+    {
+        "frame": {"x":1,"y":1,"w":51,"h":55,"length":1}
+    },
+    {
+        "frame": {"x":112,"y":1,"w":50,"h":57,"length":1}
+    },
+    {
+        "frame": {"x":171,"y":1,"w":50,"h":55,"length":1}
+    },
+    {
+        "frame": {"x":336,"y":1,"w":50,"h":52,"length":1}
+    },
+    {
+        repeats: true,
+        keyframe: 0
+    }
+];
+
+canvas=document.getElementById('canvas');
+ctx = canvas.getContext('2d');
+
+var image = new Image();
+image.src = 'explosion.png';
+
+var explosion = new AnimationData(explodeFrames);
+var animExplosion = new AnimationPlayer(explosion);
+var  lastTime = Date.now();
+
+// Looks like we're good to go!
+if(ctx !== null) {
+    image.addEventListener('load', function () {
+        setInterval(function() {
+            ctx.clearRect(0, 0, 320, 240);
+            animExplosion.update(16.666);
+            ctx.drawImage(
+                image,
+                animExplosion.frame.x,
+                animExplosion.frame.y,
+                animExplosion.frame.w,
+                animExplosion.frame.h,
+                0,
+                0,
+                animExplosion.frame.w,
+                animExplosion.frame.h);
+        }, 16.6666);
+    }, false);
+}
