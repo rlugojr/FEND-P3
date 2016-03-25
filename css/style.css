@@ -35,8 +35,12 @@ canvas {
     z-index: 1;
 }
 
-#cUI{
+#cScenery{
     z-index: 2;
+}
+
+#cUI{
+    z-index: 3;
     /*background-color: black;*/
 }
 

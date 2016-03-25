@@ -198,7 +198,21 @@ var App = (function(global){
     Enemy.prototype.constructor = Enemy;
     Enemy.prototype.name = "";
     Enemy.prototype.level = "";
-    Enemy.prototype.attackPattern = "";
+    Enemy.prototype.update = function(dt){
+        switch(this.attackPattern) {
+            case "sittingDuck":
+                //do nothing, just sit there.
+                break;
+            case "barelySane-ders":
+
+                break;
+            default:
+                break;
+        }
+
+
+
+    };
     //TODO: Override "update" method to use attackPatterns to determine movement.
 
 
@@ -289,12 +303,12 @@ var App = (function(global){
 
     //create enemy objects
     var enemyList =[
-        {"name" : "Carson","imgSrc" : "images/enemies/carson.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "sittingDuck","level":1},
-        {"name" : "Cruz","imgSrc" : "images/enemies/cruz.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "gangUp","level":3},
-        {"name" : "Hillary","imgSrc" : "images/enemies/hillary.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "barkingMad","level":5},
-        {"name" : "Romney","imgSrc" : "images/enemies/romney.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "usurper","level":4},
-        {"name" : "Rubio","imgSrc" : "images/enemies/rubio.png","x" : 0,"y" : 0,"width" : 56.7,"height" : 96,"attackPattern" : "gangUp","level":3},
-        {"name" : "sanders","imgSrc" : "images/enemies/sanders.png","x" : 0,"y" : 0,"width" : 100.5,"height" : 85.93,"attackPattern" : "barely","level":2}
+        {"name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,"attackPattern" : "lameDuck","level":1},
+        {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 640,"y" : 250,"width" : 65,"height" : 110,"attackPattern" : "headHunt","level":3},
+        {"name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,"attackPattern" : "barkingMad","level":5},
+        {"name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,"attackPattern" : "usurper","level":4},
+        {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 640,"y" : 640,"width" : 65,"height" : 110,"attackPattern" : "headHunt","level":3},
+        {"name" : "Lenin Marx","imgSrc" : "images/enemies/sanders.png","x" : 640,"y" : 900,"width" : 65,"height" : 110,"attackPattern" : "barelySane-ders","level":2}
     ];
     //create enemy array
     //create an instance of Enemy to run in the objectFactory
@@ -308,7 +322,7 @@ var App = (function(global){
 
 
     // Place the player object in a variable called player
-    var player = new Player('The Donald','images/player/trump.png',92,518,65,110);  //set initial y-pos so feet are center tile.
+    var player = new Player('The Donald','images/player/trump.png',92,518,81,138);  //set initial y-pos so feet are center tile.
     //Create inheritance chain through prototype to parent class
     player.prototype = Player.prototype;
     //Set the constructor for this object
@@ -326,7 +340,7 @@ var App = (function(global){
         {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5},
         {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4},
         {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2},
-        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":4}
+        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":3}
     ];
 
 

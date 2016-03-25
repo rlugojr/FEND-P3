@@ -26,24 +26,14 @@ var Engine = (function(global) {
         win = global.window,
         cGeo = doc.getElementById('cGeo'),
         cAction = doc.getElementById('cAction'),
+        cScenery= doc.getElementById('cScenery'),
         cUI = doc.getElementById('cUI'),
         lastTime;
 
-    /*cGeo.Width = 1280;
-     cGeo.Height=1024;
-     cAction.Width= 1280;
-     cAction.Height= 1024;
-     cUI.Width=1280;
-     cUI.Height=1024;*/
     var ctxGeo = cGeo.getContext('2d');
     var ctxAction = cAction.getContext('2d');
+    var ctxScenery = cScenery.getContext('2d');
     var ctxUI = cUI.getContext('2d');
-
-    /*
-     ctxGeo.scale(1,1);
-     ctxAction.scale(1,1);
-     ctxUI.scale(1,1);
-     */
 
     var intro_loop = new Howl({
         src: ['audio/intro_loop.mp3', 'audio/intro_loop.ogg'],
@@ -53,29 +43,28 @@ var Engine = (function(global) {
     });
 
 
-    //TODO: track game states.
     var gameState = function () {
-        this.init = false;
-        this.loading = false;
-        this.startScreen = false;
-        this.newGame = false;
-        this.paused = false;
-        this.won = true;
-        this.lost = false;
-        this.reset = false;
+        this.level = {
+            1:"Level 1 : A Lame Duck",
+            2:"Level 2 : Barely Sane-ders",
+            3:"Level 3 : Gang Him Style",
+            4:"Level 4 : Usurp the Throne",
+            5:"level 5 : Barking Mad"
+        };
+        this.currentState = {
+            loading: 'loading',
+            init: 'init',
+            menu: 'menu',
+            running: 'running',
+            paused: 'paused'
+        };
+        this.playerState = {
+            pause:'pause',
+            reset:'reset',
+            won:'won',
+            lost:'lost'}
     };
 
-    function setGameState(setting) {
-        for (var i in gameState) {
-            if (gameState.hasOwnProperty(i)) {
-                if (gameState[i] === setting) {
-                    gameState[i] = true
-                } else {
-                    gameState[i] = false
-                }
-            }
-        }
-    }
 
     window.addEventListener('resize', resizeCanvas, false);
     window.addEventListener('orientationChange', resizeCanvas, false);
@@ -89,6 +78,11 @@ var Engine = (function(global) {
     function drawAction(layer, ctxAction) {
         ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
         map._drawLayer(layer, ctxAction);
+    }
+
+    function drawScenery(layer, ctxScenery) {
+        ctxScenery.clearRect(0, 0, ctxScenery.canvas.width, ctxScenery.canvas.height);
+        map._drawLayer(layer, ctxScenery);
     }
 
 
@@ -117,12 +111,15 @@ var Engine = (function(global) {
 
         var cGeoResize = doc.getElementById('cGeo');
         var cActionResize = doc.getElementById('cAction');
+        var cSceneryResize = doc.getElementById('cScenery');
         var cUIResize = doc.getElementById('cUI');
 
         cGeoResize.width = newWidth;
         cGeoResize.height = newHeight;
         cActionResize.width = newWidth;
         cActionResize.height = newHeight;
+        cSceneryResize.width = newWidth;
+        cSceneryResize.height = newHeight;
         cUIResize.width = newWidth;
         cUIResize.height = newHeight;
 
@@ -130,10 +127,12 @@ var Engine = (function(global) {
 
         var ctxGeoResize = cGeoResize.getContext("2d");
         var ctxActionResize = cActionResize.getContext("2d");
+        var ctxSceneryResize = cSceneryResize.getContext('2d');
         var ctxUIResize = cUIResize.getContext("2d");
 
         ctxGeoResize.scale(scaleRatio,scaleRatio);
         ctxActionResize.scale(scaleRatio,scaleRatio);
+        ctxSceneryResize.scale(scaleRatio,scaleRatio);
         ctxUIResize.scale(scaleRatio,scaleRatio);
 
 }
@@ -152,6 +151,14 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
+        var currEnemy={};
+        var currArtifact = {};
+
+        switch(gameState.level){
+            case 1:
+                currEnemy = allEnemies[];
+                currArtifact = artifacts[];
+        };
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
@@ -180,6 +187,7 @@ var Engine = (function(global) {
 
         reset();
 
+        gameState.level=1;
         lastTime = Date.now();
 
         var game_loop = new Howl({
@@ -217,10 +225,11 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-       /* allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
-        });
-        */
+
+        for (var e=0;e<=allEnemies.length-1;e++) {
+            allEnemies[e].update(dt,map);
+        }
+
         player.update(dt,map);
 
     }
@@ -231,13 +240,18 @@ var Engine = (function(global) {
      * they are flipbooks creating the illusion of animation but in reality
      * they are just drawing the entire screen over and over.
      */
-    function render() {
+    function render(dt) {
+        if ((dt%6000)==0) {
+            drawMap(0, ctxGeo);
+        };
 
-        drawMap(0,ctxGeo);
+        drawAction(1,ctxAction);
 
         renderEntities();
 
-        drawAction(1,ctxAction);
+        drawScenery(2,ctxScenery);
+
+
     }
 
     /* This function is called by the render function and is called on each game
@@ -248,11 +262,12 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        /*allEnemies.forEach(function(enemy) {
-            enemy.render();
-        });
-         */
-        player.render(ctxGeo,true);
+        for (var e=0;e<=allEnemies.length-1;e++) {
+            allEnemies[e].render(ctxAction, true);
+        }
+
+        player.render(ctxAction,true);
+
         //console.log(map.getCol(player.x),map.getRow(player.y))
 
     }
@@ -264,7 +279,8 @@ var Engine = (function(global) {
     function reset() {
         // noop
 
-        //resizeCanvas();
+        gameState.level=1;
+        resizeCanvas();
 
         drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
 
@@ -315,7 +331,8 @@ var Engine = (function(global) {
         'images/enemies/hillary.png',
         'images/enemies/romney.png',
         'images/enemies/rubio.png',
-        'images/enemies/sanders.png'
+        'images/enemies/sanders.png',
+        'images/effects/explosion.png'
 
 
     ]);
@@ -327,5 +344,6 @@ var Engine = (function(global) {
      */
     window.ctxGeo = ctxGeo;
     window.ctxAction = ctxAction;
+    window.ctxScenery = ctxScenery;
     window.ctxUI = ctxUI;
 })(this);
