@@ -65,15 +65,7 @@ var App = (function(global){
     Animate.prototype.direction = 1;
     Animate.prototype.speed = 256;
     Animate.prototype.moved = false;
-    //TODO: method to locate the collision points based on body coordinate and not image boundaries.
-   /*
-    Animate.prototype.updateCollisionOffset = function (){
-        this.offsetTop = this.y; //pixels from top of sprite to character's head
-        this.offsetRight = this.x + this.width; //pixels from left side of sprite to character's rightmost side
-        this.offsetLeft = this.x; //pixels from left side of sprite to character's left-most side
-        this.offsetBottom = this.y + this.height; //pixels from top of sprite to character's feet
-    };
-    */
+
     //method to update the object's location based on current position, velocity and collisions.
     Animate.prototype.update = function (dt) {
         var bUp,bDown,bLeft,bRight;
@@ -197,6 +189,7 @@ var App = (function(global){
     //Set the constructor for this object
     Enemy.prototype.constructor = Enemy;
     Enemy.prototype.name = "";
+    Enemy.prototype.attackPattern='';
     Enemy.prototype.level = "";
     Enemy.prototype.update = function(dt){
         switch(this.attackPattern) {
@@ -204,8 +197,9 @@ var App = (function(global){
                 //do nothing, just sit there.
                 break;
             case "barelySane-ders":
-
+                //TODO: create random pattern for aimless movement with boundary checks
                 break;
+
             default:
                 break;
         }
@@ -303,12 +297,24 @@ var App = (function(global){
 
     //create enemy objects
     var enemyList =[
-        {"name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,"attackPattern" : "lameDuck","level":1},
-        {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 640,"y" : 250,"width" : 65,"height" : 110,"attackPattern" : "headHunt","level":3},
-        {"name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,"attackPattern" : "barkingMad","level":5},
-        {"name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,"attackPattern" : "usurper","level":4},
-        {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 640,"y" : 640,"width" : 65,"height" : 110,"attackPattern" : "headHunt","level":3},
-        {"name" : "Lenin Marx","imgSrc" : "images/enemies/sanders.png","x" : 640,"y" : 900,"width" : 65,"height" : 110,"attackPattern" : "barelySane-ders","level":2}
+        {"name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "attackPattern" : "lameDuck","level":1},
+        {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 640,"y" : 250,"width" : 65,"height" : 110,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "attackPattern" : "GaurdDog","level":3},
+        {"name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "attackPattern" : "barkingMad","level":5},
+        {"name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "attackPattern" : "usurper","level":4},
+        {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 640,"y" : 640,"width" : 65,"height" : 110,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "attackPattern" : "headHunter","level":3},
+        {"name" : "Lenin Marx","imgSrc" : "images/enemies/sanders.png","x" : 640,"y" : 900,"width" : 65,"height" : 110,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "attackPattern" : "barelySane-ders","level":2}
     ];
     //create enemy array
     //create an instance of Enemy to run in the objectFactory
@@ -329,18 +335,33 @@ var App = (function(global){
     player.prototype.constructor = Player;
     //set properties
     player.speed = 1024;
-    //player.update_posParts();
+    player.offsetTop = 8;
+    player.offsetBottom = 1;
+    player.offsetLeft=30;
+    player.offsetRight=26;
 
 
 
     //create artifact objects
     var artifactList =[
-        {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 512,"width" : 50,"height" : 100,"enemyEffected" : "carson","level":1},
-        {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "cruz","level":3},
-        {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5},
-        {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4},
-        {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2},
-        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "rubio","level":3}
+        {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 512,"width" : 50,"height" : 100,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "enemyEffected" : "carson","level":1},
+        {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "enemyEffected" : "cruz","level":3},
+        {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "enemyEffected" : "hillary","level":5},
+        {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "enemyEffected" : "romney","level":4},
+        {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "enemyEffected" : "sanders","level":2},
+        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
+            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "enemyEffected" : "rubio","level":3}
     ];
 
 
