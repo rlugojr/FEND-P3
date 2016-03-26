@@ -20,15 +20,11 @@ var App = (function(global){
     Actor.prototype.y = 0;
     Actor.prototype.width=0;
     Actor.prototype.height=0;
-    Actor.prototype.render = function render(ctx,originFeet){
-        if(originFeet) {
-            ctx.save();
-            ctx.translate(0, -1*this.height);
-        }
+    Actor.prototype.render = function render(ctx){
+        ctx.save();
+        ctx.translate(0, -1*this.height);
         ctx.drawImage(Resources.get(this.imgSrc), this.x, this.y, this.width, this.height);
-
-        if(originFeet) {ctx.restore()}
-
+        ctx.restore()
     };
 
 
@@ -49,7 +45,6 @@ var App = (function(global){
 
 
 
-
     //define class for animated actors
     var Animate = function Animate(name,imgSrc, x, y, width, height) {
         //Ensure that any reference to "this" references the current object and not the prototype
@@ -62,21 +57,21 @@ var App = (function(global){
     //Set the constructor for this object
     Animate.prototype.constructor = Animate;
     //Add any additional properties specific to this object or its children to the prototype.
-    Animate.prototype.posHead = 0; //pixels from top of sprite to character's head
-    Animate.prototype.posRight = 0; //pixels from left side of sprite to character's rightmost side
-    Animate.prototype.posLeft = 0; //pixels from left side of sprite to character's left-tmost side
-    Animate.prototype.posFeet = 0; //pixels from top of sprite to character's feet
+    Animate.prototype.offsetTop = 0; //pixels from top of sprite to character's head
+    Animate.prototype.offsetRight = 0; //pixels from left side of sprite to character's right-most side
+    Animate.prototype.offsetLeft = 0; //pixels from left side of sprite to character's left-most side
+    Animate.prototype.offsetBottom = 0; //pixels from top of sprite to character's feet
     Animate.prototype.axis = 'x';
     Animate.prototype.direction = 1;
     Animate.prototype.speed = 256;
     Animate.prototype.moved = false;
     //TODO: method to locate the collision points based on body coordinate and not image boundaries.
    /*
-    Animate.prototype.update_posParts = function (){
-        this.posHead = this.y; //pixels from top of sprite to character's head
-        this.posRight = this.x + this.width; //pixels from left side of sprite to character's rightmost side
-        this.posLeft = this.x; //pixels from left side of sprite to character's left-most side
-        this.posFeet = this.y + this.height; //pixels from top of sprite to character's feet
+    Animate.prototype.updateCollisionOffset = function (){
+        this.offsetTop = this.y; //pixels from top of sprite to character's head
+        this.offsetRight = this.x + this.width; //pixels from left side of sprite to character's rightmost side
+        this.offsetLeft = this.x; //pixels from left side of sprite to character's left-most side
+        this.offsetBottom = this.y + this.height; //pixels from top of sprite to character's feet
     };
     */
     //method to update the object's location based on current position, velocity and collisions.
@@ -102,7 +97,7 @@ var App = (function(global){
             var tileRight = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x + 64),map.getRow(this.y)))>=0;
 
             //DEBUG: uncomment to debug
-            console.log("Blocks: " + tileUp,tileDown,tileLeft,tileRight);
+            //console.log("Blocks: " + tileUp,tileDown,tileLeft,tileRight);
 
             //get tile boundaries in pixels
             //
@@ -126,17 +121,19 @@ var App = (function(global){
                 //create xDisplace to hold potential new x value while it is tested
                 var xDisplace = this.x + vector;
                 //DEBUG
-                console.log("Displacement: " + xDisplace);
+                //console.log("Displacement: " + xDisplace);
 
                 if (this.direction < 0) {
                     if (tileLeft && (bLeft > xDisplace)) {
-                        console.log("Can't move left")
+                        //DEBUG
+                        //console.log("Can't move left")
                     } else {
                         this.x = xDisplace
                     }
                 } else {
                     if (tileRight && (bRight < xDisplace)) {
-                        console.log("Can't move Right")
+                        //DEBUG
+                        //console.log("Can't move Right")
                     } else {
                         this.x = xDisplace
                     }
@@ -146,17 +143,19 @@ var App = (function(global){
                 //create yDisplace to hold potential new y value while it is tested
                 var yDisplace = this.y + vector;
                 //DEBUG
-                console.log("Displacement: " + yDisplace);
+                //console.log("Displacement: " + yDisplace);
 
                 if (this.direction < 0) {
                     if (tileUp && (bUp > yDisplace)) {
-                        console.log("Can't move up")
+                        //DEBUG
+                        //console.log("Can't move up")
                     } else {
                         this.y = yDisplace
                     }
                 } else {
                     if (tileDown && (bDown < yDisplace)) {
-                        console.log("Can't move down")
+                        //DEBUG
+                        //console.log("Can't move down")
                     } else {
                         this.y = yDisplace
                     }
@@ -167,19 +166,20 @@ var App = (function(global){
         }
     };
     //method to check for collision with opponent.
-    Animate.prototype.enemyCollisionCheck = function (opponent) {
-        if (this.x < opponent.x + opponent.width &&
-            this.x +this.width > opponent.x &&
-            this.y < opponent.y + opponent.height &&
-            this.height + this.y > opponent.y){
+    Animate.prototype.collisionCheck = function (obj) {
+        //DEBUG
+
+        if (this.x < obj.x + obj.width &&
+            this.x +this.width > obj.x &&
+            this.y - this.height < obj.y &&
+            this.y > obj.y - obj.height){
             //DEBUG
             console.log('We have a collision on ' + this.x + ", " + this.y);
-            opponent = null;
-            return true
+            return {collided:true}
         } else {
             //DEBUG
-            console.log("No collision.");
-            return false
+            //console.log("No collision.");
+            return {collided:false}
         }
     };
 
@@ -335,8 +335,8 @@ var App = (function(global){
 
     //create artifact objects
     var artifactList =[
+        {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 512,"width" : 50,"height" : 100,"enemyEffected" : "carson","level":1},
         {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "cruz","level":3},
-        {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "carson","level":1},
         {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "hillary","level":5},
         {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "romney","level":4},
         {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,"enemyEffected" : "sanders","level":2},

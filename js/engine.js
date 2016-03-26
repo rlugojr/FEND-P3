@@ -28,7 +28,9 @@ var Engine = (function(global) {
         cAction = doc.getElementById('cAction'),
         cScenery= doc.getElementById('cScenery'),
         cUI = doc.getElementById('cUI'),
-        lastTime;
+        lastTime,
+        currEnemy=[],
+        currArtifact=[];
 
     var ctxGeo = cGeo.getContext('2d');
     var ctxAction = cAction.getContext('2d');
@@ -151,14 +153,12 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        var currEnemy={};
-        var currArtifact = {};
 
         switch(gameState.level){
             case 1:
-                currEnemy = allEnemies[];
-                currArtifact = artifacts[];
-        };
+                currEnemy = [allEnemies[0]];
+                currArtifact = [artifacts[0]];
+        }
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
@@ -214,7 +214,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -226,11 +226,15 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
 
-        for (var e=0;e<=allEnemies.length-1;e++) {
+        /*for (var e=0;e<=allEnemies.length-1;e++) {
             allEnemies[e].update(dt,map);
+        }*/
+
+        for (var e=0;e<=currEnemy.length-1;e++) {
+            currEnemy[e].update(dt, map)
         }
 
-        player.update(dt,map);
+        player.update(dt,map)
 
     }
 
@@ -241,9 +245,9 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render(dt) {
-        if ((dt%6000)==0) {
+        if ((dt%10000)==0) {
             drawMap(0, ctxGeo);
-        };
+        }
 
         drawAction(1,ctxAction);
 
@@ -262,15 +266,41 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        for (var e=0;e<=allEnemies.length-1;e++) {
+        /*for (var e=0;e<=allEnemies.length-1;e++) {
             allEnemies[e].render(ctxAction, true);
+        }*/
+
+        for (var f=0;f<=currArtifact.length-1;f++) {
+            currArtifact[f].render(ctxAction)
         }
 
-        player.render(ctxAction,true);
+        for (var e=0;e<=currEnemy.length-1;e++) {
+            currEnemy[e].render(ctxAction)
+        }
+
+        player.render(ctxAction);
 
         //console.log(map.getCol(player.x),map.getRow(player.y))
 
     }
+
+    function checkCollisions(){
+        var gotArtifact;
+        var gotHit;
+
+        for (var f=0;f<=currArtifact.length-1;f++) {
+            gotArtifact = player.collisionCheck(currArtifact[f]);
+            //console.log("gotArtifact :" + gotArtifact);
+            if (gotArtifact.collided){console.log("enemy has been destroyed.");break}
+        }
+
+        for (var e=0;e<=currEnemy.length-1;e++) {
+            gotHit= player.collisionCheck(currEnemy[e]);
+            //console.log("gotHit :" + gotHit);
+            if(gotHit.collided){console.log("Player takes damage");break}
+        }
+    }
+
 
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
@@ -280,6 +310,7 @@ var Engine = (function(global) {
         // noop
 
         gameState.level=1;
+
         resizeCanvas();
 
         drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
@@ -346,4 +377,5 @@ var Engine = (function(global) {
     window.ctxAction = ctxAction;
     window.ctxScenery = ctxScenery;
     window.ctxUI = ctxUI;
+
 })(this);
