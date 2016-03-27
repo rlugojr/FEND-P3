@@ -10,6 +10,14 @@ var App = (function(global){
         this.y = y;
         this.width = width;
         this.height = height;
+        this.offsetTop = 0;
+        this.offsetBottom = 0;
+        this.offsetLeft = 0;
+        this.offsetRight = 0;
+        this.boxTop = 0;
+        this.boxBottom = 0;
+        this.boxLeft = 0;
+        this.boxRight = 0;
     };
     //This creates the initial link in the inheritance chain for the canvas object prototypes
     //Set the constructor for this object
@@ -20,12 +28,50 @@ var App = (function(global){
     Actor.prototype.y = 0;
     Actor.prototype.width=0;
     Actor.prototype.height=0;
+    Actor.prototype.offsetTop = 0; //pixels from top of sprite to character's head
+    Actor.prototype.offsetBottom = 0; //pixels from top of sprite to character's feet
+    Actor.prototype.offsetLeft = 0; //pixels from left side of sprite to character's left-most side
+    Actor.prototype.offsetRight = 0; //pixels from left side of sprite to character's right-most side
+    Actor.prototype.boxTop = 0;
+    Actor.prototype.boxBottom = 0;
+    Actor.prototype.boxLeft = 0;
+    Actor.prototype.boxRight = 0;
+
+    Actor.prototype.calcSides = function(){
+        this.boxTop = this.y - (this.height + this.offsetTop);
+        this.boxBottom = this.y - this.offsetBottom;
+        this.boxLeft = this.x  + this.width - this.offsetLeft;
+        this.boxRight = this.x  + this.offsetLeft
+    };
     Actor.prototype.render = function render(ctx){
         ctx.save();
         ctx.translate(0, -1*this.height);
         ctx.drawImage(Resources.get(this.imgSrc), this.x, this.y, this.width, this.height);
+        ctx.restore();
+        //debug hit area
+        ctx.save();
+        ctx.lineWidth = "1";
+        ctx.strokeStyle="red";
+        ctx.strokeRect(this.x + this.offsetRight,this.y - this.offsetBottom,this.width - this.offsetRight - this.offsetLeft,-1*(this.height-this.offsetTop-this.offsetBottom));
         ctx.restore()
     };
+    //method to check for collision with opponent.
+    Actor.prototype.collisionCheck = function (obj) {
+        //DEBUG
+
+        if ((this.boxTop > obj.top || this.boxTop < obj.bottom) &&
+            (this.boxLeft > obj.left || this.boxRight > obj.right)
+        ){
+            //DEBUG
+            console.log('We have a collision.');
+            return {collided:true}
+        } else {
+            //DEBUG
+            //console.log("No collision.");
+            return {collided:false}
+        }
+    };
+
 
 
 
@@ -36,7 +82,7 @@ var App = (function(global){
         //Ensure that any reference to "this" references the current object and not the prototype
         // Actor.call(name, x, y, width, height);
         //add properties specific to Inanimate objects;
-        Actor.call(this,name,imgSrc, x, y, width, height);
+        Actor.call(this,name,imgSrc,x,y,width, height);
     };
     //Create inheritance chain through prototype to base class Actor prototype
     Inanimate.prototype = Object.create(Actor.prototype);
@@ -57,25 +103,10 @@ var App = (function(global){
     //Set the constructor for this object
     Animate.prototype.constructor = Animate;
     //Add any additional properties specific to this object or its children to the prototype.
-    Animate.prototype.offsetTop = 0; //pixels from top of sprite to character's head
-    Animate.prototype.offsetRight = 0; //pixels from left side of sprite to character's right-most side
-    Animate.prototype.offsetLeft = 0; //pixels from left side of sprite to character's left-most side
-    Animate.prototype.offsetBottom = 0; //pixels from top of sprite to character's feet
     Animate.prototype.axis = 'x';
     Animate.prototype.direction = 1;
     Animate.prototype.speed = 256;
     Animate.prototype.moved = false;
-    Animate.protoype.top = 0;
-    Animate.prototype.bottom = 0;
-    Animate.prototype.left = 0;
-    Animate.prototype.right = 0;
-
-    Animate.prototype.calcSides = function(){
-        this.top = this.y - this.height + this.offsetTop;
-        this.bottom = this.y - this.offsetBottom;
-        this.left = this.x  + this.width - this.offsetLeft;
-        this.right = this.x  + this.offsetLeft
-    };
 
     //method to update the object's location based on current position, velocity and collisions.
     Animate.prototype.update = function (dt) {
@@ -168,33 +199,15 @@ var App = (function(global){
             this.moved=false;
         }
     };
-    //method to check for collision with opponent.
-    Animate.prototype.collisionCheck = function (obj) {
-        //DEBUG
-
-
-
-        if ((this.bottom > obj.top || this.top < obj.bottom) &&
-            (this.left > obj.left || this.right > obj.right)
-            ){
-            //DEBUG
-            console.log('We have a collision on ' + this.x + ", " + this.y);
-            return {collided:true}
-        } else {
-            //DEBUG
-            //console.log("No collision.");
-            return {collided:false}
-        }
-    };
 
 
 
 //2ND LEVEL OF INHERITANCE
 
     //define class for enemy - which the player must avoid.  This inherits from Animate.
-    var Enemy = function Enemy(name, imgSrc, x, y, width, height, attackPattern, level){
+    var Enemy = function Enemy(name, imgSrc, x, y, width, height,offsetTop, offsetBottom, offsetLeft, offsetRight, attackPattern, level){
         //Ensure that any reference to "this" references the current object and not the prototype
-        Animate.call(this,name,imgSrc, x, y, width, height);
+        Animate.call(this,name,imgSrc,x,y,width,height,offsetTop,offsetBottom,offsetLeft,offsetRight);
     };
     //Create inheritance chain through prototype to parent class Animate prototype
     Enemy.prototype = Object.create(Animate.prototype);
@@ -258,9 +271,9 @@ var App = (function(global){
 
 
     //artifacts inherits from Inanimate
-    var Artifact = function Artifact(name, imgSrc, x, y, width, height, enemyEffected, level){
+    var Artifact = function Artifact(name, imgSrc, x, y, width, height,offsetTop, offsetBottom, offsetLeft, offsetRight, enemyEffected, level){
         //Ensure that any reference to "this" references the current object and not the prototype
-        Inanimate.call(this,name,imgSrc, x, y, width, height);
+        Inanimate.call(this,name,imgSrc, x, y, width, height,offsetTop, offsetBottom,offsetLeft,offsetRight);
         this.enemyEffected = enemyEffected;
         this.level = level;
     };
@@ -297,6 +310,14 @@ var App = (function(global){
             newObj.y = currItem.y;
             newObj.width = currItem.width;
             newObj.height = currItem.height;
+            newObj.offsetTop = currItem.offsetTop;
+            newObj.offsetBottom = currItem.offsetBottom;
+            newObj.offsetLeft = currItem.offsetLeft;
+            newObj.offsetRight = currItem.offsetRight;
+            newObj.boxTop = currItem.y - currItem.height + currItem.offsetTop;
+            newObj.boxBottom = currItem.y - currItem.offsetBottom;
+            newObj.boxLeft = currItem.x  + currItem.width - currItem.offsetLeft;
+            newObj.boxRight = currItem.x  + currItem.offsetLeft;
             if(newObj.enemyEffected!==undefined){newObj.enemyEffected = currItem.enemyEffected;}
             if(newObj.attackPattern!==undefined){newObj.attackPattern = currItem.attackPattern;}
             newObj.level = currItem.level;
@@ -310,7 +331,7 @@ var App = (function(global){
     //create enemy objects
     var enemyList =[
         {"name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
-            "offsetTop":1,"offsetBottom":10,"offsetLeft":30,"offsetRight":26,
+            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,
             "attackPattern" : "lameDuck","level":1},
         {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 640,"y" : 250,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,
@@ -325,7 +346,7 @@ var App = (function(global){
             "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,
             "attackPattern" : "headHunter","level":3},
         {"name" : "Lenin Marx","imgSrc" : "images/enemies/sanders.png","x" : 640,"y" : 900,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":19,"offsetRight":19,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,
             "attackPattern" : "barelySane-ders","level":2}
     ];
     //create enemy array
@@ -349,8 +370,9 @@ var App = (function(global){
     player.speed = 1024;
     player.offsetTop = 8;
     player.offsetBottom = 1;
-    player.offsetLeft=30;
-    player.offsetRight=26;
+    player.offsetLeft=13;
+    player.offsetRight=20;
+    player.calcSides();
 
 
 
@@ -359,20 +381,20 @@ var App = (function(global){
         {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 512,"width" : 50,"height" : 100,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "carson","level":1},
-        {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
+        {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 540,"y" : 512,"width" : 52,"height" : 30,
             "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
             "enemyEffected" : "cruz","level":3},
-        {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+        {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 512,"y" : 512,"width" : 45,"height" : 75,
+            "offsetTop":55,"offsetBottom":19,"offsetLeft":2,"offsetRight":1,
             "enemyEffected" : "hillary","level":5},
-        {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
-            "offsetTop":50,"offsetBottom":10,"offsetLeft":32,"offsetRight":30,
+        {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 512,"y" : 512,"width" : 50,"height" : 85,
+            "offsetTop":26,"offsetBottom":5,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "romney","level":4},
-        {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
+        {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 512,"y" : 512,"width" : 50,"height" : 85,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "sanders","level":2},
-        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
-            "offsetTop":55,"offsetBottom":10,"offsetLeft":32,"offsetRight":30,
+        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 512,"y" : 512,"width" : 35,"height" : 70,
+            "offsetTop":24,"offsetBottom":5,"offsetLeft":8,"offsetRight":8,
             "enemyEffected" : "rubio","level":3}
     ];
 

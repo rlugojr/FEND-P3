@@ -157,7 +157,7 @@ var Engine = (function(global) {
         switch(gameState.level){
             case 1:
                 currEnemy = [allEnemies[0]];
-                currArtifact = [artifacts[0]];
+                currArtifact = [artifacts[5]];
         }
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
