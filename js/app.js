@@ -65,6 +65,17 @@ var App = (function(global){
     Animate.prototype.direction = 1;
     Animate.prototype.speed = 256;
     Animate.prototype.moved = false;
+    Animate.protoype.top = 0;
+    Animate.prototype.bottom = 0;
+    Animate.prototype.left = 0;
+    Animate.prototype.right = 0;
+
+    Animate.prototype.calcSides = function(){
+        this.top = this.y - this.height + this.offsetTop;
+        this.bottom = this.y - this.offsetBottom;
+        this.left = this.x  + this.width - this.offsetLeft;
+        this.right = this.x  + this.offsetLeft
+    };
 
     //method to update the object's location based on current position, velocity and collisions.
     Animate.prototype.update = function (dt) {
@@ -161,10 +172,11 @@ var App = (function(global){
     Animate.prototype.collisionCheck = function (obj) {
         //DEBUG
 
-        if (this.x < obj.x + obj.width &&
-            this.x +this.width > obj.x &&
-            this.y - this.height < obj.y &&
-            this.y > obj.y - obj.height){
+
+
+        if ((this.bottom > obj.top || this.top < obj.bottom) &&
+            (this.left > obj.left || this.right > obj.right)
+            ){
             //DEBUG
             console.log('We have a collision on ' + this.x + ", " + this.y);
             return {collided:true}
@@ -298,22 +310,22 @@ var App = (function(global){
     //create enemy objects
     var enemyList =[
         {"name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":1,"offsetBottom":10,"offsetLeft":30,"offsetRight":26,
             "attackPattern" : "lameDuck","level":1},
         {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 640,"y" : 250,"width" : 65,"height" : 110,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,
             "attackPattern" : "GaurdDog","level":3},
         {"name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,
             "attackPattern" : "barkingMad","level":5},
         {"name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,
             "attackPattern" : "usurper","level":4},
         {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 640,"y" : 640,"width" : 65,"height" : 110,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,
             "attackPattern" : "headHunter","level":3},
         {"name" : "Lenin Marx","imgSrc" : "images/enemies/sanders.png","x" : 640,"y" : 900,"width" : 65,"height" : 110,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":19,"offsetRight":19,
             "attackPattern" : "barelySane-ders","level":2}
     ];
     //create enemy array
@@ -345,7 +357,7 @@ var App = (function(global){
     //create artifact objects
     var artifactList =[
         {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 512,"width" : 50,"height" : 100,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "carson","level":1},
         {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
             "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
@@ -354,13 +366,13 @@ var App = (function(global){
             "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
             "enemyEffected" : "hillary","level":5},
         {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":50,"offsetBottom":10,"offsetLeft":32,"offsetRight":30,
             "enemyEffected" : "romney","level":4},
         {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":5,"offsetBottom":1,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "sanders","level":2},
         {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 0,"y" : 0,"width" : 52,"height" : 30,
-            "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
+            "offsetTop":55,"offsetBottom":10,"offsetLeft":32,"offsetRight":30,
             "enemyEffected" : "rubio","level":3}
     ];
 
