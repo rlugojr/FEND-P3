@@ -153,7 +153,7 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        gameState.level=2;
+        gameState.level=3;
         switch(gameState.level){
             case 1:
                 currEnemy = [allEnemies[0]];
@@ -162,6 +162,10 @@ var Engine = (function(global) {
             case 2:
                 currEnemy = [allEnemies[5]];
                 currArtifact = [artifacts[4]];
+                break;
+            case 3:
+                currEnemy = [allEnemies[1],allEnemies[4]];
+                currArtifact = [artifacts[1],artifacts[5]];
                 break;
         }
         /* Call our update/render functions, pass along the time delta to

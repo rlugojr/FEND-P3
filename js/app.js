@@ -395,7 +395,7 @@ var App = (function(global){
         {"name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
             "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,
             "attackPattern" : "lameDuck","level":1},
-        {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 640,"y" : 250,"width" : 65,"height" : 110,
+        {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 1152,"y" : 512,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
             "attackPattern" : "GaurdDog","level":3},
         {"name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
@@ -404,7 +404,7 @@ var App = (function(global){
         {"name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":5,
             "attackPattern" : "usurper","level":4},
-        {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 640,"y" : 640,"width" : 65,"height" : 110,
+        {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 576,"y" : 512,"width" : 65,"height" : 110,
             "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":5,
             "attackPattern" : "headHunter","level":3},
         {"name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"attackPattern":"barelySane-ders","level":2}
@@ -439,10 +439,10 @@ var App = (function(global){
 
     //create artifact objects
     var artifactList =[
-        {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 512,"width" : 50,"height" : 100,
+        {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 511,"width" : 50,"height" : 100,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "carson","level":1},
-        {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 540,"y" : 512,"width" : 52,"height" : 30,
+        {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 1152,"y" : 120,"width" : 52,"height" : 30,
             "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
             "enemyEffected" : "cruz","level":3},
         {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 512,"y" : 512,"width" : 45,"height" : 75,
@@ -454,7 +454,7 @@ var App = (function(global){
         {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 780,"y" : 352,"width" : 50,"height" : 85,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "sanders","level":2},
-        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 512,"y" : 512,"width" : 35,"height" : 70,
+        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 1170,"y" : 950,"width" : 35,"height" : 70,
             "offsetTop":24,"offsetBottom":5,"offsetLeft":8,"offsetRight":8,
             "enemyEffected" : "rubio","level":3}
     ];
