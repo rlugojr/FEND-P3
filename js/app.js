@@ -44,32 +44,40 @@ var App = (function(global){
         this.boxRight = this.x  + this.offsetLeft
     };
     Actor.prototype.render = function render(ctx){
+        //draw actor with negative height so that the origin starts at the bottom left of sprite.
         ctx.save();
         ctx.translate(0, -1*this.height);
         ctx.drawImage(Resources.get(this.imgSrc), this.x, this.y, this.width, this.height);
         ctx.restore();
-        //debug hit area
+        //DEBUG
+        //draw bound box hit area
+        /*
         ctx.save();
         ctx.lineWidth = "1";
         ctx.strokeStyle="red";
         ctx.strokeRect(this.x + this.offsetRight,this.y - this.offsetBottom,this.width - this.offsetRight - this.offsetLeft,-1*(this.height-this.offsetTop-this.offsetBottom));
         ctx.restore()
+        */
+    };
+    Actor.prototype.renderText=function renderText(ctx){
+        //display name above sprite
+        ctx.save();
+        ctx.font = "8px";
+        ctx.textAlign='center';
+        ctx.strokeText(this.name,this.x,-1*this.height-5);
+        ctx.restore();
     };
     //method to check for collision with opponent.
     Actor.prototype.collisionCheck = function (obj) {
         //DEBUG
 
-        if ((this.boxTop > obj.top || this.boxTop < obj.bottom) &&
-            (this.boxLeft > obj.left || this.boxRight > obj.right)
-        ){
-            //DEBUG
-            console.log('We have a collision.');
-            return {collided:true}
-        } else {
-            //DEBUG
-            //console.log("No collision.");
-            return {collided:false}
-        }
+        //Define point to check inside of target bound box.
+        return !(
+            ( ( this.y + this.height ) < ( obj.y ) ) ||
+            ( this.y > ( obj.y + obj.height ) ) ||
+            ( ( this.x + obj.width ) < obj.x ) ||
+            ( this.x > ( obj.x + obj.width ) )
+        )
     };
 
 
@@ -222,16 +230,69 @@ var App = (function(global){
                 //do nothing, just sit there.
                 break;
             case "barelySane-ders":
-                //TODO: create random pattern for aimless movement with boundary checks
-                break;
+                var pick;
+                var picked = {};
+                var moves = [{axis:"x",direction:-1},{axis:"x",direction:1},{axis:"y",direction:-1},{axis:"y",direction:1},
+                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:-1},{axis:"x",direction:-1},
+                            {axis:"x",direction:-1},{axis:"y",direction:-1},{axis:"y",direction:-1},{axis:"x",direction:-1},
+                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:1},{axis:"x",direction:1},
+                            {axis:"x",direction:-1},{axis:"x",direction:1},{axis:"y",direction:-1},{axis:"y",direction:1},
+                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:-1},{axis:"x",direction:-1},
+                            {axis:"x",direction:-1},{axis:"y",direction:-1},{axis:"y",direction:-1},{axis:"x",direction:-1},
+                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:1},{axis:"x",direction:1},
+                            {axis:"x",direction:-1},{axis:"x",direction:1},{axis:"y",direction:-1},{axis:"y",direction:1},
+                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:-1},{axis:"x",direction:-1},
+                            {axis:"x",direction:-1},{axis:"y",direction:-1},{axis:"y",direction:-1},{axis:"x",direction:-1},
+                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:1},{axis:"x",direction:1},
+                            {axis:"x",direction:-1},{axis:"x",direction:1},{axis:"y",direction:-1},{axis:"y",direction:1},
+                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:-1},{axis:"x",direction:-1},
+                            {axis:"x",direction:-1},{axis:"y",direction:-1},{axis:"y",direction:-1},{axis:"x",direction:-1},
+                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:1},{axis:"x",direction:1}];
+                var axis;
+                var direction;
+                var vector;
+                var minX=448;
+                var minY=320;
+                var maxX=768;
+                var maxY=640;
+                var inBounds;
 
-            default:
+                this.speed = 20;
+
+                pick = Math.round(Math.random() * (moves.length));
+                //debug
+                //console.log(pick);
+
+                if(pick !== 0){pick = pick - 1}
+                picked = moves[pick];
+                axis = picked.axis;
+                direction = picked.direction;
+                vector = Math.round(this.speed * direction);
+
+                inBounds = false;
+                do{
+                    if (axis === "x") {
+                        if(this.x + vector <= minX){
+                            this.x = minX
+                        }else if(this.x + vector >= maxX){
+                            this.x = maxX
+                        }else {
+                            this.x = this.x + vector;
+                        }
+                    } else if(axis==="y"){
+                        if(this.y + vector <= minY){
+                            this.y = minY
+                        }else if(this.y + vector >= maxY){
+                            this.y = maxY
+                        }else {
+                            this.y = this.y + vector;
+                        }
+                    }
+                }while(inBounds = false);
                 break;
         }
-
-
-
     };
+
     //TODO: Override "update" method to use attackPatterns to determine movement.
 
 
@@ -314,6 +375,7 @@ var App = (function(global){
             newObj.offsetBottom = currItem.offsetBottom;
             newObj.offsetLeft = currItem.offsetLeft;
             newObj.offsetRight = currItem.offsetRight;
+            newObj.speed = currItem.speed;
             newObj.boxTop = currItem.y - currItem.height + currItem.offsetTop;
             newObj.boxBottom = currItem.y - currItem.offsetBottom;
             newObj.boxLeft = currItem.x  + currItem.width - currItem.offsetLeft;
@@ -331,23 +393,21 @@ var App = (function(global){
     //create enemy objects
     var enemyList =[
         {"name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
-            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,
+            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,
             "attackPattern" : "lameDuck","level":1},
         {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 640,"y" : 250,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
             "attackPattern" : "GaurdDog","level":3},
         {"name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
-            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,
+            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":5,
             "attackPattern" : "barkingMad","level":5},
         {"name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":5,
             "attackPattern" : "usurper","level":4},
         {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 640,"y" : 640,"width" : 65,"height" : 110,
-            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,
+            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":5,
             "attackPattern" : "headHunter","level":3},
-        {"name" : "Lenin Marx","imgSrc" : "images/enemies/sanders.png","x" : 640,"y" : 900,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,
-            "attackPattern" : "barelySane-ders","level":2}
+        {"name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"attackPattern":"barelySane-ders","level":2}
     ];
     //create enemy array
     //create an instance of Enemy to run in the objectFactory
@@ -376,6 +436,7 @@ var App = (function(global){
 
 
 
+
     //create artifact objects
     var artifactList =[
         {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 512,"width" : 50,"height" : 100,
@@ -390,7 +451,7 @@ var App = (function(global){
         {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 512,"y" : 512,"width" : 50,"height" : 85,
             "offsetTop":26,"offsetBottom":5,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "romney","level":4},
-        {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 512,"y" : 512,"width" : 50,"height" : 85,
+        {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 780,"y" : 352,"width" : 50,"height" : 85,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "sanders","level":2},
         {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 512,"y" : 512,"width" : 35,"height" : 70,

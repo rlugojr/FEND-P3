@@ -153,11 +153,16 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-
+        gameState.level=2;
         switch(gameState.level){
             case 1:
                 currEnemy = [allEnemies[0]];
-                currArtifact = [artifacts[5]];
+                currArtifact = [artifacts[0]];
+                break;
+            case 2:
+                currEnemy = [allEnemies[5]];
+                currArtifact = [artifacts[4]];
+                break;
         }
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
@@ -245,9 +250,9 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render(dt) {
-        if ((dt%10000)==0) {
+        /*if ((dt%10000)==0) {
             drawMap(0, ctxGeo);
-        }
+        }*/
 
         drawAction(1,ctxAction);
 
@@ -279,6 +284,7 @@ var Engine = (function(global) {
         }
 
         player.render(ctxAction);
+        //player.renderText(ctxUI);
 
         //console.log(map.getCol(player.x),map.getRow(player.y))
 
@@ -291,13 +297,13 @@ var Engine = (function(global) {
         for (var f=0;f<=currArtifact.length-1;f++) {
             gotArtifact = player.collisionCheck(currArtifact[f]);
             //console.log("gotArtifact :" + gotArtifact);
-            if (gotArtifact.collided){console.log("enemy has been destroyed.");break}
+            if (gotArtifact.collided){/*enemy has been destroyed.*/break}
         }
 
         for (var e=0;e<=currEnemy.length-1;e++) {
             gotHit= player.collisionCheck(currEnemy[e]);
             //console.log("gotHit :" + gotHit);
-            if(gotHit.collided){console.log("Player takes damage");break}
+            if(gotHit.collided){/*Player takes damage*/break}
         }
     }
 
