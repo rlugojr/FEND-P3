@@ -47,8 +47,7 @@ var gameMap = (function(global) {
     };
 
     Map.prototype._drawLayer = function (layer) {
-        var cMap;
-        var ctx;
+        var ctxGeo,ctxAction,ctxScenery;
 
         switch (layer) {
             case 0:
@@ -57,7 +56,11 @@ var gameMap = (function(global) {
             case 1:
                 var ctxAction = global.ctxAction;
                 break;
+            case 2:
+                var ctxScenery = global.ctxScenery;
+                break;
         }
+
         for (var c = 0; c <= this.cols - 1; c++) {
             for (var r = 0; r <= this.rows - 1; r++) {
                 var tile = this.getTile(layer, c, r);

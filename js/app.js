@@ -134,8 +134,8 @@ var App = (function(global){
             //Check each possible move for blocked tiles listed in map.blockedTiles.
             //Returns a boolean: "true" = blocked, "false" = walkable.
             var tileUp = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x), map.getRow(this.y - 64)))>=0;
-            var tileDown = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x),map.getRow(this.y + 64)))>=0;
-            var tileLeft = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x - 64),map.getRow(this.y)))>=0;
+            var tileDown = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x),map.getRow(this.y + 5)))>=0;
+            var tileLeft = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x -5),map.getRow(this.y)))>=0;
             var tileRight = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x + 64),map.getRow(this.y)))>=0;
 
             //DEBUG: uncomment to debug
@@ -144,8 +144,8 @@ var App = (function(global){
             //get tile boundaries in pixels
             //
             bUp = 64 + (this.height/2);//Using 1/2 of sprite's height allows the sprite to move to the top unblocked
-            bDown = 1024 - (this.height/2);//row and also have half their body over the top or under the bottom bounds for 3d-ish effect.
-            bLeft = 64;
+            bDown =1088 - (this.height/2);//row and also have half their body over the top or under the bottom bounds for 3d-ish effect.
+            bLeft =64;
             bRight= map.maxX - 64 - (this.width);
 
             //DEBUG: uncomment to debug
@@ -166,17 +166,22 @@ var App = (function(global){
                 //console.log("Displacement: " + xDisplace);
 
                 if (this.direction < 0) {
-                    if (tileLeft && (bLeft > xDisplace)) {
+                    if (bLeft > xDisplace){
+                        this.x = bLeft
+                    }else if(tileLeft){
                         //DEBUG
-                        //console.log("Can't move left")
+                       // console.log("Can't move left")
                     } else {
                         this.x = xDisplace
                     }
                 } else {
-                    if (tileRight && (bRight < xDisplace)) {
+                    if (bRight < xDisplace) {
                         //DEBUG
-                        //console.log("Can't move Right")
-                    } else {
+                        this.x = bRight
+                    }else if(tileRight){
+                        //can't move
+                    }
+                     else {
                         this.x = xDisplace
                     }
                 }
@@ -188,16 +193,20 @@ var App = (function(global){
                 //console.log("Displacement: " + yDisplace);
 
                 if (this.direction < 0) {
-                    if (tileUp && (bUp > yDisplace)) {
-                        //DEBUG
+                    if (bUp > yDisplace) {
+                        this.y = bUp
+                    }else if(tileUp){
+                    //DEBUG
                         //console.log("Can't move up")
                     } else {
                         this.y = yDisplace
                     }
                 } else {
-                    if (tileDown && (bDown < yDisplace)) {
+                    if (bDown < yDisplace) {
                         //DEBUG
-                        //console.log("Can't move down")
+                        this.y = bDown
+                    }else if(tileDown){
+                      //console.log("Can't move down')
                     } else {
                         this.y = yDisplace
                     }
