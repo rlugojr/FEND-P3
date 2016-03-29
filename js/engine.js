@@ -63,8 +63,12 @@ var Engine = (function(global) {
         this.playerState = {
             pause:'pause',
             reset:'reset',
-            won:'won',
-            lost:'lost'}
+            beatLevel:'beatLevel',
+            lostLevel:'lostLevel',
+            wonGame:'wonGame',
+            lostGame:'lostGame',
+            gameOver:'gameOver'
+        }
     };
 
 
@@ -153,24 +157,6 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        gameState.level=3;
-        switch(gameState.level){
-            case 1:
-                currEnemy = [allEnemies[0]];
-                currArtifact = [artifacts[0]];
-                break;
-            case 2:
-                currEnemy = [allEnemies[5]];
-                currArtifact = [artifacts[4]];
-                break;
-            case 3:
-                currEnemy = [allEnemies[1],allEnemies[4]];
-                currArtifact = [artifacts[1],artifacts[5]];
-                break;
-        }
-        /* Call our update/render functions, pass along the time delta to
-         * our update function since it may be used for smooth animation.
-         */
         update(dt);
         render();
 
@@ -196,8 +182,11 @@ var Engine = (function(global) {
 
         reset();
 
-        gameState.level=1;
         lastTime = Date.now();
+
+        gameState.level=3;
+
+        levelSetup();
 
         var game_loop = new Howl({
             src: ['audio/gameplay_loop.mp3','audio/gameplay_loop.ogg'],
@@ -210,6 +199,15 @@ var Engine = (function(global) {
         });
 
         main();
+    }
+
+    function levelSetup(){
+        /* This function retrieves the enemy and artifact objects
+           and places prepares them to be updated and rendered.
+         */
+
+        currEnemy = level[gameState.level][0];
+        currArtifact = level[gameState.level][1];
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -254,9 +252,14 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render(dt) {
-        /*if ((dt%10000)==0) {
-            drawMap(0, ctxGeo);
-        }*/
+        /* DrawMap has been commented out while I test if there is a need to update it
+            during gameplay.
+
+            if ((dt%10000)==0) {
+                drawMap(0, ctxGeo);
+            }
+
+        */
 
         drawAction(1,ctxAction);
 

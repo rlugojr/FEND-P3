@@ -143,10 +143,10 @@ var App = (function(global){
 
             //get tile boundaries in pixels
             //
-            bUp = (map.getRow(this.y) * 64) + (this.height/2);//Using 1/2 of sprite's height allows the sprite to move to the top unblocked
-            bDown = (map.getRow(this.y) * 64) + (this.height/2);//row and also have half their body over the top or under the bottom bounds for 3d-ish effect.
-            bLeft = (map.getCol(this.x) * 64);
-            bRight= bLeft + 64 - 65;
+            bUp = 64 + (this.height/2);//Using 1/2 of sprite's height allows the sprite to move to the top unblocked
+            bDown = 1024 - (this.height/2);//row and also have half their body over the top or under the bottom bounds for 3d-ish effect.
+            bLeft = 64;
+            bRight= map.maxX - 64 - (this.width);
 
             //DEBUG: uncomment to debug
             //console.log("bUp: " + bUp);
@@ -290,7 +290,20 @@ var App = (function(global){
                     }
                 }while(inBounds = false);
                 break;
+            case "guardDog":{
+                var minY = 64,
+                    midY = 512,
+                    maxY = map.maxY -64
+
+                //mirror player up and down but stay in back to guard the items
+                //while lil Rubio headhunts.
+
+                this.y = player.y
+
+
+            }
         }
+
     };
 
     //TODO: Override "update" method to use attackPatterns to determine movement.
@@ -397,7 +410,7 @@ var App = (function(global){
             "attackPattern" : "lameDuck","level":1},
         {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 1152,"y" : 512,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
-            "attackPattern" : "GaurdDog","level":3},
+            "attackPattern" : "guardDog","level":3},
         {"name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
             "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":5,
             "attackPattern" : "barkingMad","level":5},
@@ -418,23 +431,6 @@ var App = (function(global){
     //use array to hold all artifacts created through the factory method.
     // Place all enemy objects in an array called allEnemies
     var allEnemies = objectFactory(enemyList,enemy);
-
-
-    // Place the player object in a variable called player
-    var player = new Player('The Donald','images/player/trump.png',92,518,81,138);  //set initial y-pos so feet are center tile.
-    //Create inheritance chain through prototype to parent class
-    player.prototype = Player.prototype;
-    //Set the constructor for this object
-    player.prototype.constructor = Player;
-    //set properties
-    player.speed = 1024;
-    player.offsetTop = 8;
-    player.offsetBottom = 1;
-    player.offsetLeft=13;
-    player.offsetRight=20;
-    player.calcSides();
-
-
 
 
     //create artifact objects
@@ -470,6 +466,42 @@ var App = (function(global){
     //use array to hold all artifacts created through the factory method.
    var artifacts = objectFactory(artifactList,artifact);
 
+    //create array to hold artifacts and enemies per level
+    var lvlEnemies =[],lvlArtifacts=[];
+    var level = [];
+
+    //No Level #0 so fill the first element to prevent errors.
+    level.push(["lvlEnemies","lvlArtifacts"])
+
+    //Populate the levels.
+    for(var lvl=1 ; lvl <= Math.max(allEnemies.length, artifacts.length)-1; lvl++){
+        lvlEnemies =[];
+        lvlArtifacts=[];
+
+        lvlEnemies = allEnemies.filter(function(item) {
+            return item.level === lvl
+        });
+        lvlArtifacts = artifacts.filter(function(item){
+            return item.level === lvl
+        });
+        level.push([lvlEnemies,lvlArtifacts])
+    }
+
+    // Place the player object in a variable called player
+    var player = new Player('The Donald','images/player/trump.png',92,518,81,138);  //set initial y-pos so feet are center tile.
+    //Create inheritance chain through prototype to parent class
+    player.prototype = Player.prototype;
+    //Set the constructor for this object
+    player.prototype.constructor = Player;
+    //set properties
+    player.speed = 1024;
+    player.offsetTop = 8;
+    player.offsetBottom = 1;
+    player.offsetLeft=13;
+    player.offsetRight=20;
+    player.calcSides();
+
+
     // This listens for key presses and sends the keys to your
     // Player.handleInput() method.
     window.addEventListener('keydown', function(e) {
@@ -496,5 +528,8 @@ var App = (function(global){
     global.player = player;
     global.artifacts = artifacts;
     global.allEnemies = allEnemies;
+    global.level = level;
+    global.lvlEnemies = lvlEnemies;
+    global.lvlArtifacts = lvlArtifacts;
 
 })(this);
