@@ -15,21 +15,18 @@ var gameScenes = (function(global) {
      ];
 
 
-     var playIntro = function playIntro(e) {
+     var playIntro = function playIntro() {
          var cUI = document.getElementById('cUI');
          var ctxUI = cUI.getContext('2d');
          for(var i=0;i<introScenes.length;i++){
-             for(var j=0;j<introScenes[i].length;j++) {
+             do {
+                 ctxUI.drawImage(Resources.get(introScenes[i][0]),0,0);
+                 if (dt%5000 ===0) {
+                     exitLoop = true
+                 }
+             } while (exitLoop = false);
 
-                 do {
-                     ctxUI.drawImage(introScenes[i][j],0,0);
-                     if (e.keyCode === 32) {
-                         exitLoop = true
-                     }
-                 } while (exitLoop = false);
-
-                 exitLoop = false;
-             }
+             exitLoop = false;
          }
      };
 
@@ -45,5 +42,6 @@ var gameScenes = (function(global) {
         playIntro(allowedKeys[e.keyCode]);
     });
 
+    global.playIntro = playIntro()
 
 })(this);

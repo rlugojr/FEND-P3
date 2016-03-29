@@ -129,19 +129,38 @@ var Engine = (function(global) {
         cUIResize.width = newWidth;
         cUIResize.height = newHeight;
 
-        var scaleRatio = (newWidth/400)*.30;
+        var scaleRatio = (newWidth / 400) * .30;
 
         var ctxGeoResize = cGeoResize.getContext("2d");
         var ctxActionResize = cActionResize.getContext("2d");
         var ctxSceneryResize = cSceneryResize.getContext('2d');
         var ctxUIResize = cUIResize.getContext("2d");
 
-        ctxGeoResize.scale(scaleRatio,scaleRatio);
-        ctxActionResize.scale(scaleRatio,scaleRatio);
-        ctxSceneryResize.scale(scaleRatio,scaleRatio);
-        ctxUIResize.scale(scaleRatio,scaleRatio);
+        ctxGeoResize.scale(scaleRatio, scaleRatio);
+        ctxActionResize.scale(scaleRatio, scaleRatio);
+        ctxSceneryResize.scale(scaleRatio, scaleRatio);
+        ctxUIResize.scale(scaleRatio, scaleRatio);
+    }
 
-}
+        function playIntro() {
+            var introScenes = [
+                ["images/intro/intro_0.png","caption text"],
+                ["images/intro/intro_1.png","caption text"],
+                ["images/intro/intro_2.png","caption text"],
+                ["images/intro/intro_3.png","caption text"],
+                ["images/intro/intro_4.png","caption text"],
+                ["images/intro/intro_5.png","caption text"],
+                ["images/intro/start_screen.png","caption text"]];
+
+            for(var i=0;i < introScenes.length-1 ;i++) {
+                var wait=0;
+                ctxUI.drawImage(Resources.get(introScenes[i][0]), 0, 0);
+                do {
+                    wait = wait + 1
+                } while (wait < 5000)
+            }
+        }
+
 
 
     /* This function serves as the kickoff point for the game loop itself
@@ -178,7 +197,7 @@ var Engine = (function(global) {
     function init() {
 
         //setGameState('init');
-        //playIntro(e);
+        playIntro();
 
         reset();
 

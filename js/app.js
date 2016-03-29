@@ -1,6 +1,8 @@
 var App = (function(global){
 
     "use strict";
+
+
 //BASE CLASS DEFINITION
     //define base object "actor", with common methods and properties, used by all character objects for inheritance
     var Actor = function Actor(name,imgSrc, x, y, width, height) {
@@ -233,86 +235,90 @@ var App = (function(global){
     Enemy.prototype.name = "";
     Enemy.prototype.attackPattern='';
     Enemy.prototype.level = "";
-    Enemy.prototype.update = function(dt){
-        switch(this.attackPattern) {
+    Enemy.prototype.update = function(dt) {
+        switch (this.attackPattern) {
             case "sittingDuck":
                 //do nothing, just sit there.
                 break;
             case "barelySane-ders":
-                var pick;
-                var picked = {};
-                var moves = [{axis:"x",direction:-1},{axis:"x",direction:1},{axis:"y",direction:-1},{axis:"y",direction:1},
-                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:-1},{axis:"x",direction:-1},
-                            {axis:"x",direction:-1},{axis:"y",direction:-1},{axis:"y",direction:-1},{axis:"x",direction:-1},
-                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:1},{axis:"x",direction:1},
-                            {axis:"x",direction:-1},{axis:"x",direction:1},{axis:"y",direction:-1},{axis:"y",direction:1},
-                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:-1},{axis:"x",direction:-1},
-                            {axis:"x",direction:-1},{axis:"y",direction:-1},{axis:"y",direction:-1},{axis:"x",direction:-1},
-                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:1},{axis:"x",direction:1},
-                            {axis:"x",direction:-1},{axis:"x",direction:1},{axis:"y",direction:-1},{axis:"y",direction:1},
-                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:-1},{axis:"x",direction:-1},
-                            {axis:"x",direction:-1},{axis:"y",direction:-1},{axis:"y",direction:-1},{axis:"x",direction:-1},
-                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:1},{axis:"x",direction:1},
-                            {axis:"x",direction:-1},{axis:"x",direction:1},{axis:"y",direction:-1},{axis:"y",direction:1},
-                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:-1},{axis:"x",direction:-1},
-                            {axis:"x",direction:-1},{axis:"y",direction:-1},{axis:"y",direction:-1},{axis:"x",direction:-1},
-                            {axis:"x",direction:1},{axis:"y",direction:1},{axis:"y",direction:1},{axis:"x",direction:1}];
-                var axis;
-                var direction;
-                var vector;
-                var minX=448;
-                var minY=320;
-                var maxX=768;
-                var maxY=640;
-                var inBounds;
-
-                this.speed = 20;
-
-                pick = Math.round(Math.random() * (moves.length));
-                //debug
-                //console.log(pick);
-
-                if(pick !== 0){pick = pick - 1}
-                picked = moves[pick];
-                axis = picked.axis;
-                direction = picked.direction;
-                vector = Math.round(this.speed * direction);
-
-                inBounds = false;
-                do{
-                    if (axis === "x") {
-                        if(this.x + vector <= minX){
-                            this.x = minX
-                        }else if(this.x + vector >= maxX){
-                            this.x = maxX
-                        }else {
-                            this.x = this.x + vector;
-                        }
-                    } else if(axis==="y"){
-                        if(this.y + vector <= minY){
-                            this.y = minY
-                        }else if(this.y + vector >= maxY){
-                            this.y = maxY
-                        }else {
-                            this.y = this.y + vector;
-                        }
-                    }
-                }while(inBounds = false);
+                this.barelysaneders();
                 break;
-            case "guardDog":{
-                var minY = 64,
-                    midY = 512,
-                    maxY = map.maxY -64
-
-                //mirror player up and down but stay in back to guard the items
-                //while lil Rubio headhunts.
-
-                this.y = player.y
-
-
-            }
+            case "guardDog":
+                this.guardDog();
+                break;
         }
+    };
 
+    Enemy.prototype.barelysaneders = function() {
+        var pick;
+        var picked = {};
+        var moves = [{axis: "x", direction: -1}, {axis: "x", direction: 1}, {axis: "y", direction: -1}, {axis: "y",direction: 1},
+                    {axis: "x", direction: 1}, {axis: "y", direction: 1}, {axis: "y", direction: -1}, {axis: "x",direction: -1},{axis: "x", direction: -1},
+                    {axis: "y", direction: -1}, {axis: "y", direction: -1}, {axis: "x",direction: -1},{axis: "x", direction: 1}, {axis: "y", direction: 1},
+                    {axis: "y", direction: 1}, {axis: "x", direction: 1},{axis: "x", direction: -1}, {axis: "x", direction: 1}, {axis: "y", direction: -1},
+                    {axis: "y",direction: 1}, {axis: "x", direction: 1}, {axis: "y", direction: 1}, {axis: "y", direction: -1}, {axis: "x",direction: -1},
+                    {axis: "x", direction: -1}, {axis: "y", direction: -1}, {axis: "y", direction: -1}, {axis: "x", direction: -1},
+                    {axis: "x", direction: 1}, {axis: "y", direction: 1}, {axis: "y", direction: 1}, {axis: "x", direction: 1},
+                    {axis: "x", direction: -1}, {axis: "x", direction: 1}, {axis: "y", direction: -1}, {axis: "y",direction: 1},
+                    {axis: "x", direction: 1}, {axis: "y", direction: 1}, {axis: "y", direction: -1}, {axis: "x",direction: -1},
+                    {axis: "x", direction: -1}, {axis: "y", direction: -1}, {axis: "y", direction: -1}, {axis: "x",direction: -1},
+                    {axis: "x", direction: 1}, {axis: "y", direction: 1}, {axis: "y", direction: 1}, {axis: "x", direction: 1},
+                    {axis: "x", direction: -1}, {axis: "x", direction: 1}, {axis: "y", direction: -1}, {axis: "y",direction: 1},
+                    {axis: "x", direction: 1}, {axis: "y", direction: 1}, {axis: "y", direction: -1}, {axis: "x",direction: -1},
+                    {axis: "x", direction: -1}, {axis: "y", direction: -1}, {axis: "y", direction: -1}, {axis: "x",direction: -1},
+                    {axis: "x", direction: 1}, {axis: "y", direction: 1}, {axis: "y", direction: 1}, {axis: "x", direction: 1}];
+        var axis;
+        var direction;
+        var vector;
+        var minX = 448;
+        var minY = 320;
+        var maxX = 768;
+        var maxY = 640;
+        var inBounds;
+
+        this.speed = 20;
+
+        pick = Math.round(Math.random() * (moves.length));
+        //debug
+        //console.log(pick);
+
+        if (pick !== 0) {
+            pick = pick - 1
+        }
+        picked = moves[pick];
+        axis = picked.axis;
+        direction = picked.direction;
+        vector = Math.round(this.speed * direction);
+
+        inBounds = false;
+        do {
+            if (axis === "x") {
+                if (this.x + vector <= minX) {
+                    this.x = minX
+                } else if (this.x + vector >= maxX) {
+                    this.x = maxX
+                } else {
+                    this.x = this.x + vector;
+                }
+            } else if (axis === "y") {
+                if (this.y + vector <= minY) {
+                    this.y = minY
+                } else if (this.y + vector >= maxY) {
+                    this.y = maxY
+                } else {
+                    this.y = this.y + vector;
+                }
+            }
+        } while (inBounds = false)
+    };
+
+    Enemy.prototype.guardDog=function(){
+        var gdMinY = 100,
+            gdMidY = 512,
+            gdMaxY = 950;
+        //mirror player up and down but stay in back to guard the items
+        //while lil Rubio headhunts.
+        this.y = player.y
     };
 
     //TODO: Override "update" method to use attackPatterns to determine movement.
