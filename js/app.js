@@ -318,7 +318,9 @@ var App = (function(global){
             gdMaxY = 950;
         //mirror player up and down but stay in back to guard the items
         //while lil Rubio headhunts.
-        this.y = player.y
+        //this.y = player.y
+        this.y = Math.sin(1 * 0.5 * Math.PI);
+        this.x += this.speed;
     };
 
     //TODO: Override "update" method to use attackPatterns to determine movement.

@@ -142,7 +142,7 @@ var Engine = (function(global) {
         ctxUIResize.scale(scaleRatio, scaleRatio);
     }
 
-        function playIntro() {
+        function playIntro(ctxUI) {
             var introScenes = [
                 ["images/intro/intro_0.png","caption text"],
                 ["images/intro/intro_1.png","caption text"],
@@ -152,9 +152,16 @@ var Engine = (function(global) {
                 ["images/intro/intro_5.png","caption text"],
                 ["images/intro/start_screen.png","caption text"]];
 
+            var currImage;
+
             for(var i=0;i < introScenes.length-1 ;i++) {
                 var wait=0;
-                ctxUI.drawImage(Resources.get(introScenes[i][0]), 0, 0);
+
+
+                Resources.get(introScenes[i][0].isReady());
+
+                    currImage= Resources.get(introScenes[i][0]);
+                ctxUI.drawImage(currImage, 0, 0);
                 do {
                     wait = wait + 1
                 } while (wait < 5000)
@@ -197,7 +204,7 @@ var Engine = (function(global) {
     function init() {
 
         //setGameState('init');
-        playIntro();
+        //playIntro(ctxUI);
 
         reset();
 
