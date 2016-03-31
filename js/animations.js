@@ -20,7 +20,7 @@ var Animations = (function(global){
      */
     function AnimationPlayer(animation,x,y) {
         this.animation = animation;
-        this.frame = undefined;
+        this.frame = 0;
         this.index = 0;
         this.elapsed = 0;
         this.x = x;
@@ -70,7 +70,7 @@ var Animations = (function(global){
             this.animation.frame.h);
     };
 
-    var explodeFrames = [
+explodeFrames = [
        {"x":656,"y":33,"w":17,"h":16,"length":1},
        {"x":687,"y":1,"w":26,"h":25,"length":1},
        {"x":656,"y":1,"w":30,"h":29,"length":1},
@@ -95,8 +95,6 @@ var Animations = (function(global){
 
 
 
-    global.explosion = new AnimationData(explodeFrames,'images/effects/explosion.png');
-    global.newExplosion = AnimationPlayer;
 
 })(this);
 

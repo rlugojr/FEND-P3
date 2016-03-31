@@ -234,6 +234,8 @@ var Engine = (function(global) {
 
         currEnemy = level[gameState.level][0];
         currArtifact = level[gameState.level][1];
+        var explosion = new AnimationData(explodeFrames,'images/effects/explosion.png', {repeats: true,keyframe: 0});
+        var newExplosion = new AnimationPlayer(explosion,512,512);
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -266,6 +268,8 @@ var Engine = (function(global) {
         for (var e=0;e<=currEnemy.length-1;e++) {
             currEnemy[e].update(dt, map)
         }
+
+        newExplosion.update(dt);
 
         player.update(dt,map)
 
@@ -315,6 +319,8 @@ var Engine = (function(global) {
         for (var e=0;e<=currEnemy.length-1;e++) {
             currEnemy[e].render(ctxAction)
         }
+
+        newExplosion.render();
 
         player.render(ctxAction);
         //player.renderText(ctxUI);
