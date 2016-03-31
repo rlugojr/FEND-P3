@@ -145,10 +145,10 @@ var App = (function(global){
 
             //get tile boundaries in pixels
             //
-            bUp = 64 + (this.height/2);//Using 1/2 of sprite's height allows the sprite to move to the top unblocked
+            bUp = 64 + (this.height/8);//Using 1/2 of sprite's height allows the sprite to move to the top unblocked
             bDown =1088 - (this.height/2);//row and also have half their body over the top or under the bottom bounds for 3d-ish effect.
             bLeft =64;
-            bRight= map.maxX - 64 - (this.width);
+            bRight= map.maxX - 64;
 
             //DEBUG: uncomment to debug
             //console.log("bUp: " + bUp);
@@ -235,16 +235,20 @@ var App = (function(global){
     Enemy.prototype.name = "";
     Enemy.prototype.attackPattern='';
     Enemy.prototype.level = "";
+    Enemy.prototype.tickTock = 0;
     Enemy.prototype.update = function(dt) {
         switch (this.attackPattern) {
             case "sittingDuck":
                 //do nothing, just sit there.
                 break;
             case "barelySane-ders":
-                this.barelysaneders();
+                this.barelysaneders(dt);
                 break;
             case "guardDog":
-                this.guardDog();
+                this.guardDog(dt);
+                break;
+            case "headHunter":
+                this.headHunter(dt);
                 break;
         }
     };
@@ -312,15 +316,44 @@ var App = (function(global){
         } while (inBounds = false)
     };
 
-    Enemy.prototype.guardDog=function(){
+    Enemy.prototype.guardDog=function(dt){
         var gdMinY = 100,
             gdMidY = 512,
             gdMaxY = 950;
-        //mirror player up and down but stay in back to guard the items
+        //Enemy flies back and forth but stay in last row to guard the items
         //while lil Rubio headhunts.
-        //this.y = player.y
-        this.y = Math.sin(1 * 0.5 * Math.PI);
-        this.x += this.speed;
+        this.tickTock +=1;
+        this.y  = (450 * Math.sin(this.tickTock * 0.5 * Math.PI/(40*2)))+550
+    };
+
+    Enemy.prototype.headHunter=function(dt){
+        var currX = this.x;
+        var currY = this.y;
+
+        //walks around the center square
+        if(currY === 240){
+            if(currX <=885 && currX !=305){
+                //walk to x=305
+                this.x -= 2
+            }
+        }
+        if(currY == 822){
+            if(currX >=305 && currX != 885){
+                this.x+=2
+            }
+        }
+        if(currX === 305){
+            if(currY >=240 && currY != 822){
+                //walk to x=305
+                this.y += 2
+            }
+        }
+        if(currX === 885){
+            if(currY <=822 && currY != 240){
+                //walk to x=305
+                this.y -= 2
+            }
+        }
     };
 
     //TODO: Override "update" method to use attackPatterns to determine movement.
@@ -434,7 +467,7 @@ var App = (function(global){
         {"name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":5,
             "attackPattern" : "usurper","level":4},
-        {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 576,"y" : 512,"width" : 65,"height" : 110,
+        {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
             "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":5,
             "attackPattern" : "headHunter","level":3},
         {"name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"attackPattern":"barelySane-ders","level":2}
@@ -505,7 +538,7 @@ var App = (function(global){
     }
 
     // Place the player object in a variable called player
-    var player = new Player('The Donald','images/player/trump.png',92,518,81,138);  //set initial y-pos so feet are center tile.
+    var player = new Player('The Donald','images/player/trump.png',92,518,101,171);  //set initial y-pos so feet are center tile.
     //Create inheritance chain through prototype to parent class
     player.prototype = Player.prototype;
     //Set the constructor for this object
