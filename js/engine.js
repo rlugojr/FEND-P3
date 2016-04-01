@@ -234,8 +234,7 @@ var Engine = (function(global) {
 
         currEnemy = level[gameState.level][0];
         currArtifact = level[gameState.level][1];
-        var explosion = new AnimationData(explodeFrames,'images/effects/explosion.png', {repeats: true,keyframe: 0});
-        var newExplosion = new AnimationPlayer(explosion,512,512);
+
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -320,7 +319,7 @@ var Engine = (function(global) {
             currEnemy[e].render(ctxAction)
         }
 
-        newExplosion.render();
+        newExplosion.render(ctxAction);
 
         player.render(ctxAction);
         //player.renderText(ctxUI);
