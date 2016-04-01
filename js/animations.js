@@ -36,6 +36,13 @@ var Animations = (function(global){
         this.frame = this.animation.frames[this.index];
     };
 
+    AnimationPlayer.prototype.nukeTarget = function(obj){
+        this.x = obj.x;
+        this.y = obj.y;
+
+        this.reset()
+    };
+
     AnimationPlayer.prototype.update = function(dt) {
         this.elapsed = this.elapsed + dt;
 
@@ -86,7 +93,7 @@ var Animations = (function(global){
         {"x":336,"y":1,"w":50,"h":52,"length":.1}
     ];
 
-    var explosion = new AnimationData(explodeFrames,'images/effects/explosion.png', {repeats: true,keyframe: 0});
+    var explosion = new AnimationData(explodeFrames,'images/effects/explosion.png', {repeats: false,keyframe: 0});
     var newExplosion = new AnimationPlayer(explosion,512,512);
     newExplosion.prototype = AnimationPlayer.prototype;
     newExplosion.prototype.constructor = AnimationPlayer;
