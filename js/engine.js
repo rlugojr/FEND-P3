@@ -30,7 +30,8 @@ var Engine = (function(global) {
         cUI = doc.getElementById('cUI'),
         lastTime,
         currEnemy=[],
-        currArtifact=[];
+        currArtifact=[],
+        currExplosion = [];
 
     var ctxGeo = cGeo.getContext('2d');
     var ctxAction = cAction.getContext('2d');
@@ -45,7 +46,7 @@ var Engine = (function(global) {
     });
 
 
-    var gameState = function () {
+    var gameState = function gameState() {
         this.level = {
             1:"Level 1 : A Lame Duck",
             2:"Level 2 : Barely Sane-ders",
@@ -53,22 +54,25 @@ var Engine = (function(global) {
             4:"Level 4 : Usurp the Throne",
             5:"level 5 : Barking Mad"
         };
-        this.currentState = {
+        this.currentState ="running";
+        /* values can be:
             loading: 'loading',
             init: 'init',
             menu: 'menu',
             running: 'running',
             paused: 'paused'
-        };
-        this.playerState = {
+        */
+        this.playerState = "inLevel";
+        /*values can be:
             pause:'pause',
             reset:'reset',
+            inLevel:'inLevel'
             beatLevel:'beatLevel',
             lostLevel:'lostLevel',
             wonGame:'wonGame',
             lostGame:'lostGame',
             gameOver:'gameOver'
-        }
+        */
     };
 
 
@@ -142,7 +146,7 @@ var Engine = (function(global) {
         ctxUIResize.scale(scaleRatio, scaleRatio);
     }
 
-        function playIntro(ctxUI) {
+        function playIntro(ctxUI, dt) {
             var introScenes = [
                 ["images/intro/intro_0.png","caption text"],
                 ["images/intro/intro_1.png","caption text"],
@@ -152,19 +156,17 @@ var Engine = (function(global) {
                 ["images/intro/intro_5.png","caption text"],
                 ["images/intro/start_screen.png","caption text"]];
 
-            var currImage;
+            var currImage = new Image();
 
             for(var i=0;i < introScenes.length-1 ;i++) {
-                var wait=0;
 
-
-                Resources.get(introScenes[i][0].isReady());
-
-                    currImage= Resources.get(introScenes[i][0]);
+                currImage= Resources.get(introScenes[i][0]);
                 ctxUI.drawImage(currImage, 0, 0);
+
+                var wait=0;
                 do {
-                    wait = wait + 1
-                } while (wait < 5000)
+                    wait = wait++
+                } while (wait < (dt*5))
             }
         }
 
@@ -183,7 +185,21 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
+
+
         update(dt);
+
+        if(gameState.playerState === 'beatLevel'){
+            if(gameState.level > 5){
+                gameState.playerState = 'wonGame';
+                //exit code for WIN
+            }else {
+                gameState.level++
+            }
+            levelSetup(gameState.level);
+            gameState.playerState= 'inLevel'
+        }
+
         render();
 
         /* Set our lastTime variable which is used to determine the time delta
@@ -210,7 +226,7 @@ var Engine = (function(global) {
 
         lastTime = Date.now();
 
-        gameState.level=3;
+        gameState.level=1;
 
         levelSetup();
 
@@ -234,6 +250,7 @@ var Engine = (function(global) {
 
         currEnemy = level[gameState.level][0];
         currArtifact = level[gameState.level][1];
+        player.startPosition()
 
     }
 
@@ -260,15 +277,20 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
 
-        /*for (var e=0;e<=allEnemies.length-1;e++) {
-            allEnemies[e].update(dt,map);
-        }*/
+        for (var a=0;a<=currArtifact.length-1;a++) {
+            currEnemy[a].update(dt, map)
+        }
 
         for (var e=0;e<=currEnemy.length-1;e++) {
             currEnemy[e].update(dt, map)
         }
 
-        newExplosion.update(dt);
+        for (var d=0;d<=currExplosion.length-1;d++) {
+            if(currExplosion[d].active = true) {
+                currExplosion[d].update(dt, map)
+            }
+        }
+        //newExplosion.update(dt);
 
         player.update(dt,map)
 
@@ -282,13 +304,16 @@ var Engine = (function(global) {
      */
     function render(dt) {
         /* DrawMap has been commented out while I test if there is a need to update it
-            during gameplay.
+            during gameplay.  So far, there hasn't been a need to repaint the Geo layer with the
+            mao tiles so we will keep this commented out until we find a need to enable it again.
 
             if ((dt%10000)==0) {
                 drawMap(0, ctxGeo);
             }
 
         */
+
+        drawMap(0,ctxGeo);
 
         drawAction(1,ctxAction);
 
@@ -311,15 +336,21 @@ var Engine = (function(global) {
             allEnemies[e].render(ctxAction, true);
         }*/
 
-        for (var f=0;f<=currArtifact.length-1;f++) {
-            currArtifact[f].render(ctxAction)
+        for (var a=0;a<=currArtifact.length-1;a++) {
+            currArtifact[a].render(ctxAction)
         }
 
         for (var e=0;e<=currEnemy.length-1;e++) {
             currEnemy[e].render(ctxAction)
         }
 
-        newExplosion.render(ctxAction);
+        for (var x=0;x<=currExplosion.length-1;x++) {
+            if(currExplosion[x].active === true) {
+                currExplosion[x].render(ctxAction)
+            }
+        }
+
+        //newExplosion.render(ctxAction);
 
         player.render(ctxAction);
         //player.renderText(ctxUI);
@@ -335,13 +366,43 @@ var Engine = (function(global) {
         for (var f=0;f<=currArtifact.length-1;f++) {
             gotArtifact = player.collisionCheck(currArtifact[f]);
             //console.log("gotArtifact :" + gotArtifact);
-            if (gotArtifact.collided){/*enemy has been destroyed.*/break}
+            if (gotArtifact) {
+                //debug
+                var target = currArtifact[f].enemyEffected;
+
+                for (var t = 0; t <= currEnemy.length - 1; t++) {
+                    var suspect = currEnemy[t].id;
+                    if (suspect == target) {
+                        var tarX, tarY;
+                        tarX = currEnemy[t].x;
+                        tarY = currEnemy[t].y - currEnemy[t].height;
+
+                        var explode = new newExplosion(tarX,tarY);
+                        explode.prototype = newExplosion.prototype;
+                        explode.prototype.constructor = newExplosion;
+                        explode.reset();
+
+                        currExplosion.push(explode);
+                        currArtifact.splice(f, 1);
+                        currEnemy.splice(t, 1);
+
+                        if (currEnemy.length === 0) {
+                            gameState.playerState = 'beatLevel';
+                            gameState.level = gameState.level++;
+                            break
+                        }
+                    }
+                }
+            }
         }
 
         for (var e=0;e<=currEnemy.length-1;e++) {
-            gotHit= player.collisionCheck(currEnemy[e]);
+            gotHit = player.collisionCheck(currEnemy[e]);
             //console.log("gotHit :" + gotHit);
-            if(gotHit.collided){/*Player takes damage*/break}
+            if(gotHit){
+                player.ego -= 25;
+
+            }
         }
     }
 

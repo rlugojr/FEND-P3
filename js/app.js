@@ -5,7 +5,8 @@ var App = (function(global){
 
 //BASE CLASS DEFINITION
     //define base object "actor", with common methods and properties, used by all character objects for inheritance
-    var Actor = function Actor(name,imgSrc, x, y, width, height) {
+    var Actor = function Actor(id, name,imgSrc, x, y, width, height) {
+        this.id = id;
         this.name = name;
         this.imgSrc = imgSrc;
         this.x = x;
@@ -24,6 +25,7 @@ var App = (function(global){
     //This creates the initial link in the inheritance chain for the canvas object prototypes
     //Set the constructor for this object
     Actor.prototype.constructor = Actor;
+    Actor.prototype.id = "";
     Actor.prototype.name = "";
     Actor.prototype.imgSrc = "";
     Actor.prototype.x = 0;
@@ -88,11 +90,11 @@ var App = (function(global){
 //1ST LEVEL OF INHERITANCE
 
     //define class for inanimate game actors
-    var Inanimate = function Inanimate(name,imgSrc, x, y, width, height){
+    var Inanimate = function Inanimate(id, name,imgSrc, x, y, width, height){
         //Ensure that any reference to "this" references the current object and not the prototype
         // Actor.call(name, x, y, width, height);
         //add properties specific to Inanimate objects;
-        Actor.call(this,name,imgSrc,x,y,width, height);
+        Actor.call(this, id, name, imgSrc,x,y,width, height);
     };
     //Create inheritance chain through prototype to base class Actor prototype
     Inanimate.prototype = Object.create(Actor.prototype);
@@ -102,11 +104,11 @@ var App = (function(global){
 
 
     //define class for animated actors
-    var Animate = function Animate(name,imgSrc, x, y, width, height) {
+    var Animate = function Animate(id, name,imgSrc, x, y, width, height) {
         //Ensure that any reference to "this" references the current object and not the prototype
         // Actor.call(name, x, y, width, height);
         //add properties specific to Inanimate objects;
-        Actor.call(this,name, imgSrc, x, y, width, height);
+        Actor.call(this , id, name, imgSrc, x, y, width, height);
     };
     //Create inheritance chain through prototype to base class Actor prototype
     Animate.prototype = Object.create(Actor.prototype);
@@ -117,6 +119,10 @@ var App = (function(global){
     Animate.prototype.direction = 1;
     Animate.prototype.speed = 256;
     Animate.prototype.moved = false;
+    Animate.prototype.ego = 100;
+    Animate.prototype.bruisedEgo=function(damage) {
+        this.ego = this.ego -= damage
+    };
 
     //method to update the object's location based on current position, velocity and collisions.
     Animate.prototype.update = function (dt) {
@@ -224,14 +230,15 @@ var App = (function(global){
 //2ND LEVEL OF INHERITANCE
 
     //define class for enemy - which the player must avoid.  This inherits from Animate.
-    var Enemy = function Enemy(name, imgSrc, x, y, width, height,offsetTop, offsetBottom, offsetLeft, offsetRight, attackPattern, level){
+    var Enemy = function Enemy(id, name, imgSrc, x, y, width, height,offsetTop, offsetBottom, offsetLeft, offsetRight, attackPattern, level){
         //Ensure that any reference to "this" references the current object and not the prototype
-        Animate.call(this,name,imgSrc,x,y,width,height,offsetTop,offsetBottom,offsetLeft,offsetRight);
+        Animate.call(this, id, name,imgSrc,x,y,width,height,offsetTop,offsetBottom,offsetLeft,offsetRight);
     };
     //Create inheritance chain through prototype to parent class Animate prototype
     Enemy.prototype = Object.create(Animate.prototype);
     //Set the constructor for this object
     Enemy.prototype.constructor = Enemy;
+    Enemy.prototype.id = "";
     Enemy.prototype.name = "";
     Enemy.prototype.attackPattern='';
     Enemy.prototype.level = "";
@@ -360,9 +367,9 @@ var App = (function(global){
 
 
     //define class for player character.  This inherits from Animate.
-    var Player = function Player(name,imgSrc, x, y, width, height){
+    var Player = function Player(id, name,imgSrc, x, y, width, height){
        //Ensure that any reference to "this" references the current object and not the prototype
-       Animate.call(this,name,imgSrc, x, y, width, height);
+       Animate.call(this, id, name, imgSrc, x, y, width, height);
     };
     //Create inheritance chain through prototype to parent class Animate prototype
     Player.prototype = Object.create(Animate.prototype);
@@ -395,9 +402,9 @@ var App = (function(global){
 
 
     //artifacts inherits from Inanimate
-    var Artifact = function Artifact(name, imgSrc, x, y, width, height,offsetTop, offsetBottom, offsetLeft, offsetRight, enemyEffected, level){
+    var Artifact = function Artifact(id, name, imgSrc, x, y, width, height,offsetTop, offsetBottom, offsetLeft, offsetRight, enemyEffected, level){
         //Ensure that any reference to "this" references the current object and not the prototype
-        Inanimate.call(this,name,imgSrc, x, y, width, height,offsetTop, offsetBottom,offsetLeft,offsetRight);
+        Inanimate.call(this, id, name,imgSrc, x, y, width, height,offsetTop, offsetBottom,offsetLeft,offsetRight);
         this.enemyEffected = enemyEffected;
         this.level = level;
     };
@@ -428,6 +435,7 @@ var App = (function(global){
             newObj.prototype = protoObj.prototype;
             newObj.prototype.constructor = protoObj;
 
+            newObj.id = currItem.id;
             newObj.name = currItem.name;
             newObj.imgSrc = currItem.imgSrc;
             newObj.x = currItem.x;
@@ -455,22 +463,22 @@ var App = (function(global){
 
     //create enemy objects
     var enemyList =[
-        {"name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
+        {"id":"carson", "name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
             "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,
             "attackPattern" : "lameDuck","level":1},
-        {"name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 1152,"y" : 512,"width" : 65,"height" : 110,
+        {"id":"cruz","name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 1152,"y" : 512,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
             "attackPattern" : "guardDog","level":3},
-        {"name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
+        {"id":"hillary","name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
             "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":5,
             "attackPattern" : "barkingMad","level":5},
-        {"name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,
+        {"id":"romney","name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":5,
             "attackPattern" : "usurper","level":4},
-        {"name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
+        {"id":"rubio","name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
             "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":5,
             "attackPattern" : "headHunter","level":3},
-        {"name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"attackPattern":"barelySane-ders","level":2}
+        {"id":"sanders","name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"attackPattern":"barelySane-ders","level":2}
     ];
     //create enemy array
     //create an instance of Enemy to run in the objectFactory
@@ -485,22 +493,22 @@ var App = (function(global){
 
     //create artifact objects
     var artifactList =[
-        {"name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 511,"width" : 50,"height" : 100,
+        {"id":"stand", "name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 511,"width" : 50,"height" : 100,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "carson","level":1},
-        {"name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 1152,"y" : 120,"width" : 52,"height" : 30,
+        {"id":"birthCert","name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 1152,"y" : 120,"width" : 52,"height" : 30,
             "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
             "enemyEffected" : "cruz","level":3},
-        {"name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 512,"y" : 512,"width" : 45,"height" : 75,
+        {"id":"server","name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 512,"y" : 512,"width" : 45,"height" : 75,
             "offsetTop":55,"offsetBottom":19,"offsetLeft":2,"offsetRight":1,
             "enemyEffected" : "hillary","level":5},
-        {"name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 512,"y" : 512,"width" : 50,"height" : 85,
+        {"id":"playbill","name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 512,"y" : 512,"width" : 50,"height" : 85,
             "offsetTop":26,"offsetBottom":5,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "romney","level":4},
-        {"name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 780,"y" : 352,"width" : 50,"height" : 85,
+        {"id":"heart","name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 780,"y" : 352,"width" : 50,"height" : 85,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "sanders","level":2},
-        {"name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 1170,"y" : 950,"width" : 35,"height" : 70,
+        {"id":"bottle","name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 1170,"y" : 950,"width" : 35,"height" : 70,
             "offsetTop":24,"offsetBottom":5,"offsetLeft":8,"offsetRight":8,
             "enemyEffected" : "rubio","level":3}
     ];
@@ -517,11 +525,11 @@ var App = (function(global){
    var artifacts = objectFactory(artifactList,artifact);
 
     //create array to hold artifacts and enemies per level
-    var lvlEnemies =[],lvlArtifacts=[];
+    var lvlEnemies =[], lvlArtifacts=[];
     var level = [];
 
     //No Level #0 so fill the first element to prevent errors.
-    level.push(["lvlEnemies","lvlArtifacts"])
+    level.push(["lvlEnemies","lvlArtifacts"]);
 
     //Populate the levels.
     for(var lvl=1 ; lvl <= Math.max(allEnemies.length, artifacts.length)-1; lvl++){
@@ -538,18 +546,23 @@ var App = (function(global){
     }
 
     // Place the player object in a variable called player
-    var player = new Player('The Donald','images/player/trump.png',92,518,101,171);  //set initial y-pos so feet are center tile.
+    var player = new Player("trump",'The Donald','images/player/trump.png',92,518,101,171);  //set initial y-pos so feet are center tile.
     //Create inheritance chain through prototype to parent class
     player.prototype = Player.prototype;
     //Set the constructor for this object
     player.prototype.constructor = Player;
     //set properties
+    player.ego = 125;
     player.speed = 1024;
     player.offsetTop = 8;
     player.offsetBottom = 1;
     player.offsetLeft=13;
     player.offsetRight=20;
     player.calcSides();
+    player.prototype.startPosition = function(){
+        player.x = 92;
+        player.y = 518
+    };
 
 
     // This listens for key presses and sends the keys to your
@@ -564,7 +577,8 @@ var App = (function(global){
             68: 'right',    //'D' key
             40: 'down',     //arrow down
             83: 'down',     //'S' key
-            32: 'space'     //spacebar
+            32: 'space'     //space bar for insults.
+                            //TODO: add "g" key for gloating.
         };
 
     window.addEventListener('keyup', function(e) {

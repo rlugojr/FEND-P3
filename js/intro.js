@@ -16,7 +16,7 @@ var gameScenes = (function(global) {
 
 
      var playIntro = function playIntro() {
-         var cUI = document.getElementById('cUI');
+         var cUI = Document.getElementById('cUI');
          var ctxUI = cUI.getContext('2d');
          for(var i=0;i<introScenes.length;i++){
              do {
@@ -29,18 +29,6 @@ var gameScenes = (function(global) {
              exitLoop = false;
          }
      };
-
-    window.addEventListener('keydown', function(e) {
-        var allowedKeys = {
-            32: 'space'
-        };
-
-        window.addEventListener('keyup', function(e) {
-            delete e.keyCode;
-        });
-
-        playIntro(allowedKeys[e.keyCode]);
-    });
 
     global.playIntro = playIntro()
 
