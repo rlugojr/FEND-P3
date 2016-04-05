@@ -71,6 +71,15 @@ var Explosions = (function(global) {
         }
     };
 
+    Explosion.prototype.playTagLine = function(mp3,ogg){
+        var tagLine = new Howl({
+            src: [mp3,ogg],
+            autoplay: true,
+            loop: false,
+            volume: 0.7
+        });
+    };
+
     Explosion.prototype.render = function (ctx) {
         ctx.drawImage(Resources.get(this.imgSrc), this.frame.x, this.frame.y,
             this.frame.w, this.frame.h, this.targetX, this.targetY,

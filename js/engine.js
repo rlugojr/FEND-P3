@@ -382,6 +382,7 @@ var Engine = (function(global) {
                         explode.prototype.constructor = newExplosion;
                         explode.reset();
 
+                        explode.playTagLine('audio/fired.mp3','audio/fired.ogg');
                         currExplosion.push(explode);
                         currArtifact.splice(f, 1);
                         currEnemy.splice(t, 1);

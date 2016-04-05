@@ -63,14 +63,7 @@ var App = (function(global){
         ctx.restore()
         */
     };
-    Actor.prototype.renderText=function renderText(ctx){
-        //display name above sprite
-        ctx.save();
-        ctx.font = "8px";
-        ctx.textAlign='center';
-        ctx.strokeText(this.name,this.x,-1*this.height-5);
-        ctx.restore();
-    };
+
     //method to check for collision with opponent.
     Actor.prototype.collisionCheck = function (obj) {
         //DEBUG
