@@ -255,6 +255,8 @@ var App = (function(global){
             case "usurper":
                 this.usurper(dt);
                 break;
+            case "barkingMad":
+                this.barkingMad(dt);
         }
     };
 
@@ -387,8 +389,67 @@ var App = (function(global){
         var easystar = new EasyStar.js();
 
         easystar.setGrid(grid);
+        easystar.enableDiagonals();
 
         easystar.setAcceptableTiles([1]);
+        easystar.setIterationsPerCalculation(200);
+
+        easystar.findPath(map.getCol(this.x), map.getRow(this.y), map.getCol(player.x), map.getRow(player.y), function(path){
+
+            if (path.length !== null && path.length > 1) {
+                newX = path[1].x;
+                newY = path[1].y;
+            }
+        });
+
+        easystar.calculate();
+
+        this.speed = 8;
+
+        if (map.getCol(this.x) !== newX) {
+            if (map.getCol(this.x) < newX) {
+                this.x += this.speed;
+            } else if (map.getCol(this.x) > newX) {
+                this.x -= this.speed;
+            }
+        } else if (map.getRow(this.y) !== newY) {
+            if (map.getRow(this.y) < newY) {
+                this.y += this.speed;
+            } else if (map.getRow(this.y) > newY) {
+                this.y -= this.speed;
+            }
+        }
+
+    };
+
+    Enemy.prototype.barkingMad = function(dt) {
+
+        var grid = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0],
+            [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+            [0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+            [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+            [0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+
+
+
+        var easystar = new EasyStar.js();
+
+        easystar.setGrid(grid);
+
+        easystar.setAcceptableTiles([0,1]);
         easystar.setIterationsPerCalculation(200);
 
         easystar.findPath(map.getCol(this.x), map.getRow(this.y), map.getCol(player.x), map.getRow(player.y), function(path){
@@ -418,8 +479,6 @@ var App = (function(global){
         }
 
     };
-
-    //TODO: Override "update" method to use attackPatterns to determine movement.
 
 
     //define class for player character.  This inherits from Animate.

@@ -233,7 +233,7 @@ var Engine = (function(global) {
 
         lastTime = Date.now();
 
-        gameState.level=4;
+        gameState.level=5;
 
         levelSetup();
 
