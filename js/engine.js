@@ -38,6 +38,7 @@ var Engine = (function(global) {
     var ctxScenery = cScenery.getContext('2d');
     var ctxUI = cUI.getContext('2d');
 
+
     var intro_loop = new Howl({
         src: ['audio/intro_loop.mp3', 'audio/intro_loop.ogg'],
         autoplay: false,
@@ -87,12 +88,16 @@ var Engine = (function(global) {
 
     function drawAction(layer, ctxAction) {
         ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
-        map._drawLayer(layer, ctxAction);
+        //map._drawLayer(layer, ctxAction);
     }
 
     function drawScenery(layer, ctxScenery) {
         ctxScenery.clearRect(0, 0, ctxScenery.canvas.width, ctxScenery.canvas.height);
         map._drawLayer(layer, ctxScenery);
+    }
+
+    function drawUI(layer, ctxUI){
+        ctxUI.clearRect(0,0, ctxUI.canvas.width, ctxUI.canvas.height)
     }
 
 
@@ -144,6 +149,8 @@ var Engine = (function(global) {
         ctxActionResize.scale(scaleRatio, scaleRatio);
         ctxSceneryResize.scale(scaleRatio, scaleRatio);
         ctxUIResize.scale(scaleRatio, scaleRatio);
+
+
     }
 
         function playIntro(ctxUI, dt) {
@@ -226,7 +233,7 @@ var Engine = (function(global) {
 
         lastTime = Date.now();
 
-        gameState.level=1;
+        gameState.level=4;
 
         levelSetup();
 
@@ -277,23 +284,23 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
 
-        for (var a=0;a<=currArtifact.length-1;a++) {
-            currEnemy[a].update(dt, map)
-        }
+        player.update(dt,map);
+
+
+        /* for (var a=0;a<=currArtifact.length-1;a++) {
+            currArtifact[a].update(dt, map)
+        }*/
 
         for (var e=0;e<=currEnemy.length-1;e++) {
-            currEnemy[e].update(dt, map)
+                currEnemy[e].update(dt)
         }
+
 
         for (var d=0;d<=currExplosion.length-1;d++) {
             if(currExplosion[d].active = true) {
                 currExplosion[d].update(dt, map)
             }
         }
-        //newExplosion.update(dt);
-
-        player.update(dt,map)
-
     }
 
     /* This function initially draws the "game level", it will then call
@@ -313,13 +320,13 @@ var Engine = (function(global) {
 
         */
 
-        drawMap(0,ctxGeo);
-
         drawAction(1,ctxAction);
 
         renderEntities();
 
         drawScenery(2,ctxScenery);
+
+        drawUI(1,ctxUI);
 
 
     }

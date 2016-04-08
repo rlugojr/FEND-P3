@@ -123,13 +123,13 @@ var gameMap = (function(global) {
 
                     //enable the next 6 lines to draw a debugging grid for collision checks and
                     // placement of objects in the Action layer.
-                    /*if(layer === 0) {
+                    if(layer === 0) {
                         ctxGeo.beginPath();
                         ctxGeo.font = "9pt sans-serif";
                         ctxGeo.strokeText(r + ", " + c, x +20, y + 36);
                         ctxGeo.strokeRect(x, y, 64, 64);
                         ctxGeo.closePath()
-                    } */
+                    }
                 }
             }
         }
@@ -162,7 +162,7 @@ var gameMap = (function(global) {
         'images/tiles/wall_horizontal.png', //15
         'images/tiles/grass.png'   //16 blocked version of grass to place under trees and rocks
     ];
-
+    map.walkableTiles = [0,1,2];
     map.blockedTiles = [3,4,5,6,13,14,15,16];
 
     map.layers = [[    //Geo

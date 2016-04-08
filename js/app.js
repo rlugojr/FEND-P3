@@ -2,6 +2,8 @@ var App = (function(global){
 
     "use strict";
 
+    var newX, newY;
+
 
 //BASE CLASS DEFINITION
     //define base object "actor", with common methods and properties, used by all character objects for inheritance
@@ -236,7 +238,7 @@ var App = (function(global){
     Enemy.prototype.attackPattern='';
     Enemy.prototype.level = "";
     Enemy.prototype.tickTock = 0;
-    Enemy.prototype.update = function(dt) {
+    Enemy.prototype.update = function(dt, newX, newY) {
         switch (this.attackPattern) {
             case "sittingDuck":
                 //do nothing, just sit there.
@@ -249,6 +251,9 @@ var App = (function(global){
                 break;
             case "headHunter":
                 this.headHunter(dt);
+                break;
+            case "usurper":
+                this.usurper(dt);
                 break;
         }
     };
@@ -354,6 +359,64 @@ var App = (function(global){
                 this.y -= 2
             }
         }
+    };
+
+    Enemy.prototype.usurper = function(dt) {
+
+        var grid = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0],
+            [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+            [0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+            [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+            [0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+
+
+
+        var easystar = new EasyStar.js();
+
+        easystar.setGrid(grid);
+
+        easystar.setAcceptableTiles([1]);
+        easystar.setIterationsPerCalculation(200);
+
+        easystar.findPath(map.getCol(this.x), map.getRow(this.y), map.getCol(player.x), map.getRow(player.y), function(path){
+
+            if (path.length !== null && path.length > 1) {
+                newX = path[1].x;
+                newY = path[1].y;
+            }
+        });
+
+        easystar.calculate();
+
+        this.speed = 2;
+
+        if (map.getCol(this.x) !== newX) {
+            if (map.getCol(this.x) < newX) {
+                this.x += this.speed;
+            } else if (map.getCol(this.x) > newX) {
+                this.x -= this.speed;
+            }
+        } else if (map.getRow(this.y) !== newY) {
+            if (map.getRow(this.y) < newY) {
+                this.y += this.speed;
+            } else if (map.getRow(this.y) > newY) {
+                this.y -= this.speed;
+            }
+        }
+
     };
 
     //TODO: Override "update" method to use attackPatterns to determine movement.
@@ -465,8 +528,8 @@ var App = (function(global){
         {"id":"hillary","name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
             "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":5,
             "attackPattern" : "barkingMad","level":5},
-        {"id":"romney","name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 128,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":5,
+        {"id":"romney","name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 130,"width" : 65,"height" : 110,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":100,
             "attackPattern" : "usurper","level":4},
         {"id":"rubio","name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
             "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":5,
@@ -495,7 +558,7 @@ var App = (function(global){
         {"id":"server","name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 512,"y" : 512,"width" : 45,"height" : 75,
             "offsetTop":55,"offsetBottom":19,"offsetLeft":2,"offsetRight":1,
             "enemyEffected" : "hillary","level":5},
-        {"id":"playbill","name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 512,"y" : 512,"width" : 50,"height" : 85,
+        {"id":"playbill","name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 1152,"y" : 120,"width" : 50,"height" : 85,
             "offsetTop":26,"offsetBottom":5,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "romney","level":4},
         {"id":"heart","name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 780,"y" : 352,"width" : 50,"height" : 85,
