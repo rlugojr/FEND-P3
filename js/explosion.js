@@ -81,9 +81,10 @@ var Explosions = (function(global) {
     };
 
     Explosion.prototype.render = function (ctx) {
+        //explosion size increases with each progressing level.
         ctx.drawImage(Resources.get(this.imgSrc), this.frame.x, this.frame.y,
             this.frame.w, this.frame.h, this.targetX, this.targetY,
-            this.frame.w * 2, this.frame.h * 2
+            this.frame.w * gameState.level, this.frame.h * gameState.level
         )
 
     };

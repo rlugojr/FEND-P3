@@ -451,6 +451,8 @@ var App = (function(global){
 
         easystar.setAcceptableTiles([0,1]);
         easystar.setIterationsPerCalculation(200);
+        easystar.enableDiagonals();
+        easystar.enableCornerCutting();
 
         easystar.findPath(map.getCol(this.x), map.getRow(this.y), map.getCol(player.x), map.getRow(player.y), function(path){
 

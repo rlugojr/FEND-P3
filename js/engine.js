@@ -58,7 +58,7 @@ var Engine = (function(global) {
         this.currentState ="running";
         /* values can be:
             loading: 'loading',
-            init: 'init',
+            init: 'initializing',
             menu: 'menu',
             running: 'running',
             paused: 'paused'
@@ -192,19 +192,21 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-
+        gameState.currentState = 'running';
 
         update(dt);
 
         if(gameState.playerState === 'beatLevel'){
-            if(gameState.level > 5){
+            if(gameState.level >=5){
                 gameState.playerState = 'wonGame';
+                console.log(gameState.playerState);
+
                 //exit code for WIN
             }else {
-                gameState.level++
+                gameState.level++;
+                levelSetup(gameState.level);
+                gameState.playerState= 'inLevel'
             }
-            levelSetup(gameState.level);
-            gameState.playerState= 'inLevel'
         }
 
         render();
@@ -226,14 +228,15 @@ var Engine = (function(global) {
      */
     function init() {
 
-        //setGameState('init');
+        gameState.currentState = 'initializing';
+
         //playIntro(ctxUI);
 
         reset();
 
         lastTime = Date.now();
 
-        gameState.level=5;
+        gameState.level=1;
 
         levelSetup();
 
@@ -253,6 +256,7 @@ var Engine = (function(global) {
     function levelSetup(){
         /* This function retrieves the enemy and artifact objects
            and places prepares them to be updated and rendered.
+           Player is transported to starting position.
          */
 
         currEnemy = level[gameState.level][0];
@@ -271,7 +275,9 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+        //update position of all objects to be rendered.
         updateEntities(dt);
+        //check for collisions between player and artifacts or enemies.
         checkCollisions();
     }
 
@@ -284,18 +290,15 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
 
+        //update player position according to the user input and game rules.
         player.update(dt,map);
 
-
-        /* for (var a=0;a<=currArtifact.length-1;a++) {
-            currArtifact[a].update(dt, map)
-        }*/
-
+        //update each enemy position for each enemy in the level.
         for (var e=0;e<=currEnemy.length-1;e++) {
                 currEnemy[e].update(dt)
         }
 
-
+        //Update the animation for any explosions that have been queued.
         for (var d=0;d<=currExplosion.length-1;d++) {
             if(currExplosion[d].active = true) {
                 currExplosion[d].update(dt, map)
@@ -310,22 +313,25 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render(dt) {
-        /* DrawMap has been commented out while I test if there is a need to update it
+        /* drawMap has been commented out while I test if there is a need to update it
             during gameplay.  So far, there hasn't been a need to repaint the Geo layer with the
-            mao tiles so we will keep this commented out until we find a need to enable it again.
+            map tiles so we will keep this commented out until we find a need to enable it again.
 
             if ((dt%10000)==0) {
                 drawMap(0, ctxGeo);
             }
 
         */
-
+        //clear Action layer and draw any "special" items that are positioned using Action grid.)
         drawAction(1,ctxAction);
 
+        //draw all objects rendered in the Action layer (player, enemies, artifacts, explosions)
         renderEntities();
 
-        drawScenery(2,ctxScenery);
+        //drawScenery has been commented out for the same reason as drawMap.
+        //drawScenery(2,ctxScenery);
 
+        //draw any objects that provide health status or notifications to the user.
         drawUI(1,ctxUI);
 
 
@@ -339,9 +345,6 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        /*for (var e=0;e<=allEnemies.length-1;e++) {
-            allEnemies[e].render(ctxAction, true);
-        }*/
 
         for (var a=0;a<=currArtifact.length-1;a++) {
             currArtifact[a].render(ctxAction)
@@ -357,12 +360,7 @@ var Engine = (function(global) {
             }
         }
 
-        //newExplosion.render(ctxAction);
-
         player.render(ctxAction);
-        //player.renderText(ctxUI);
-
-        //console.log(map.getCol(player.x),map.getRow(player.y))
 
     }
 
@@ -394,9 +392,9 @@ var Engine = (function(global) {
                         currArtifact.splice(f, 1);
                         currEnemy.splice(t, 1);
 
-                        if (currEnemy.length === 0) {
+                        if (currEnemy.length === 0){
                             gameState.playerState = 'beatLevel';
-                            gameState.level = gameState.level++;
+                            //gameState.level = gameState.level++;
                             break
                         }
                     }
@@ -406,9 +404,10 @@ var Engine = (function(global) {
 
         for (var e=0;e<=currEnemy.length-1;e++) {
             gotHit = player.collisionCheck(currEnemy[e]);
-            //console.log("gotHit :" + gotHit);
+            console.log("gotHit :" + gotHit);
             if(gotHit){
                 player.ego -= 25;
+                console.log(player.ego)
 
             }
         }
@@ -420,14 +419,15 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
-
+        //set starting game level
         gameState.level=1;
 
+        //resize canvas to fit the current browser window optimally.
         resizeCanvas();
 
+        //draw map and scenery layers because they don't change and won't need to be rendered again.
         drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
-
+        drawScenery(2,ctxScenery);  //draw scenery objects once to conserve memory and cpu cycles
 
     }
 
@@ -490,5 +490,8 @@ var Engine = (function(global) {
     window.ctxAction = ctxAction;
     window.ctxScenery = ctxScenery;
     window.ctxUI = ctxUI;
+
+    //add gameState to global for access from any other js file.
+    global.gameState = gameState;
 
 })(this);
