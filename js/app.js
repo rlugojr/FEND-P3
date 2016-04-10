@@ -404,8 +404,6 @@ var App = (function(global){
 
         easystar.calculate();
 
-        this.speed = 8;
-
         if (map.getCol(this.x) !== newX) {
             if (map.getCol(this.x) < newX) {
                 this.x += this.speed;
@@ -463,8 +461,6 @@ var App = (function(global){
         });
 
         easystar.calculate();
-
-        this.speed = 2;
 
         if (map.getCol(this.x) !== newX) {
             if (map.getCol(this.x) < newX) {
@@ -587,10 +583,10 @@ var App = (function(global){
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
             "attackPattern" : "guardDog","level":3},
         {"id":"hillary","name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
-            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":5,
+            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":8,
             "attackPattern" : "barkingMad","level":5},
         {"id":"romney","name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 130,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":100,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":2,
             "attackPattern" : "usurper","level":4},
         {"id":"rubio","name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
             "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":5,
@@ -616,7 +612,7 @@ var App = (function(global){
         {"id":"birthCert","name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 1152,"y" : 120,"width" : 52,"height" : 30,
             "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
             "enemyEffected" : "cruz","level":3},
-        {"id":"server","name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 512,"y" : 512,"width" : 45,"height" : 75,
+        {"id":"server","name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 1160,"y" : 945,"width" : 45,"height" : 75,
             "offsetTop":55,"offsetBottom":19,"offsetLeft":2,"offsetRight":1,
             "enemyEffected" : "hillary","level":5},
         {"id":"playbill","name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 1152,"y" : 120,"width" : 50,"height" : 85,

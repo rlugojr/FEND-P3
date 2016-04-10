@@ -236,8 +236,6 @@ var Engine = (function(global) {
 
         lastTime = Date.now();
 
-        gameState.level=1;
-
         levelSetup();
 
         var game_loop = new Howl({
@@ -292,6 +290,7 @@ var Engine = (function(global) {
 
         //update player position according to the user input and game rules.
         player.update(dt,map);
+        egometer.update(player.ego,"Ego");
 
         //update each enemy position for each enemy in the level.
         for (var e=0;e<=currEnemy.length-1;e++) {
@@ -325,14 +324,16 @@ var Engine = (function(global) {
         //clear Action layer and draw any "special" items that are positioned using Action grid.)
         drawAction(1,ctxAction);
 
+        //draw any objects that provide health status or notifications to the user.
+        drawUI(1,ctxUI);
+
         //draw all objects rendered in the Action layer (player, enemies, artifacts, explosions)
         renderEntities();
 
         //drawScenery has been commented out for the same reason as drawMap.
         //drawScenery(2,ctxScenery);
 
-        //draw any objects that provide health status or notifications to the user.
-        drawUI(1,ctxUI);
+
 
 
     }
@@ -361,6 +362,7 @@ var Engine = (function(global) {
         }
 
         player.render(ctxAction);
+        egometer.render(ctxUI)
 
     }
 
@@ -394,6 +396,7 @@ var Engine = (function(global) {
 
                         if (currEnemy.length === 0){
                             gameState.playerState = 'beatLevel';
+                            player.ego += 25;
                             //gameState.level = gameState.level++;
                             break
                         }
@@ -406,8 +409,8 @@ var Engine = (function(global) {
             gotHit = player.collisionCheck(currEnemy[e]);
             console.log("gotHit :" + gotHit);
             if(gotHit){
-                player.ego -= 25;
-                console.log(player.ego)
+                player.ego -= 10;
+                //console.log(player.ego)
 
             }
         }
@@ -428,6 +431,7 @@ var Engine = (function(global) {
         //draw map and scenery layers because they don't change and won't need to be rendered again.
         drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
         drawScenery(2,ctxScenery);  //draw scenery objects once to conserve memory and cpu cycles
+
 
     }
 
