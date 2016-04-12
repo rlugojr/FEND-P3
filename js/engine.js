@@ -31,7 +31,7 @@ var Engine = (function(global) {
         lastTime,
         currEnemy=[],
         currArtifact=[],
-        currExplosion = [];
+        currExplosion =[];
 
     var ctxGeo = cGeo.getContext('2d');
     var ctxAction = cAction.getContext('2d');
@@ -43,7 +43,7 @@ var Engine = (function(global) {
         src: ['audio/intro_loop.mp3', 'audio/intro_loop.ogg'],
         autoplay: false,
         loop: true,
-        volume: 0.8
+        volume: 0.5
     });
 
 
@@ -199,14 +199,21 @@ var Engine = (function(global) {
         if(gameState.playerState === 'beatLevel'){
             if(gameState.level >=5){
                 gameState.playerState = 'wonGame';
-                console.log(gameState.playerState);
-
+                if(currExplosion.length===0){
+                    game_loop.stop;
+                    game_loop.unload();
+                    console.log("Explosion finished and you won the game")}
                 //exit code for WIN
             }else {
                 gameState.level++;
                 levelSetup(gameState.level);
                 gameState.playerState= 'inLevel'
             }
+        }
+
+        if(gameState.playerState==='gotHit'){
+            levelSetup(gameState.level);
+            gameState.playerState= 'inLevel'
         }
 
         render();
@@ -396,8 +403,7 @@ var Engine = (function(global) {
 
                         if (currEnemy.length === 0){
                             gameState.playerState = 'beatLevel';
-                            player.ego += 25;
-                            //gameState.level = gameState.level++;
+                            player.ego += 10;
                             break
                         }
                     }
@@ -410,8 +416,7 @@ var Engine = (function(global) {
             console.log("gotHit :" + gotHit);
             if(gotHit){
                 player.ego -= 10;
-                //console.log(player.ego)
-
+                gameState.playerState = 'gotHit'
             }
         }
     }
@@ -473,7 +478,7 @@ var Engine = (function(global) {
         'images/artifacts/playbill.png',
         'images/artifacts/bleeding_heart.png',
         'images/artifacts/water_bottle.png',
-        'images/player/trump.png',
+        'images/player/trump_suit.png',
         'images/enemies/carson.png',
         'images/enemies/cruz.png',
         'images/enemies/hillary.png',

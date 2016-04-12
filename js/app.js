@@ -238,6 +238,10 @@ var App = (function(global){
     Enemy.prototype.attackPattern='';
     Enemy.prototype.level = "";
     Enemy.prototype.tickTock = 0;
+    Enemy.prototype.startPosition = function(){
+        this.x = x;
+        this.y = y
+    };
     Enemy.prototype.update = function(dt, newX, newY) {
         switch (this.attackPattern) {
             case "sittingDuck":
@@ -369,16 +373,16 @@ var App = (function(global){
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
             [0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0],
-            [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
-            [0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0],
-            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
+            [0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0],
+            [0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0],
+            [0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
             [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
             [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0],
-            [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
+            [0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0],
+            [0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0],
             [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
             [0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -389,7 +393,6 @@ var App = (function(global){
         var easystar = new EasyStar.js();
 
         easystar.setGrid(grid);
-        easystar.enableDiagonals();
 
         easystar.setAcceptableTiles([1]);
         easystar.setIterationsPerCalculation(200);
@@ -404,17 +407,31 @@ var App = (function(global){
 
         easystar.calculate();
 
+        var tileUp = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x), map.getRow(this.y - 64)))>=0;
+        var tileDown = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x),map.getRow(this.y + 5)))>=0;
+        var tileLeft = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x -5),map.getRow(this.y)))>=0;
+        var tileRight = map.blockedTiles.indexOf(map.getTile(0, map.getCol(this.x + 64),map.getRow(this.y)))>=0;
+
+
         if (map.getCol(this.x) !== newX) {
             if (map.getCol(this.x) < newX) {
-                this.x += this.speed;
+                if(!tileRight) {
+                    this.x += Math.floor(this.speed + dt);
+                }
             } else if (map.getCol(this.x) > newX) {
-                this.x -= this.speed;
+                if(!tileLeft) {
+                    this.x -= Math.floor(this.speed + dt);
+                }
             }
         } else if (map.getRow(this.y) !== newY) {
             if (map.getRow(this.y) < newY) {
-                this.y += this.speed;
+                if(!tileDown) {
+                    this.y += Math.floor(this.speed + dt);
+                }
             } else if (map.getRow(this.y) > newY) {
-                this.y -= this.speed;
+                if(!tileUp) {
+                    this.y -= Math.floor(this.speed + dt);
+                }
             }
         }
 
@@ -464,15 +481,15 @@ var App = (function(global){
 
         if (map.getCol(this.x) !== newX) {
             if (map.getCol(this.x) < newX) {
-                this.x += this.speed;
+                this.x += Math.floor(this.speed + dt);
             } else if (map.getCol(this.x) > newX) {
-                this.x -= this.speed;
+                this.x -=  Math.floor(this.speed + dt);
             }
         } else if (map.getRow(this.y) !== newY) {
             if (map.getRow(this.y) < newY) {
-                this.y += this.speed;
+                this.y +=  Math.floor(this.speed + dt);
             } else if (map.getRow(this.y) > newY) {
-                this.y -= this.speed;
+                this.y -=  Math.floor(this.speed + dt);
             }
         }
 
@@ -583,13 +600,13 @@ var App = (function(global){
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
             "attackPattern" : "guardDog","level":3},
         {"id":"hillary","name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
-            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":8,
+            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":1,
             "attackPattern" : "barkingMad","level":5},
         {"id":"romney","name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 130,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":2,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":1,
             "attackPattern" : "usurper","level":4},
         {"id":"rubio","name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
-            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":5,
+            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":6,
             "attackPattern" : "headHunter","level":3},
         {"id":"sanders","name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"attackPattern":"barelySane-ders","level":2}
     ];
@@ -659,13 +676,13 @@ var App = (function(global){
     }
 
     // Place the player object in a variable called player
-    var player = new Player("trump",'The Donald','images/player/trump.png',92,518,101,171);  //set initial y-pos so feet are center tile.
+    var player = new Player("trump",'The Donald','images/player/trump_suit.png',92,518,42,125);  //set initial y-pos so feet are center tile.
     //Create inheritance chain through prototype to parent class
     player.prototype = Player.prototype;
     //Set the constructor for this object
     player.prototype.constructor = Player;
     //set properties
-    player.ego = 125;
+    player.ego = 50;
     player.speed = 1024;
     player.offsetTop = 8;
     player.offsetBottom = 1;

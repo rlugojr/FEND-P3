@@ -114,13 +114,13 @@ var Animations = (function(global){
     };
     newExplosion.prototype = Object.create(AnimationPlayer.prototype);
     newExplosion.prototype.constructor = AnimationPlayer;
-    newExplosion.prototype.nukeTarget = function(obj,tagLine){
+   /* newExplosion.prototype.nukeTarget = function(obj,tagLine){
         this.x = obj.x;
         this.y = obj.y;
 
         this.reset();
         this.playTagLine('audio/' + tagLine + '.mp3','audio/' + tagLine + '.ogg')
-    };
+    };*/
 
     global.explosion = explosion;
     global.newExplosion = newExplosion
