@@ -192,32 +192,34 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        gameState.currentState = 'running';
+        if(gameState.currentState !=='paused') {
+            gameState.currentState = 'running';
 
-        update(dt);
+            update(dt);
 
-        if(gameState.playerState === 'beatLevel'){
-            if(gameState.level >=5){
-                gameState.playerState = 'wonGame';
-                if(currExplosion.length===0){
-                    game_loop.stop;
-                    game_loop.unload();
-                    console.log("Explosion finished and you won the game")}
-                //exit code for WIN
-            }else {
-                gameState.level++;
-                levelSetup(gameState.level);
-                gameState.playerState= 'inLevel'
+            if (gameState.playerState === 'beatLevel') {
+                if (gameState.level >= 5) {
+                    gameState.playerState = 'wonGame';
+                    if (currExplosion.length === 0) {
+                        game_loop.stop;
+                        game_loop.unload();
+                        console.log("Explosion finished and you won the game")
+                    }
+                    //exit code for WIN
+                } else {
+                    gameState.level++;
+                    levelSetup(gameState.level);
+                    gameState.playerState = 'inLevel'
+                }
             }
+
+            if (gameState.playerState === 'gotHit') {
+                levelSetup(gameState.level);
+                gameState.playerState = 'inLevel'
+            }
+
+            render();
         }
-
-        if(gameState.playerState==='gotHit'){
-            levelSetup(gameState.level);
-            gameState.playerState= 'inLevel'
-        }
-
-        render();
-
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
