@@ -1,5 +1,18 @@
 var HUD = (function(global){
 
+    /* This function displays notifications to the player*/
+    var hudMessage = function hudMessage(ctx, message, frameColor, fontColor) {
+        ctx.font = "Bold 48px 'Ready 2P'";
+        ctx.textAlign = "center";
+        ctx.fillStyle = frameColor;
+        ctx.strokeStyle = fontColor;
+        ctx.fillRect(0, 120, ctx.canvas.width, 140);
+        ctx.strokeRect(0, 120, ctx.canvas.width, 140);
+        ctx.fillStyle = fontColor;
+        ctx.fillText(message, ctx.canvas.width/2, ctx.canvas.height/2)
+    }
+
+    //This creates a parent prototype for a circular progress bar.
     var AnyMeter = function AnyMeter() {
         this.percentage = 0 / 100;
 
@@ -39,7 +52,7 @@ var HUD = (function(global){
     egometer.percentage = 1;
     egometer.meterName = 'Ego';
 
-
+    global.hudMessage = hudMessage;
     global.egometer = egometer;
 
 })(this);

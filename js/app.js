@@ -508,22 +508,28 @@ var App = (function(global){
     //method to handle keyboard input to update player sprite location.
     Player.prototype.handleInput = function(keyCode){
         //code to take key request and update player direction.
-        switch(keyCode){
+        switch(keyCode) {
             case 'up':
-                this.axis='y';
+                this.axis = 'y';
                 this.direction = -1;
                 break;
             case 'down':
-                this.axis='y';
+                this.axis = 'y';
                 this.direction = 1;
                 break;
             case 'left':
-                this.axis='x';
+                this.axis = 'x';
                 this.direction = -1;
                 break;
             case 'right':
-                this.axis='x';
+                this.axis = 'x';
                 this.direction = 1;
+                break;
+            case 'gloat':
+                //add howler for random gloat. Stun enemy for 1 round.
+                break;
+            case 'insult':
+                //add howler for random insult and stun enemies for 5 rounds. Can onlu be used 1x per level
                 break;
         }
         this.moved = true;
@@ -596,19 +602,24 @@ var App = (function(global){
         {"id":"carson", "name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
             "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,
             "attackPattern" : "lameDuck","level":1},
+        {"id":"kasich", "name" : "HongKongKasich","imgSrc" : "images/enemies/kasich.png","x" : 440,"y" : 512,"width" : 136,"height" : 130,
+            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,
+            "attackPattern" : "lameDuck","level":2},
         {"id":"cruz","name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 1152,"y" : 512,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
-            "attackPattern" : "guardDog","level":3},
+            "attackPattern" : "guardDog","level":4},
         {"id":"hillary","name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
             "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":1,
-            "attackPattern" : "barkingMad","level":5},
+            "attackPattern" : "barkingMad","level":6},
         {"id":"romney","name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 130,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":1,
-            "attackPattern" : "usurper","level":4},
+            "attackPattern" : "usurper","level":5},
         {"id":"rubio","name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
             "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":6,
-            "attackPattern" : "headHunter","level":3},
-        {"id":"sanders","name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"attackPattern":"barelySane-ders","level":2}
+            "attackPattern" : "headHunter","level":4},
+        {"id":"sanders","name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110
+            ,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,
+            "attackPattern":"barelySane-ders","level":3}
     ];
     //create enemy array
     //create an instance of Enemy to run in the objectFactory
@@ -626,21 +637,24 @@ var App = (function(global){
         {"id":"stand", "name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 511,"width" : 50,"height" : 100,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "carson","level":1},
+        {"id":"belt", "name" : "White Belt","imgSrc" : "images/artifacts/white_belt.png","x" : 540,"y" : 512,"width" : 67,"height" : 100,
+            "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
+            "enemyEffected" : "kasich","level":2},
         {"id":"birthCert","name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 1152,"y" : 120,"width" : 52,"height" : 30,
             "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
-            "enemyEffected" : "cruz","level":3},
+            "enemyEffected" : "cruz","level":4},
         {"id":"server","name" : "Mail Server","imgSrc" : "images/artifacts/mail_server.png","x" : 1160,"y" : 945,"width" : 45,"height" : 75,
             "offsetTop":55,"offsetBottom":19,"offsetLeft":2,"offsetRight":1,
-            "enemyEffected" : "hillary","level":5},
+            "enemyEffected" : "hillary","level":6},
         {"id":"playbill","name" : "Playbill","imgSrc" : "images/artifacts/playbill.png","x" : 1152,"y" : 120,"width" : 50,"height" : 85,
             "offsetTop":26,"offsetBottom":5,"offsetLeft":5,"offsetRight":5,
-            "enemyEffected" : "romney","level":4},
+            "enemyEffected" : "romney","level":5},
         {"id":"heart","name" : "Bleeding Heart","imgSrc" : "images/artifacts/bleeding_heart.png","x" : 780,"y" : 352,"width" : 50,"height" : 85,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":5,"offsetRight":5,
-            "enemyEffected" : "sanders","level":2},
+            "enemyEffected" : "sanders","level":3},
         {"id":"bottle","name" : "Water Bottle","imgSrc" : "images/artifacts/water_bottle.png","x" : 1170,"y" : 950,"width" : 35,"height" : 70,
             "offsetTop":24,"offsetBottom":5,"offsetLeft":8,"offsetRight":8,
-            "enemyEffected" : "rubio","level":3}
+            "enemyEffected" : "rubio","level":4}
     ];
 
 
@@ -676,7 +690,7 @@ var App = (function(global){
     }
 
     // Place the player object in a variable called player
-    var player = new Player("trump",'The Donald','images/player/trump_suit.png',92,518,42,125);  //set initial y-pos so feet are center tile.
+    var player = new Player("trump",'The Donald','images/player/trump_suit.png',92,518,57,171);  //set initial y-pos so feet are center tile.
     //Create inheritance chain through prototype to parent class
     player.prototype = Player.prototype;
     //Set the constructor for this object
@@ -707,13 +721,21 @@ var App = (function(global){
             68: 'right',    //'D' key
             40: 'down',     //arrow down
             83: 'down',     //'S' key
-            32: 'space'     //space bar for insults.
-                            //TODO: add "g" key for gloating.
+            80: 'pause',    //'P' key
+            32: 'insult',   //space bar for insults.
+            71: 'gloat'     //'G' key
+
         };
 
     window.addEventListener('keyup', function(e) {
         delete e.keyCode;
     });
+        console.log(allowedKeys[e.keyCode]);
+
+        if(allowedKeys[e.keyCode] === 'pause'){
+            pauseToggle();
+        }
+        //else
         //event sends keys to player.handleInput
         player.handleInput(allowedKeys[e.keyCode]);
     });

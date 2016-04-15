@@ -38,6 +38,17 @@ var Engine = (function(global) {
     var ctxScenery = cScenery.getContext('2d');
     var ctxUI = cUI.getContext('2d');
 
+    //set all Howler instances
+
+    var game_loop = new Howl({
+        src: ['audio/gameplay_loop.mp3','audio/gameplay_loop.ogg'],
+        autoplay: false,
+        loop: true,
+        volume: 0.5,
+        onload: function() {
+            console.log('Finished loading game_loop!');
+        }
+    });
 
     var intro_loop = new Howl({
         src: ['audio/intro_loop.mp3', 'audio/intro_loop.ogg'],
@@ -198,10 +209,10 @@ var Engine = (function(global) {
             update(dt);
 
             if (gameState.playerState === 'beatLevel') {
-                if (gameState.level >= 5) {
+                if (gameState.level >= 6) {
                     gameState.playerState = 'wonGame';
                     if (currExplosion.length === 0) {
-                        game_loop.stop;
+                        game_loop.stop();
                         game_loop.unload();
                         console.log("Explosion finished and you won the game")
                     }
@@ -247,15 +258,7 @@ var Engine = (function(global) {
 
         levelSetup();
 
-        var game_loop = new Howl({
-            src: ['audio/gameplay_loop.mp3','audio/gameplay_loop.ogg'],
-            autoplay: true,
-            loop: true,
-            volume: 0.5,
-            onload: function() {
-                console.log('Finished loading game_loop!');
-            }
-        });
+        game_loop.play();
 
         main();
     }
@@ -357,6 +360,7 @@ var Engine = (function(global) {
          */
 
         for (var a=0;a<=currArtifact.length-1;a++) {
+            console.log(currArtifact[a]);
             currArtifact[a].render(ctxAction)
         }
 
@@ -431,6 +435,7 @@ var Engine = (function(global) {
     function reset() {
         //set starting game level
         gameState.level=1;
+        gameState.currentState = "inLevel";
 
         //resize canvas to fit the current browser window optimally.
         resizeCanvas();
@@ -441,6 +446,19 @@ var Engine = (function(global) {
 
 
     }
+
+    var pauseToggle = function pauseToggle(){
+        if(gameState.currentState!=='paused') {
+            gameState.currentState = "paused";
+            game_loop.pause();
+            hudMessage(ctxUI,"PAUSED",'black','red');
+            //Display blinking "Paused" image on ctxUI.
+        }else if (gameState.currentState==='paused'){
+            gameState.currentState = "inLevel";
+            game_loop.unpause();
+        }
+    };
+
 
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -476,12 +494,14 @@ var Engine = (function(global) {
         'images/tiles/wall_corner.png', //22
         'images/artifacts/birth_certificate.png',
         'images/artifacts/debate_stand.png',
+        'images/artifacts/white_belt.png',
         'images/artifacts/mail_server.png',
         'images/artifacts/playbill.png',
         'images/artifacts/bleeding_heart.png',
         'images/artifacts/water_bottle.png',
         'images/player/trump_suit.png',
         'images/enemies/carson.png',
+        'images/enemies/kasich.png',
         'images/enemies/cruz.png',
         'images/enemies/hillary.png',
         'images/enemies/romney.png',
@@ -504,5 +524,6 @@ var Engine = (function(global) {
 
     //add gameState to global for access from any other js file.
     global.gameState = gameState;
+    global.pauseToggle = pauseToggle
 
 })(this);
