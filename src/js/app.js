@@ -247,6 +247,9 @@ var App = (function(global){
             case "sittingDuck":
                 //do nothing, just sit there.
                 break;
+            case "hongKongDingDong":
+                this.hongKongDingDong(dt);
+                break;
             case "barelySane-ders":
                 this.barelysaneders(dt);
                 break;
@@ -261,6 +264,16 @@ var App = (function(global){
                 break;
             case "barkingMad":
                 this.barkingMad(dt);
+        }
+    };
+
+    Enemy.prototype.hongKongDingDong = function(dt){
+        this.tickTock++;
+        if(this.tickTock===100){
+            this.x = this.x + this.speed
+        }else if(this.tickTock===200){
+            this.x = this.x - this.speed;
+            this.tickTock = 1
         }
     };
 
@@ -602,9 +615,9 @@ var App = (function(global){
         {"id":"carson", "name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
             "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,
             "attackPattern" : "lameDuck","level":1},
-        {"id":"kasich", "name" : "HongKongKasich","imgSrc" : "images/enemies/kasich.png","x" : 440,"y" : 512,"width" : 136,"height" : 130,
-            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,
-            "attackPattern" : "lameDuck","level":2},
+        {"id":"kasich", "name" : "HongKongKasich","imgSrc" : "images/enemies/kasich.png","x" : 384,"y" : 512,"width" : 136,"height" : 130,
+            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":384,
+            "attackPattern" : "hongKongDingDong","level":2},
         {"id":"cruz","name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 1152,"y" : 512,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
             "attackPattern" : "guardDog","level":4},
