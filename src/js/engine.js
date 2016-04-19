@@ -57,6 +57,13 @@ var Engine = (function(global) {
         volume: 0.5
     });
 
+    var win_loop = new Howl({
+        src: ['audio/hail_to_the_chief.mp3', 'audio/hail_to_the_chief.ogg'],
+        autoplay: false,
+        loop: true,
+        volume: 0.5
+    });
+
 
     var gameState = function gameState() {
         this.level = {
@@ -189,6 +196,12 @@ var Engine = (function(global) {
         }
 
 
+        function showWinScreen(){
+            ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
+            win_loop.play();
+            ctxUI.drawImage(Resources.get("images/outro/win_screen.png"), 0, 0, ctxUI.canvas.width,ctxUI.canvas.height);
+            gameState.currentState = "paused"
+        }
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -213,7 +226,7 @@ var Engine = (function(global) {
                     gameState.playerState = 'wonGame';
                     if (currExplosion.length === 0) {
                         game_loop.stop();
-                        game_loop.unload();
+                        //TODO: Show win picture and play presedential song.
                         console.log("Explosion finished and you won the game")
                     }
                     //exit code for WIN
@@ -302,7 +315,7 @@ var Engine = (function(global) {
 
         //update player position according to the user input and game rules.
         player.update(dt,map);
-        egometer.update(player.ego,"Ego");
+        //REMOVE: egometer.update(player.ego,"Ego");
 
         //update each enemy position for each enemy in the level.
         for (var e=0;e<=currEnemy.length-1;e++) {
@@ -375,7 +388,7 @@ var Engine = (function(global) {
         }
 
         player.render(ctxAction);
-        egometer.render(ctxUI)
+        //REMOVE: egometer.render(ctxUI)
 
     }
 
@@ -455,7 +468,7 @@ var Engine = (function(global) {
             //Display blinking "Paused" image on ctxUI.
         }else if (gameState.currentState==='paused'){
             gameState.currentState = "inLevel";
-            game_loop.unpause();
+            game_loop.play();
         }
     };
 
@@ -507,8 +520,11 @@ var Engine = (function(global) {
         'images/enemies/romney.png',
         'images/enemies/rubio.png',
         'images/enemies/sanders.png',
-        'images/effects/explosion.png'
-
+        'images/effects/explosion.png',
+        'images/effects/bang.png',
+        'images/effects/level_up.png',
+        'images/effects/pow.png',
+        'images/effects/yeah.png'
 
     ]);
     Resources.onReady(init);

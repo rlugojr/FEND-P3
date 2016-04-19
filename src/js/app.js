@@ -69,7 +69,7 @@ var App = (function(global){
     //method to check for collision with opponent.
     Actor.prototype.collisionCheck = function (obj) {
         //DEBUG
-
+        //TODO:  Refine this.
         //Define point to check inside of target bound box.
         return !(
             ( ( this.y + this.height ) < ( obj.y ) ) ||
