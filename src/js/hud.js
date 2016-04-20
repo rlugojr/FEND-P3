@@ -12,6 +12,14 @@ var HUD = (function(global){
         ctx.fillText(message, ctx.canvas.width/2, ctx.canvas.height/2)
     };
 
+    var hudImage = function hudImage(ctxUI, image, displayTime){
+        this.elapsed=0;
+        this.displayTime = 120; //2 secs
+        this.displayImage = function () {
+            ctxUI.clearRect(0, 0, ctxUI.canvas.width, ctxUI.canvas.height);
+            ctxUI.drawImage(Resources.get('effects/bang.png'), ctxUI.canvas.width / 2, ctx.canvas.height / 2);
+        }
+    };
 
 
 
