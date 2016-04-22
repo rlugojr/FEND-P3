@@ -65,6 +65,115 @@ var Engine = (function(global) {
     });
 
 
+   /* {
+        "urls": [
+        "gameaudio.mp3",
+        "gameaudio.ogg"
+    ],
+        "sprite": {
+        "intro_loop": [
+            0,
+            18861
+        ],
+            "hail_to_the_chief": [
+            20000,
+            40464
+        ],
+            "fired": [
+            62000,
+            865
+        ],
+            "gameplay_loop": [
+            64000,
+            37105
+        ],
+            "artifact_capture": [
+            103000,
+            241
+        ],
+            "collision": [
+            105000,
+            1009
+        ],
+            "explosion": [
+            108000,
+            5565
+        ],
+            "levelUp": [
+            115000,
+            6243
+        ],
+            "winning": [
+            123000,
+            9745
+        ],
+            "bernie": [
+            134000,
+            24399
+        ],
+            "carson": [
+            160000,
+            2613
+        ],
+            "cruz": [
+            164000,
+            2927
+        ],
+            "Hilantura": [
+            168000,
+            5591
+        ],
+            "hillary_bark": [
+            175000,
+            1386
+        ],
+            "kasich": [
+            178000,
+            6866
+        ],
+            "rubio": [
+            186000,
+            1464
+        ],
+            "usurper": [
+            189000,
+            3744
+        ],
+            "usurper_all_mine": [
+            194000,
+            32497
+        ],
+            "bababa": [
+            228000,
+            3084
+        ],
+            "built_company": [
+            233000,
+            8543
+        ],
+            "really_rich": [
+            243000,
+            1046
+        ],
+            "Commie": [
+            246000,
+            4886
+        ],
+            "lil_guy": [
+            252000,
+            2848
+        ],
+            "lyin_ted": [
+            256000,
+            2378
+        ],
+            "tough_guy": [
+            260000,
+            654
+        ]
+    }
+    }/**/
+
     var gameState = function gameState() {
         this.level = {
             1:"Level 1 : A Lame Duck",
