@@ -67,32 +67,33 @@ var Engine = (function(global) {
 
     var sounds = new Howl({
         "urls": ["audio/gameaudio.mp3","audio/gameaudio.ogg"],
+        buffer: true,
         "sprite": {
-            "intro_loop": [0,18861],
-            "hail_to_the_chief": [20000,40464],
-            "fired": [62000,865],
-            "gameplay_loop": [64000,37105],
-            "artifact_capture": [103000,241],
-            "collision": [105000,1009],
-            "explosion": [108000,5565],
-            "levelUp": [115000,6243],
-            "winning": [123000,9745],
-            "bernie": [134000,24399],
-            "carson": [160000,2613],
-            "cruz": [164000,2927],
-            "Hilantura": [168000,5591],
-            "hillary_bark": [175000,1386],
-            "kasich": [178000,6866],
-            "rubio": [186000,1464],
-            "usurper": [189000,3744],
-            "usurper_all_mine": [194000,32497],
-            "bababa": [228000,3084],
-            "built_company": [233000,8543],
-            "really_rich": [243000,1046],
-            "Commie": [246000,4886],
-            "lil_guy": [252000,2848],
-            "lyin_ted": [256000,2378],
-            "tough_guy": [260000,654]
+            intro_loop: [0,18861],
+            hail_to_the_chief: [20000,40464],
+            fired: [62000,865],
+            gameplay_loop: [64000,37105],
+            artifact_capture: [103000,241],
+            collision: [105000,1009],
+            explosion: [108000,5565],
+            levelUp: [115000,6243],
+            winning: [123000,9745],
+            bernie: [134000,24399],
+            carson: [160000,2613],
+            cruz: [164000,2927],
+            Hilantura: [168000,5591],
+            hillary_bark: [175000,1386],
+            kasich: [178000,6866],
+            rubio: [186000,1464],
+            usurper: [189000,3744],
+            usurper_all_mine: [194000,32497],
+            bababa: [228000,3084],
+            built_company: [233000,8543],
+            really_rich: [243000,1046],
+            Commie: [246000,4886],
+            lil_guy: [252000,2848],
+            lyin_ted: [256000,2378],
+            tough_guy: [260000,654]
         }
     });
 
@@ -229,7 +230,7 @@ var Engine = (function(global) {
 
         function showWinScreen(){
             ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
-            sounds.play("hail_to_the_chief");
+            sounds.play('hail_to_the_chief');
             ctxUI.drawImage(Resources.get("images/outro/win_screen.png"), 0, 0, ctxUI.canvas.width,ctxUI.canvas.height);
             gameState.currentState = "paused"
         }
@@ -256,7 +257,7 @@ var Engine = (function(global) {
                 if (gameState.level >= 6) {
                     gameState.playerState = 'wonGame';
                     if (currExplosion.length === 0) {
-                        sounds.stop("game_loop");
+                        sounds.stop('game_loop');
                         //TODO: Show win picture and play presedential song.
                         console.log("Explosion finished and you won the game")
                     }
@@ -302,7 +303,7 @@ var Engine = (function(global) {
 
         levelSetup();
 
-        sounds.play("game_loop");
+        sounds.play('game_loop');
 
         main();
     }
@@ -432,7 +433,7 @@ var Engine = (function(global) {
             //console.log("gotArtifact :" + gotArtifact);
             if (gotArtifact) {
                 //debug
-                sounds.play("artifact_capture");
+                sounds.play('artifact_capture');
                 var target = currArtifact[f].enemyEffected;
 
                 for (var t = 0; t <= currEnemy.length - 1; t++) {

@@ -72,8 +72,8 @@ var Explosions = (function(global) {
     };
 
     Explosion.prototype.playSounds = function(){
-        sounds.play("fired");
-        sounds.play("explosion")
+        sounds.play('fired');
+        sounds.play('explosion');
     };
 
     Explosion.prototype.render = function (ctx) {
