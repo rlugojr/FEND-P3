@@ -542,7 +542,7 @@ var App = (function(global){
                 //add howler for random gloat. Stun enemy for 1 round.
                 break;
             case 'insult':
-                //add howler for random insult and stun enemies for 5 rounds. Can onlu be used 1x per level
+                //add howler for random insult and stun enemies for 5 rounds. Can only be used 1x per level
                 break;
         }
         this.moved = true;
@@ -564,7 +564,6 @@ var App = (function(global){
     //Add any additional properties specific to this object or its children to the prototype.
     Artifact.prototype.enemyEffected ="";
     Artifact.prototype.level="";
-    //TODO: method to destroy enemy associate with the artifact upon the artifact's capture (collision)
     Artifact.prototype.captured = function captured(){
         console.log("Destroyed Enemy: " + this.enemyEffected)
     };

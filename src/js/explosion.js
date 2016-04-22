@@ -71,13 +71,9 @@ var Explosions = (function(global) {
         }
     };
 
-    Explosion.prototype.playTagLine = function(mp3,ogg){
-        var tagLine = new Howl({
-            src: [mp3,ogg],
-            autoplay: true,
-            loop: false,
-            volume: 0.7
-        });
+    Explosion.prototype.playSounds = function(){
+        sounds.play("fired");
+        sounds.play("explosion")
     };
 
     Explosion.prototype.render = function (ctx) {

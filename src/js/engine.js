@@ -40,7 +40,7 @@ var Engine = (function(global) {
 
     //set all Howler instances
 
-    var game_loop = new Howl({
+    /*var game_loop = new Howl({
         src: ['audio/gameplay_loop.mp3','audio/gameplay_loop.ogg'],
         autoplay: false,
         loop: true,
@@ -62,117 +62,39 @@ var Engine = (function(global) {
         autoplay: false,
         loop: true,
         volume: 0.5
-    });
+    });*/
 
 
-   /* {
-        "urls": [
-        "gameaudio.mp3",
-        "gameaudio.ogg"
-    ],
+    var sounds = new Howl({
+        "urls": ["audio/gameaudio.mp3","audio/gameaudio.ogg"],
         "sprite": {
-        "intro_loop": [
-            0,
-            18861
-        ],
-            "hail_to_the_chief": [
-            20000,
-            40464
-        ],
-            "fired": [
-            62000,
-            865
-        ],
-            "gameplay_loop": [
-            64000,
-            37105
-        ],
-            "artifact_capture": [
-            103000,
-            241
-        ],
-            "collision": [
-            105000,
-            1009
-        ],
-            "explosion": [
-            108000,
-            5565
-        ],
-            "levelUp": [
-            115000,
-            6243
-        ],
-            "winning": [
-            123000,
-            9745
-        ],
-            "bernie": [
-            134000,
-            24399
-        ],
-            "carson": [
-            160000,
-            2613
-        ],
-            "cruz": [
-            164000,
-            2927
-        ],
-            "Hilantura": [
-            168000,
-            5591
-        ],
-            "hillary_bark": [
-            175000,
-            1386
-        ],
-            "kasich": [
-            178000,
-            6866
-        ],
-            "rubio": [
-            186000,
-            1464
-        ],
-            "usurper": [
-            189000,
-            3744
-        ],
-            "usurper_all_mine": [
-            194000,
-            32497
-        ],
-            "bababa": [
-            228000,
-            3084
-        ],
-            "built_company": [
-            233000,
-            8543
-        ],
-            "really_rich": [
-            243000,
-            1046
-        ],
-            "Commie": [
-            246000,
-            4886
-        ],
-            "lil_guy": [
-            252000,
-            2848
-        ],
-            "lyin_ted": [
-            256000,
-            2378
-        ],
-            "tough_guy": [
-            260000,
-            654
-        ]
-    }
-    }/**/
+            "intro_loop": [0,18861],
+            "hail_to_the_chief": [20000,40464],
+            "fired": [62000,865],
+            "gameplay_loop": [64000,37105],
+            "artifact_capture": [103000,241],
+            "collision": [105000,1009],
+            "explosion": [108000,5565],
+            "levelUp": [115000,6243],
+            "winning": [123000,9745],
+            "bernie": [134000,24399],
+            "carson": [160000,2613],
+            "cruz": [164000,2927],
+            "Hilantura": [168000,5591],
+            "hillary_bark": [175000,1386],
+            "kasich": [178000,6866],
+            "rubio": [186000,1464],
+            "usurper": [189000,3744],
+            "usurper_all_mine": [194000,32497],
+            "bababa": [228000,3084],
+            "built_company": [233000,8543],
+            "really_rich": [243000,1046],
+            "Commie": [246000,4886],
+            "lil_guy": [252000,2848],
+            "lyin_ted": [256000,2378],
+            "tough_guy": [260000,654]
+        }
+    });
 
     var gameState = function gameState() {
         this.level = {
@@ -307,7 +229,7 @@ var Engine = (function(global) {
 
         function showWinScreen(){
             ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
-            win_loop.play();
+            sounds.play("hail_to_the_chief");
             ctxUI.drawImage(Resources.get("images/outro/win_screen.png"), 0, 0, ctxUI.canvas.width,ctxUI.canvas.height);
             gameState.currentState = "paused"
         }
@@ -334,7 +256,7 @@ var Engine = (function(global) {
                 if (gameState.level >= 6) {
                     gameState.playerState = 'wonGame';
                     if (currExplosion.length === 0) {
-                        game_loop.stop();
+                        sounds.stop("game_loop");
                         //TODO: Show win picture and play presedential song.
                         console.log("Explosion finished and you won the game")
                     }
@@ -380,7 +302,7 @@ var Engine = (function(global) {
 
         levelSetup();
 
-        game_loop.play();
+        sounds.play("game_loop");
 
         main();
     }
@@ -510,6 +432,7 @@ var Engine = (function(global) {
             //console.log("gotArtifact :" + gotArtifact);
             if (gotArtifact) {
                 //debug
+                sounds.play("artifact_capture");
                 var target = currArtifact[f].enemyEffected;
 
                 for (var t = 0; t <= currEnemy.length - 1; t++) {
@@ -524,7 +447,7 @@ var Engine = (function(global) {
                         explode.prototype.constructor = newExplosion;
                         explode.reset();
 
-                        explode.playTagLine('audio/fired.mp3','audio/fired.ogg');
+                        explode.playSounds();
                         currExplosion.push(explode);
                         currArtifact.splice(f, 1);
                         currEnemy.splice(t, 1);
@@ -572,12 +495,12 @@ var Engine = (function(global) {
     var pauseToggle = function pauseToggle(){
         if(gameState.currentState!=='paused') {
             gameState.currentState = "paused";
-            game_loop.pause();
+            sounds.pause("game_loop");
             hudMessage(ctxUI,"PAUSED",'black','red');
             //Display blinking "Paused" image on ctxUI.
         }else if (gameState.currentState==='paused'){
             gameState.currentState = "inLevel";
-            game_loop.play();
+            sounds.play("game_loop");
         }
     };
 
@@ -649,6 +572,7 @@ var Engine = (function(global) {
 
     //add gameState to global for access from any other js file.
     global.gameState = gameState;
-    global.pauseToggle = pauseToggle
+    global.pauseToggle = pauseToggle;
+    global.sounds = sounds;
 
 })(this);
