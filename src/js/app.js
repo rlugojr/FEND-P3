@@ -54,16 +54,13 @@ var App = (function(global){
         ctx.save();
         ctx.translate(0, -1*this.height);
         ctx.drawImage(Resources.get(this.imgSrc), this.x, this.y, this.width, this.height);
-        ctx.restore();
         //DEBUG
         //draw bound box hit area
-        /*
-        ctx.save();
-        ctx.lineWidth = "1";
-        ctx.strokeStyle="red";
-        ctx.strokeRect(this.x + this.offsetRight,this.y - this.offsetBottom,this.width - this.offsetRight - this.offsetLeft,-1*(this.height-this.offsetTop-this.offsetBottom));
-        ctx.restore()
-        */
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.x,this.y,this.width,this.height);
+        ctx.restore();
+
     };
 
     //method to check for collision with opponent.
@@ -71,11 +68,14 @@ var App = (function(global){
         //DEBUG
         //TODO:  Refine this.
         //Define point to check inside of target bound box.
-        return !(
-            ( ( this.y + this.height ) < ( obj.y ) ) ||
-            ( this.y > ( obj.y + obj.height ) ) ||
-            ( ( this.x + obj.width ) < obj.x ) ||
-            ( this.x > ( obj.x + obj.width ) )
+        //adjust for translation of image.
+
+        return (
+            this.x < obj.x + obj.width &&
+                this.x + this.width > obj.x &&
+                this.y + this.height/8  < obj.y + 2*obj.height &&  //bottom
+                this.y + this.height > obj.y + obj.height
+
         )
     };
 
@@ -114,10 +114,6 @@ var App = (function(global){
     Animate.prototype.direction = 1;
     Animate.prototype.speed = 256;
     Animate.prototype.moved = false;
-    Animate.prototype.ego = 100;
-    Animate.prototype.bruisedEgo=function(damage) {
-        this.ego = this.ego -= damage
-    };
 
     //method to update the object's location based on current position, velocity and collisions.
     Animate.prototype.update = function (dt) {
@@ -238,14 +234,17 @@ var App = (function(global){
     Enemy.prototype.attackPattern='';
     Enemy.prototype.level = "";
     Enemy.prototype.tickTock = 0;
+    Enemy.prototype.soundIntro = "";
+    Enemy.prototype.soundEffect = "";
     Enemy.prototype.startPosition = function(){
         this.x = x;
         this.y = y
     };
+
     Enemy.prototype.update = function(dt, newX, newY) {
         switch (this.attackPattern) {
             case "sittingDuck":
-                //do nothing, just sit there.
+                this.sittingDuck(dt);
                 break;
             case "hongKongDingDong":
                 this.hongKongDingDong(dt);
@@ -267,6 +266,15 @@ var App = (function(global){
         }
     };
 
+    Enemy.prototype.sittingDuck = function(dt){
+        this.tickTock++;
+        console.log(this.tickTock);
+        if(this.tickTock===1000){
+            soundfx.play('carson');
+            soundfx.play('bababa')
+        }
+    };
+
     Enemy.prototype.hongKongDingDong = function(dt){
         this.tickTock++;
         if(this.tickTock===100){
@@ -274,6 +282,12 @@ var App = (function(global){
         }else if(this.tickTock===200){
             this.x = this.x - this.speed;
             this.tickTock = 1
+        }
+        if(this.tickTock%2000===0){
+            soundfx.play('kasich');
+            if(this.tickTock===2000){
+                soundfx.play('built_company')
+            }
         }
     };
 
@@ -600,6 +614,8 @@ var App = (function(global){
             newObj.boxLeft = currItem.x  + currItem.width - currItem.offsetLeft;
             newObj.boxRight = currItem.x  + currItem.offsetLeft;
             if(newObj.enemyEffected!==undefined){newObj.enemyEffected = currItem.enemyEffected;}
+            if(newObj.soundIntro!==undefined){newObj.soundIntro = currItem.soundIntro;}
+            if(newObj.soundEffect!==undefined){newObj.soundEffect = currItem.soundEffect;}
             if(newObj.attackPattern!==undefined){newObj.attackPattern = currItem.attackPattern;}
             newObj.level = currItem.level;
 
@@ -612,25 +628,25 @@ var App = (function(global){
     //create enemy objects
     var enemyList =[
         {"id":"carson", "name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
-            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,
+            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,"soundIntro" : "","soundEffect" : "carson",
             "attackPattern" : "lameDuck","level":1},
         {"id":"kasich", "name" : "HongKongKasich","imgSrc" : "images/enemies/kasich.png","x" : 384,"y" : 512,"width" : 136,"height" : 130,
-            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":384,
+            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":384,"soundIntro" : "","soundEffect" : "kasich",
             "attackPattern" : "hongKongDingDong","level":2},
         {"id":"cruz","name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 1152,"y" : 512,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,"soundIntro" : "","soundEffect" : "cruz",
             "attackPattern" : "guardDog","level":4},
         {"id":"hillary","name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
-            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":1,
+            "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":1,"soundIntro" : "Hilantura","soundEffect" : "hillary_bark",
             "attackPattern" : "barkingMad","level":6},
         {"id":"romney","name" : "The Usurper","imgSrc" : "images/enemies/romney.png","x" : 640,"y" : 130,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":1,
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":1,"soundIntro" : "usurper","soundEffect" : "usurper_all_mine",
             "attackPattern" : "usurper","level":5},
         {"id":"rubio","name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
-            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":6,
+            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":6,"soundIntro" : "","soundEffect" : "rubio",
             "attackPattern" : "headHunter","level":4},
         {"id":"sanders","name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110
-            ,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,
+            ,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"soundIntro" : "","soundEffect" : "bernie",
             "attackPattern":"barelySane-ders","level":3}
     ];
     //create enemy array
@@ -649,7 +665,7 @@ var App = (function(global){
         {"id":"stand", "name" : "Debate Stand","imgSrc" : "images/artifacts/debate_stand.png","x" : 540,"y" : 511,"width" : 50,"height" : 100,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "carson","level":1},
-        {"id":"belt", "name" : "White Belt","imgSrc" : "images/artifacts/white_belt.png","x" : 540,"y" : 512,"width" : 67,"height" : 100,
+        {"id":"belt", "name" : "White Belt","imgSrc" : "images/artifacts/white_belt.png","x" : 540,"y" : 512,"width" : 67,"height" : 40,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "kasich","level":2},
         {"id":"birthCert","name" : "Birth Certificate","imgSrc" : "images/artifacts/birth_certificate.png","x" : 1152,"y" : 120,"width" : 52,"height" : 30,
