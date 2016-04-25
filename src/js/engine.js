@@ -260,11 +260,11 @@ var Engine = (function(global) {
             if (gameState.playerState === 'beatLevel') {
                 if (gameState.level >= 6) {
                     gameState.playerState = 'wonGame';
-                    if (currExplosion.length === 0) {
+                    //if (currExplosion.length === 0) {
                         game_loop.stop();
                         showWinScreen();
                         console.log("Explosion finished and you won the game")
-                    }
+                    //}
                     //exit code for WIN
                 } else {
                     gameState.level++;
@@ -320,7 +320,10 @@ var Engine = (function(global) {
 
         currEnemy = level[gameState.level][0];
         currArtifact = level[gameState.level][1];
-        player.startPosition()
+        player.startPosition();
+        for(s=0;s<=currEnemy.length-1;s++) {
+            soundfx.play(currEnemy[s].soundIntro)
+        }
 
     }
 
@@ -338,6 +341,10 @@ var Engine = (function(global) {
         updateEntities(dt);
         //check for collisions between player and artifacts or enemies.
         checkCollisions();
+
+        for(s=0;s<=currEnemy.length-1;s++) {
+            soundfx.play(currEnemy[s].soundEffect)
+        }
     }
 
     /* This is called by the update function and loops through all of the

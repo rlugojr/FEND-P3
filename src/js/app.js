@@ -267,12 +267,7 @@ var App = (function(global){
     };
 
     Enemy.prototype.sittingDuck = function(dt){
-        this.tickTock++;
-        console.log(this.tickTock);
-        if(this.tickTock===1000){
-            soundfx.play('carson');
-            soundfx.play('bababa')
-        }
+        //sits like a lame duck!
     };
 
     Enemy.prototype.hongKongDingDong = function(dt){
@@ -282,12 +277,6 @@ var App = (function(global){
         }else if(this.tickTock===200){
             this.x = this.x - this.speed;
             this.tickTock = 1
-        }
-        if(this.tickTock%2000===0){
-            soundfx.play('kasich');
-            if(this.tickTock===2000){
-                soundfx.play('built_company')
-            }
         }
     };
 
@@ -628,13 +617,13 @@ var App = (function(global){
     //create enemy objects
     var enemyList =[
         {"id":"carson", "name" : "TurDuckarson","imgSrc" : "images/enemies/carson.png","x" : 640,"y" : 512,"width" : 75,"height" : 95,
-            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,"soundIntro" : "","soundEffect" : "carson",
+            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,"soundIntro" : "bababa","soundEffect" : "carson",
             "attackPattern" : "lameDuck","level":1},
         {"id":"kasich", "name" : "HongKongKasich","imgSrc" : "images/enemies/kasich.png","x" : 384,"y" : 512,"width" : 136,"height" : 130,
-            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":384,"soundIntro" : "","soundEffect" : "kasich",
+            "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":384,"soundIntro" : "tough_guy","soundEffect" : "kasich",
             "attackPattern" : "hongKongDingDong","level":2},
         {"id":"cruz","name" : "Lyin Ted","imgSrc" : "images/enemies/cruz.png","x" : 1152,"y" : 512,"width" : 65,"height" : 110,
-            "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,"soundIntro" : "","soundEffect" : "cruz",
+            "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,"soundIntro" : "lyin_ted","soundEffect" : "cruz",
             "attackPattern" : "guardDog","level":4},
         {"id":"hillary","name" : "Hilantula","imgSrc" : "images/enemies/hillary.png","x" : 640,"y" : 384,"width" : 90,"height" : 80,
             "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":1,"soundIntro" : "Hilantura","soundEffect" : "hillary_bark",
@@ -643,10 +632,10 @@ var App = (function(global){
             "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":1,"soundIntro" : "usurper","soundEffect" : "usurper_all_mine",
             "attackPattern" : "usurper","level":5},
         {"id":"rubio","name" : "Lil Marco","imgSrc" : "images/enemies/rubio.png","x" : 885,"y" : 240,"width" : 65,"height" : 110,
-            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":6,"soundIntro" : "","soundEffect" : "rubio",
+            "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":6,"soundIntro" : "lil_guy","soundEffect" : "rubio",
             "attackPattern" : "headHunter","level":4},
         {"id":"sanders","name":"Lenin Marx","imgSrc":"images/enemies/sanders.png","x":640,"y":640,"width":65,"height":110
-            ,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"soundIntro" : "","soundEffect" : "bernie",
+            ,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"soundIntro" : "Commie","soundEffect" : "bernie",
             "attackPattern":"barelySane-ders","level":3}
     ];
     //create enemy array
