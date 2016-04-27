@@ -224,19 +224,16 @@ var Engine = (function(global) {
                 currImage= Resources.get(introScenes[i][0]);
                 ctxUI.drawImage(currImage, 0, 0);
 
-                var wait=0;
-                do {
-                    wait = wait++
-                } while (wait < (dt*5))
+                //TODO: add elapsed time, update and render methods
             }
         }
 
 
         function showWinScreen(){
+            gameState.currentState = "paused";
             ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
             win_loop.play();
-            ctxUI.drawImage(Resources.get("images/outro/win_screen.png"), 0, 0, ctxUI.canvas.width,ctxUI.canvas.height);
-            gameState.currentState = "paused"
+            ctxUI.drawImage(Resources.get("images/outro/win_screen.png"), 0, 0, ctxUI.canvas.width,ctxUI.canvas.height)
         }
 
     /* This function serves as the kickoff point for the game loop itself
@@ -321,7 +318,7 @@ var Engine = (function(global) {
         currEnemy = level[gameState.level][0];
         currArtifact = level[gameState.level][1];
         player.startPosition();
-        for(s=0;s<=currEnemy.length-1;s++) {
+        for(var s=0;s<=currEnemy.length-1;s++) {
             soundfx.play(currEnemy[s].soundIntro)
         }
 
@@ -341,10 +338,6 @@ var Engine = (function(global) {
         updateEntities(dt);
         //check for collisions between player and artifacts or enemies.
         checkCollisions();
-
-        for(s=0;s<=currEnemy.length-1;s++) {
-            soundfx.play(currEnemy[s].soundEffect)
-        }
     }
 
     /* This is called by the update function and loops through all of the
@@ -480,7 +473,10 @@ var Engine = (function(global) {
             if(gotHit){
                 player.ego -= 10;
                 gameState.playerState = 'gotHit';
-                soundfx.play('collision')
+                soundfx.play('collision');
+                for(var s=0;s<=currEnemy.length-1;s++) {
+                    soundfx.play(currEnemy[s].soundEffect)
+                }
             }
         }
     }
@@ -502,6 +498,7 @@ var Engine = (function(global) {
         drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
         drawScenery(2,ctxScenery);  //draw scenery objects once to conserve memory and cpu cycles
 
+        game_loop.play();
 
     }
 
