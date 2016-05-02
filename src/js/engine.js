@@ -229,12 +229,12 @@ var Engine = (function(global) {
         }
 
 
-        function showWinScreen(){
-            gameState.currentState = "paused";
-            ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
-            win_loop.play();
-            ctxUI.drawImage(Resources.get("images/outro/win_screen.png"), 0, 0, ctxUI.canvas.width,ctxUI.canvas.height)
-        }
+    function showWinScreen(){
+        gameState.currentState = "paused";
+        ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
+
+        ctxUI.drawImage(Resources.get("images/outro/win_screen.png"), 0, 0, ctxUI.canvas.width,ctxUI.canvas.height)
+    }
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
