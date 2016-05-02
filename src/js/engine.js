@@ -230,10 +230,15 @@ var Engine = (function(global) {
 
 
     function showWinScreen(){
-        gameState.currentState = "paused";
-        ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
 
-        ctxUI.drawImage(Resources.get("images/outro/win_screen.png"), 0, 0, ctxUI.canvas.width,ctxUI.canvas.height)
+        ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
+        ctxUI.fillStyle = "white";
+        ctxUI.fillRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
+        ctxUI.drawImage(Resources.get("images/outro/win_screen.jpg"), 0, 0,800,431,0,0, ctxUI.canvas.width, ctxUI.canvas.height);
+        ctxUI.font = "36px 'Press Start 2P'";
+        ctxUI.fillStyle = "White";
+        ctxUI.strokeText("You Made America Great Again!",100,ctxUI.canvas.height - 200);
+        win_loop.play()
     }
 
     /* This function serves as the kickoff point for the game loop itself
@@ -250,17 +255,17 @@ var Engine = (function(global) {
             dt = (now - lastTime) / 1000.0;
 
         if(gameState.currentState !=='paused') {
-            gameState.currentState = 'running';
-
             update(dt);
+        }
 
             if (gameState.playerState === 'beatLevel') {
                 if (gameState.level >= 6) {
                     gameState.playerState = 'wonGame';
                     //if (currExplosion.length === 0) {
+                        console.log("Explosion finished and you won the game");
                         game_loop.stop();
+                        gameState.currentState = "paused";
                         showWinScreen();
-                        console.log("Explosion finished and you won the game")
                     //}
                     //exit code for WIN
                 } else {
@@ -274,9 +279,9 @@ var Engine = (function(global) {
                 levelSetup(gameState.level);
                 gameState.playerState = 'inLevel'
             }
-
-            render();
-        }
+            if(gameState.currentState !=='paused') {
+                render();
+            }
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
@@ -424,7 +429,6 @@ var Engine = (function(global) {
         }
 
         player.render(ctxAction);
-        //REMOVE: egometer.render(ctxUI)
 
     }
 
@@ -536,8 +540,8 @@ var Engine = (function(global) {
         'images/intro/intro_3.png',
         'images/intro/intro_4.png',
         'images/intro/start_screen.png',
-        'images/outro/win_screen.png',
-        'images/outro/lose_screen.png',
+        'images/outro/win_screen.jpg',
+        'images/outro/lose_screen.jpg',
         'images/tiles/grass.png',
         'images/tiles/pavers.png',
         'images/tiles/rock.png',

@@ -123,17 +123,17 @@ var gameMap = (function(global) {
 
                     //enable the next 6 lines to draw a debugging grid for collision checks and
                     // placement of objects in the Action layer.
-                    if(layer === 0) {
+                    /*if(layer === 0) {
                         ctxGeo.beginPath();
                         ctxGeo.font = "9pt sans-serif";
                         ctxGeo.strokeText(r + ", " + c, x +20, y + 36);
                         ctxGeo.strokeRect(x, y, 64, 64);
                         ctxGeo.closePath()
-                    }
+                    }*/
                 }
             }
         }
-    }
+    };
 
 
 

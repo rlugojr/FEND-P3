@@ -738,9 +738,8 @@ var App = (function(global){
             68: 'right',    //'D' key
             40: 'down',     //arrow down
             83: 'down',     //'S' key
-            80: 'pause',    //'P' key
-            32: 'insult',   //space bar for insults.
-            71: 'gloat'     //'G' key
+            80: 'reset',    //'P' key
+            32: 'continue'   //space bar to continue.
 
         };
 
@@ -751,6 +750,9 @@ var App = (function(global){
 
         if(allowedKeys[e.keyCode] === 'pause'){
             pauseToggle();
+        }
+        if(allowedKeys[e.keyCode] === 'reset'){
+            reset();
         }
         //else
         //event sends keys to player.handleInput
