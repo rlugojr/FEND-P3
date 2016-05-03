@@ -151,12 +151,12 @@ var gameMap = (function(global) {
         'images/tiles/tree.png', //4
         'images/tiles/pink_tree.png',//5
         'images/tiles/green_tree.png', //6
-        'images/artifacts/birth_certificate.png', //7
+/*        'images/artifacts/birth_certificate.png', //7
         'images/artifacts/debate_stand.png', //8
         'images/artifacts/mail_server.png', //9
         'images/artifacts/playbill.png', //10
         'images/artifacts/bleeding_heart.png', //11
-        'images/artifacts/water_bottle.png', //12
+        'images/artifacts/water_bottle.png', //12*/
         'images/tiles/wall_corner.png', //13
         'images/tiles/wall_vertical.png', //14
         'images/tiles/wall_horizontal.png', //15

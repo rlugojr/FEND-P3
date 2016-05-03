@@ -525,7 +525,7 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
-        'images/keys/a.png',
+        /*'images/keys/a.png',
         'images/keys/d.png',
         'images/keys/s.png',
         'images/keys/w.png',
@@ -533,7 +533,8 @@ var Engine = (function(global) {
         'images/keys/down.png',
         'images/keys/left.png',
         'images/keys/right.png',
-        'images/keys/space.png',
+        'images/keys/space.png',*/
+        'images/_textures/spritesheet.png',
         'images/intro/intro_0.png',
         'images/intro/intro_1.png',
         'images/intro/intro_2.png',
@@ -542,7 +543,7 @@ var Engine = (function(global) {
         'images/intro/start_screen.png',
         'images/outro/win_screen.jpg',
         'images/outro/lose_screen.jpg',
-        'images/tiles/grass.png',
+        /*'images/tiles/grass.png',
         'images/tiles/pavers.png',
         'images/tiles/rock.png',
         'images/tiles/tree.png',
@@ -565,7 +566,7 @@ var Engine = (function(global) {
         'images/enemies/hillary.png',
         'images/enemies/romney.png',
         'images/enemies/rubio.png',
-        'images/enemies/sanders.png',
+        'images/enemies/sanders.png',*/
         'images/effects/explosion.png',
         'images/effects/bang.png',
         'images/effects/level_up.png',
