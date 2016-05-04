@@ -60,10 +60,10 @@ var App = (function(global){
         ctx.drawImage(Resources.get(this.imgSrc),this.sx, this.sy, this.sw, this.sh, this.x, this.y, this.width, this.height);
         //DEBUG
         //draw bound box hit area
-        ctx.strokeStyle = 'red';
+        /*ctx.strokeStyle = 'red';
         ctx.lineWidth = 2;
         ctx.strokeRect(this.x,this.y,this.width,this.height);
-        ctx.restore();
+        ctx.restore();*/
 
     };
 

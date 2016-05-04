@@ -70,54 +70,35 @@ var gameMap = (function(global) {
                 //Iterate through tiles and handle per case.
                 if (tile !== 0) { // 1 => empty tile
                     switch (tile) {
-                        case 1:
-                        case 2:
-                        case 13:
-                        case 14:
-                        case 15:
+                        case 1: //'images/tiles/grass.png'
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),340,566,63,63,x,y,this.tsize,this.tsize);
+                            break;
+                        case 2: //'images/tiles/pavers.png'
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),406,522,63,63,x,y,this.tsize,this.tsize);
+                            break;
+                        case 13: //'images/tiles/wall_corner.png'
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),400,702,63,63,x,y,this.tsize,this.tsize);
+                            break;
+                        case 14: //'images/tiles/wall_vertical.png'
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),432,768,63,63,x,y,this.tsize,this.tsize);
+                            break;
+                        case 15: //'images/tiles/wall_horizontal.png'
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),366,768,63,63,x,y,this.tsize,this.tsize);
+                            break;
                         case 16:
-                            ctxGeo.drawImage(
-                                Resources.get(this.tiles[tile]), // image
-                                0, // source x
-                                0, // source y
-                                this.tsize, // source width
-                                this.tsize, // source height
-                                x,  // target x
-                                y, // target y
-                                this.tsize, // target width
-                                this.tsize);// target height
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),340,566,63,63,x,y,this.tsize,this.tsize);
                             break;
-                        case 3:
-                        case 4:
-                        case 5:
-                        case 6:
-                            ctxScenery.drawImage(
-                                Resources.get(this.tiles[tile]), // image
-                                0, // source x
-                                0, // source y
-                                101, // source width
-                                171, // source height
-                                x - 20,  // target x
-                                y - 120, // target y
-                                101, // target width
-                                171);// target height
+                        case 3: //'images/tiles/rock.png', //3
+                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),400,636,63,63,x,y,this.tsize,this.tsize);
                             break;
-                        case 7:
-                        case 8:
-                        case 9:
-                        case 10:
-                        case 11:
-                        case 12:
-                            ctxAction.drawImage(
-                                Resources.get(this.tiles[tile]), // image
-                                0, // source x
-                                0, // source y
-                                101, // source width
-                                171, // source height
-                                x + 20,  // target x
-                                y + 20, // target y
-                                50, // target width
-                                85);// target height
+                        case 4: //'images/tiles/tree.png'
+                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),2,780,102,172,x - 20,y - 120,101,171);
+                            break;
+                        case 5:  //'images/tiles/pink_tree.png'
+                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),106,432,102,172,x - 20,y - 120,101,171);
+                            break;
+                        case 6: //'images/tiles/green_tree.png'
+                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),2,606,102,172,x - 20,y - 120,101,171);
                             break;
                     }
 
@@ -151,12 +132,12 @@ var gameMap = (function(global) {
         'images/tiles/tree.png', //4
         'images/tiles/pink_tree.png',//5
         'images/tiles/green_tree.png', //6
-/*        'images/artifacts/birth_certificate.png', //7
+        'images/artifacts/birth_certificate.png', //7
         'images/artifacts/debate_stand.png', //8
         'images/artifacts/mail_server.png', //9
         'images/artifacts/playbill.png', //10
         'images/artifacts/bleeding_heart.png', //11
-        'images/artifacts/water_bottle.png', //12*/
+        'images/artifacts/water_bottle.png', //12
         'images/tiles/wall_corner.png', //13
         'images/tiles/wall_vertical.png', //14
         'images/tiles/wall_horizontal.png', //15

@@ -65,9 +65,12 @@ var Engine = (function(global) {
         src: ['audio/hail_to_the_chief.ogg', 'audio/hail_to_the_chief.mp3'],
         html5: true,
         autoplay: false,
-        loop: true,
+        loop: false,
         preload: true,
-        volume: 0.25
+        volume: 0.25,
+        onend: function(){
+            init();
+        }
     });
 
 
@@ -140,17 +143,15 @@ var Engine = (function(global) {
         map._drawLayer(layer, ctxGeo);
     }
 
-    function drawAction(layer, ctxAction) {
-        ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
-        //map._drawLayer(layer, ctxAction);
-    }
 
     function drawScenery(layer, ctxScenery) {
         ctxScenery.clearRect(0, 0, ctxScenery.canvas.width, ctxScenery.canvas.height);
         map._drawLayer(layer, ctxScenery);
     }
 
-    function drawUI(layer, ctxUI){
+
+    function clearCanvasLayers(){
+        ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
         ctxUI.clearRect(0,0, ctxUI.canvas.width, ctxUI.canvas.height)
     }
 
@@ -237,7 +238,7 @@ var Engine = (function(global) {
         ctxUI.drawImage(Resources.get("images/outro/win_screen.jpg"), 0, 0,800,431,0,0, ctxUI.canvas.width, ctxUI.canvas.height);
         ctxUI.font = "36px 'Press Start 2P'";
         ctxUI.fillStyle = "White";
-        ctxUI.strokeText("You Made America Great Again!",100,ctxUI.canvas.height - 200);
+        ctxUI.fillText("You Made America Great Again!",100,ctxUI.canvas.height - 200);
         win_loop.play()
     }
 
@@ -297,7 +298,7 @@ var Engine = (function(global) {
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
-    function init() {
+    var init = function init() {
 
         gameState.currentState = 'initializing';
 
@@ -387,11 +388,14 @@ var Engine = (function(global) {
             }
 
         */
-        //clear Action layer and draw any "special" items that are positioned using Action grid.)
-        drawAction(1,ctxAction);
+        //clear Action and UI layers and
+        clearCanvasLayers();
+
+        //draw any "special" items that are positioned using Action grid.)
+        //drawAction(1,ctxAction);
 
         //draw any objects that provide health status or notifications to the user.
-        drawUI(1,ctxUI);
+        //drawUI(1,ctxUI);
 
         //draw all objects rendered in the Action layer (player, enemies, artifacts, explosions)
         renderEntities();
@@ -501,6 +505,7 @@ var Engine = (function(global) {
         //draw map and scenery layers because they don't change and won't need to be rendered again.
         drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
         drawScenery(2,ctxScenery);  //draw scenery objects once to conserve memory and cpu cycles
+
 
         game_loop.play();
 
