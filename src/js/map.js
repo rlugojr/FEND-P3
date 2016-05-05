@@ -71,34 +71,34 @@ var gameMap = (function(global) {
                 if (tile !== 0) { // 1 => empty tile
                     switch (tile) {
                         case 1: //'images/tiles/grass.png'
-                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),340,566,63,63,x,y,this.tsize,this.tsize);
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),909,397,64,64,x,y,this.tsize,this.tsize);
                             break;
                         case 2: //'images/tiles/pavers.png'
-                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),406,522,63,63,x,y,this.tsize,this.tsize);
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),318,442,64,64,x,y,this.tsize,this.tsize);
                             break;
                         case 13: //'images/tiles/wall_corner.png'
-                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),400,702,63,63,x,y,this.tsize,this.tsize);
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),454,442,64,64,x,y,this.tsize,this.tsize);
                             break;
                         case 14: //'images/tiles/wall_vertical.png'
-                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),432,768,63,63,x,y,this.tsize,this.tsize);
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),590,442,64,64,x,y,this.tsize,this.tsize);
                             break;
                         case 15: //'images/tiles/wall_horizontal.png'
-                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),366,768,63,63,x,y,this.tsize,this.tsize);
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),522,442,64,64,x,y,this.tsize,this.tsize);
                             break;
                         case 16:
-                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),340,566,63,63,x,y,this.tsize,this.tsize);
+                            ctxGeo.drawImage(Resources.get('images/_textures/spritesheet.png'),909,397,64,64,x,y,this.tsize,this.tsize);
                             break;
                         case 3: //'images/tiles/rock.png', //3
-                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),400,636,63,63,x,y,this.tsize,this.tsize);
+                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),386,442,64,64,x,y,this.tsize,this.tsize);
                             break;
                         case 4: //'images/tiles/tree.png'
-                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),2,780,102,172,x - 20,y - 120,101,171);
+                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),589,135,101,171,x - 20,y - 120,101,171);
                             break;
                         case 5:  //'images/tiles/pink_tree.png'
-                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),106,432,102,172,x - 20,y - 120,101,171);
+                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),484,135,101,171,x - 20,y - 120,101,171);
                             break;
                         case 6: //'images/tiles/green_tree.png'
-                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),2,606,102,172,x - 20,y - 120,101,171);
+                            ctxScenery.drawImage(Resources.get('images/_textures/spritesheet.png'),379,135,101,171,x - 20,y - 120,101,171);
                             break;
                     }
 

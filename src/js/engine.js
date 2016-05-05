@@ -69,7 +69,7 @@ var Engine = (function(global) {
         preload: true,
         volume: 0.25,
         onend: function(){
-            init();
+            reset();
         }
     });
 
@@ -152,7 +152,7 @@ var Engine = (function(global) {
 
     function clearCanvasLayers(){
         ctxAction.clearRect(0, 0, ctxAction.canvas.width, ctxAction.canvas.height);
-        ctxUI.clearRect(0,0, ctxUI.canvas.width, ctxUI.canvas.height)
+        //ctxUI.clearRect(0,0, ctxUI.canvas.width, ctxUI.canvas.height)
     }
 
 
@@ -267,6 +267,7 @@ var Engine = (function(global) {
                         game_loop.stop();
                         gameState.currentState = "paused";
                         showWinScreen();
+                        reset();
                     //}
                     //exit code for WIN
                 } else {
@@ -298,7 +299,7 @@ var Engine = (function(global) {
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
-    var init = function init() {
+    function init() {
 
         gameState.currentState = 'initializing';
 
@@ -312,7 +313,7 @@ var Engine = (function(global) {
 
         game_loop.play();
 
-        main();
+        main()
     }
 
     function levelSetup(){
@@ -497,7 +498,8 @@ var Engine = (function(global) {
     function reset() {
         //set starting game level
         gameState.level=1;
-        gameState.currentState = "inLevel";
+        gameState.currentState = "running";
+        gameState.playerState = "inLevel";
 
         //resize canvas to fit the current browser window optimally.
         resizeCanvas();
@@ -518,7 +520,7 @@ var Engine = (function(global) {
             hudMessage(ctxUI,"PAUSED",'black','red');
             //Display blinking "Paused" image on ctxUI.
         }else if (gameState.currentState==='paused'){
-            gameState.currentState = "inLevel";
+            gameState.currentState = "running";
             game_loop.play();
         }
     };

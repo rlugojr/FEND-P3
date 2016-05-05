@@ -58,12 +58,15 @@ var App = (function(global){
         ctx.save();
         ctx.translate(0, -1*this.height);
         ctx.drawImage(Resources.get(this.imgSrc),this.sx, this.sy, this.sw, this.sh, this.x, this.y, this.width, this.height);
+
         //DEBUG
         //draw bound box hit area
         /*ctx.strokeStyle = 'red';
         ctx.lineWidth = 2;
         ctx.strokeRect(this.x,this.y,this.width,this.height);
-        ctx.restore();*/
+        DEBUG*/
+
+        ctx.restore();
 
     };
 
@@ -625,37 +628,37 @@ var App = (function(global){
     //create enemy objects
     var enemyList =[
         {"id":"carson", "name" : "TurDuckarson","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":298,"sy":890,"sw":102,"sh":126,
+            "sx":853,"sy":267,"sw":101,"sh":126,
             "x" : 640,"y" : 512,"width" : 75,"height" : 95,
             "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":0,"soundIntro" : "bababa","soundEffect" : "carson",
             "attackPattern" : "lameDuck","level":1},
         {"id":"kasich", "name" : "HongKongKasich","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":210,"sy":648,"sw":136,"sh":110,
+            "sx":714,"sy":267,"sw":135,"sh":109,
             "x" : 384,"y" : 512,"width" : 136,"height" : 130,
             "offsetTop":1,"offsetBottom":5,"offsetLeft":15,"offsetRight":6,"speed":384,"soundIntro" : "tough_guy","soundEffect" : "kasich",
             "attackPattern" : "hongKongDingDong","level":2},
         {"id":"cruz","name" : "Lyin Ted","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":2,"sy":258,"sw":102,"sh":172,
+            "sx":3,"sy":262,"sw":101,"sh":171,
             "x" : 1152,"y" : 512,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":16,"offsetRight":9,"speed":5,"soundIntro" : "lyin_ted","soundEffect" : "cruz",
             "attackPattern" : "guardDog","level":4},
         {"id":"hillary","name" : "Hilantula","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":234,"sy":2,"sw":146,"sh":124,
+            "sx":236,"sy":3,"sw":145,"sh":124,
             "x" : 640,"y" : 384,"width" : 90,"height" : 80,
             "offsetTop":3,"offsetBottom":1,"offsetLeft":7,"offsetRight":7,"speed":1,"soundIntro" : "Hilantura","soundEffect" : "hillary_bark",
             "attackPattern" : "barkingMad","level":6},
         {"id":"romney","name" : "The Usurper","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":106,"sy":84,"sw":102,"sh":172,
+            "sx":108,"sy":87,"sw":101,"sh":171,
             "x" : 640,"y" : 130,"width" : 65,"height" : 110,
             "offsetTop":1,"offsetBottom":1,"offsetLeft":1,"offsetRight":2,"speed":1,"soundIntro" : "usurper","soundEffect" : "usurper_all_mine",
             "attackPattern" : "usurper","level":5},
         {"id":"rubio","name" : "Lil Marco","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":106,"sy":606,"sw":102,"sh":162,
+            "sx":213,"sy":306,"sw":101,"sh":162,
             "x" : 885,"y" : 240,"width" : 65,"height" : 110,
             "offsetTop":14,"offsetBottom":2,"offsetLeft":1,"offsetRight":7,"speed":6,"soundIntro" : "lil_guy","soundEffect" : "rubio",
             "attackPattern" : "headHunter","level":4},
         {"id":"sanders","name":"Lenin Marx","imgSrc":"images/_textures/spritesheet.png",
-            "sx":2,"sy":432,"sw":102,"sh":172,
+            "sx":108,"sy":262,"sw":101,"sh":171,
             "x":640,"y":640,"width":65,"height":110
             ,"offsetTop":1,"offsetBottom":1,"offsetLeft":8,"offsetRight":8,"speed":20,"soundIntro" : "Commie","soundEffect" : "bernie",
             "attackPattern":"barelySane-ders","level":3}
@@ -674,37 +677,37 @@ var App = (function(global){
     //create artifact objects
     var artifactList =[
         {"id":"stand", "name" : "Debate Stand","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":400,"sy":392,"sw":76,"sh":128,
+            "sx":913,"sy":3,"sw":76,"sh":128,
             "x" : 540,"y" : 511,"width" : 50,"height" : 100,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "carson","level":1},
         {"id":"belt", "name" : "White Belt","imgSrc" :"images/_textures/spritesheet.png",
-            "sx":406,"sy":588,"sw":100,"sh":46,
+            "sx":108,"sy":437,"sw":100,"sh":45,
             "x" : 540,"y" : 512,"width" : 67,"height" : 40,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":16,"offsetRight":10,
             "enemyEffected" : "kasich","level":2},
         {"id":"birthCert","name" : "Birth Certificate","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":2,"sy":954,"sw":102,"sh":62,
+            "sx":3,"sy":437,"sw":101,"sh":62,
             "x" : 1152,"y" : 120,"width" : 52,"height" : 30,
             "offsetTop":0,"offsetBottom":0,"offsetLeft":0,"offsetRight":0,
             "enemyEffected" : "cruz","level":4},
         {"id":"server","name" : "Mail Server","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":106,"sy":900,"sw":102,"sh":102,
+            "sx":714,"sy":380,"sw":101,"sh":101,
             "x" : 1160,"y" : 945,"width" : 45,"height" : 75,
             "offsetTop":55,"offsetBottom":19,"offsetLeft":2,"offsetRight":1,
             "enemyEffected" : "hillary","level":6},
         {"id":"playbill","name" : "Playbill","imgSrc" :"images/_textures/spritesheet.png",
-            "sx":210,"sy":900,"sw":86,"sh":120,
+            "sx":819,"sy":397,"sw":86,"sh":120,
             "x" : 1152,"y" : 120,"width" : 50,"height" : 85,
             "offsetTop":26,"offsetBottom":5,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "romney","level":5},
         {"id":"heart","name" : "Bleeding Heart","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":2,"sy":84,"sw":102,"sh":172,
+            "sx":3,"sy":87,"sw":101,"sh":171,
             "x" : 780,"y" : 352,"width" : 50,"height" : 85,
             "offsetTop":5,"offsetBottom":1,"offsetLeft":5,"offsetRight":5,
             "enemyEffected" : "sanders","level":3},
         {"id":"bottle","name" : "Water Bottle","imgSrc" : "images/_textures/spritesheet.png",
-            "sx":348,"sy":632,"sw":50,"sh":110,
+            "sx":958,"sy":135,"sw":50,"sh":110,
             "x" : 1170,"y" : 950,"width" : 35,"height" : 70,
             "offsetTop":24,"offsetBottom":5,"offsetLeft":8,"offsetRight":8,
             "enemyEffected" : "rubio","level":4}
@@ -743,7 +746,7 @@ var App = (function(global){
     }
 
     // Place the player object in a variable called player
-    var player = new Player("trump",'The Donald','images/_textures/spritesheet.png',340,392,58,172,92,518,57,171);  //set initial y-pos so feet are center tile.
+    var player = new Player("trump",'The Donald','images/_textures/spritesheet.png',318,131,57,171,92,518,57,171);  //set initial y-pos so feet are center tile.
     //Create inheritance chain through prototype to parent class
     player.prototype = Player.prototype;
     //Set the constructor for this object
