@@ -208,26 +208,55 @@ var Engine = (function(global) {
 
     }
 
-        function playIntro(ctxUI, dt) {
-            var introScenes = [
-                ["images/intro/intro_0.png","caption text"],
-                ["images/intro/intro_1.png","caption text"],
-                ["images/intro/intro_2.png","caption text"],
-                ["images/intro/intro_3.png","caption text"],
-                ["images/intro/intro_4.png","caption text"],
-                ["images/intro/intro_5.png","caption text"],
-                ["images/intro/start_screen.png","caption text"]];
+    function GameController(){
+        do{
+            playIntro(ctxUI);
 
-            var currImage = new Image();
+            init();
 
-            for(var i=0;i < introScenes.length-1 ;i++) {
-
-                currImage= Resources.get(introScenes[i][0]);
-                ctxUI.drawImage(currImage, 0, 0);
-
-                //TODO: add elapsed time, update and render methods
+            //Check if player won or lost.  Display appropriate screen.
+            if (gameState.playerState === "wonGame") {
+                showWinScreen();
             }
+            if (gameState.playerState = "replay"){
+                reset();
+            }else{
+                //leaving game - Show credits
+                break;
+                }
+        } while (true)
+    }
+
+
+    function playIntro(ctxUI) {
+        var introScenes = [
+            /*
+            "images/intro/intro_0.png",
+            "images/intro/intro_1.png",
+            "images/intro/intro_2.png",
+            "images/intro/intro_3.png",
+            "images/intro/intro_4.png",
+            "images/intro/intro_5.png",
+            */
+            "images/outro/win_screen.jpg"];
+
+        var captions = [
+            "Caption 0",
+            "caption 1",
+            "caption 2",
+            "caption 3",
+            "caption 4",
+            "caption 5",
+            "caption start_screen"
+        ];
+
+        for(var i=0;i < introScenes.length-1 ;i++) {
+
+            ctxUI.drawImage(Resources.get(introScenes[i]),0, 0,800,431,0,0, ctxUI.canvas.width, ctxUI.canvas.height);
+
+            //TODO: add elapsed time, update and render methods
         }
+    }
 
 
     function showWinScreen(){
@@ -265,9 +294,6 @@ var Engine = (function(global) {
                     //if (currExplosion.length === 0) {
                         console.log("Explosion finished and you won the game");
                         game_loop.stop();
-                        gameState.currentState = "paused";
-                        showWinScreen();
-                        reset();
                     //}
                     //exit code for WIN
                 } else {
@@ -303,7 +329,14 @@ var Engine = (function(global) {
 
         gameState.currentState = 'initializing';
 
-        //playIntro(ctxUI);
+        //resize canvas to fit the current browser window optimally.
+        resizeCanvas();
+
+        //draw map and scenery layers because they don't change and won't need to be rendered again.
+        drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
+        drawScenery(2,ctxScenery);  //draw scenery objects once to conserve memory and cpu cycles
+
+        playIntro(ctxUI);
 
         reset();
 
@@ -581,6 +614,7 @@ var Engine = (function(global) {
         'images/effects/yeah.png'
 
     ]);
+
     Resources.onReady(init);
 
     /* Assign the canvas' context object to the global variable (the window
