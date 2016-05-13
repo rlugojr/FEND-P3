@@ -228,7 +228,7 @@ var Engine = (function(global) {
     }
 
 
-    function playIntro(ctxUI) {
+    function playIntro(ctxUI,e) {
         var introScenes = [
             /*
             "images/intro/intro_0.png",
@@ -254,7 +254,9 @@ var Engine = (function(global) {
 
             ctxUI.drawImage(Resources.get(introScenes[i]),0, 0,800,431,0,0, ctxUI.canvas.width, ctxUI.canvas.height);
 
-            //TODO: add elapsed time, update and render methods
+            do {
+                //TODO: add elapsed time, update and render methods
+            }while(e != 32)
         }
     }
 
@@ -332,9 +334,7 @@ var Engine = (function(global) {
         //resize canvas to fit the current browser window optimally.
         resizeCanvas();
 
-        //draw map and scenery layers because they don't change and won't need to be rendered again.
-        drawMap(0,ctxGeo);  //draw world map once to conserve memory and cpu cycles
-        drawScenery(2,ctxScenery);  //draw scenery objects once to conserve memory and cpu cycles
+        pauseToggle();
 
         playIntro(ctxUI);
 
