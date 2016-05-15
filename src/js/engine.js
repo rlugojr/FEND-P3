@@ -243,7 +243,7 @@ var Engine = (function(global) {
         ctxUI.fillStyle = "white";
         ctxUI.fillRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
         ctxUI.drawImage(Resources.get('images/outro/lose_screen.jpg'), 0, 0,818,458,0,0, ctxUI.canvas.width, ctxUI.canvas.height-200);
-        ctxUI.font = "64px 'Press Start 2P'";
+        ctxUI.font = "36px 'Press Start 2P'";
         ctxUI.strokeStyle = 'red';
         ctxUI.lineWidth = 4;
         ctxUI.strokeText("ALL YOUR VOTES ARE BELONG TO US!",50,ctxUI.canvas.height - 225);
@@ -330,7 +330,7 @@ var Engine = (function(global) {
 
         }
 
-        if (gameState.playerState="lostGame"){
+        if (gameState.playerState==="lostGame"){
             console.log("Too many hits.  You lost all your votes!");
             game_loop.stop();
             win.cancelAnimationFrame(requestId);
@@ -541,6 +541,7 @@ var Engine = (function(global) {
         currEnemy = [];
         currArtifact = [];
         currExplosion = [];
+        lives = 3;
 
 
         gameState.level=1;
