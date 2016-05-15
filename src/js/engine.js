@@ -31,7 +31,8 @@ var Engine = (function(global) {
         lastTime,
         currEnemy=[],
         currArtifact=[],
-        currExplosion =[];
+        currExplosion =[],
+        lives = 3;
 
     var ctxGeo = cGeo.getContext('2d');
     var ctxAction = cAction.getContext('2d');
@@ -67,12 +68,8 @@ var Engine = (function(global) {
         autoplay: false,
         loop: false,
         preload: true,
-        volume: 0.25,
-        onend: function(){
-            reset();
-        }
+        volume: 0.25
     });
-
 
     var soundfx = new Howl({
         src: ['audio/gameaudio.ogg','audio/gameaudio.mp3'],
@@ -208,27 +205,7 @@ var Engine = (function(global) {
 
     }
 
-    function GameController(){
-        do{
-            playIntro(ctxUI);
-
-            init();
-
-            //Check if player won or lost.  Display appropriate screen.
-            if (gameState.playerState === "wonGame") {
-                showWinScreen();
-            }
-            if (gameState.playerState = "replay"){
-                reset();
-            }else{
-                //leaving game - Show credits
-                break;
-                }
-        } while (true)
-    }
-
-
-    function playIntro(ctxUI,e) {
+    function playIntro() {
         var introScenes = [
             /*
             "images/intro/intro_0.png",
@@ -256,18 +233,35 @@ var Engine = (function(global) {
 
             do {
                 //TODO: add elapsed time, update and render methods
-            }while(e != 32)
+            }while(true)
         }
     }
 
+    function showLoseScreen(){
+
+        ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
+        ctxUI.fillStyle = "white";
+        ctxUI.fillRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
+        ctxUI.drawImage(Resources.get('images/outro/lose_screen.jpg'), 0, 0,818,458,0,0, ctxUI.canvas.width, ctxUI.canvas.height-200);
+        ctxUI.font = "64px 'Press Start 2P'";
+        ctxUI.strokeStyle = 'red';
+        ctxUI.lineWidth = 4;
+        ctxUI.strokeText("ALL YOUR VOTES ARE BELONG TO US!",50,ctxUI.canvas.height - 225);
+        ctxUI.fillStyle = "black";
+        ctxUI.fillText("ALL YOUR VOTES ARE BELONG TO US!",50,ctxUI.canvas.height - 225);
+        soundfx.play('hillary_bark')
+    }
 
     function showWinScreen(){
 
         ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
         ctxUI.fillStyle = "white";
         ctxUI.fillRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
-        ctxUI.drawImage(Resources.get("images/outro/win_screen.jpg"), 0, 0,800,431,0,0, ctxUI.canvas.width, ctxUI.canvas.height);
+        ctxUI.drawImage(Resources.get("images/outro/win_screen.jpg"), 0, 0,800,431,0,0, ctxUI.canvas.width, ctxUI.canvas.height-200);
         ctxUI.font = "36px 'Press Start 2P'";
+        ctxUI.strokeStyle = 'black';
+        ctxUI.lineWidth = 4;
+        ctxUI.strokeText("You Made America Great Again!",100,ctxUI.canvas.height - 200);
         ctxUI.fillStyle = "White";
         ctxUI.fillText("You Made America Great Again!",100,ctxUI.canvas.height - 200);
         win_loop.play()
@@ -293,21 +287,25 @@ var Engine = (function(global) {
             if (gameState.playerState === 'beatLevel') {
                 if (gameState.level >= 6) {
                     gameState.playerState = 'wonGame';
-                    //if (currExplosion.length === 0) {
-                        console.log("Explosion finished and you won the game");
-                        game_loop.stop();
-                    //}
-                    //exit code for WIN
+
+
                 } else {
                     gameState.level++;
+                    soundfx.play('levelUp');
                     levelSetup(gameState.level);
                     gameState.playerState = 'inLevel'
                 }
             }
 
             if (gameState.playerState === 'gotHit') {
-                levelSetup(gameState.level);
-                gameState.playerState = 'inLevel'
+                lives = lives - 1;
+                if(lives===0){
+                    gameState.playerState="lostGame"
+                }
+                else {
+                    gameState.playerState = 'inLevel'
+                }
+                levelSetup(gameState.level)
             }
             if(gameState.currentState !=='paused') {
                 render();
@@ -320,7 +318,25 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+        var requestId =  win.requestAnimationFrame(main);
+
+        if (gameState.playerState === 'wonGame'){
+            if (currExplosion.length === 0) {
+                console.log("Explosion finished and you won the game");
+                game_loop.stop();
+                win.cancelAnimationFrame(requestId);
+                showWinScreen();
+            }
+
+        }
+
+        if (gameState.playerState="lostGame"){
+            console.log("Too many hits.  You lost all your votes!");
+            game_loop.stop();
+            win.cancelAnimationFrame(requestId);
+            showLoseScreen()
+        }
+
     }
 
     /* This function does some initial setup that should only occur once,
@@ -331,13 +347,6 @@ var Engine = (function(global) {
 
         gameState.currentState = 'initializing';
 
-        //resize canvas to fit the current browser window optimally.
-        resizeCanvas();
-
-        pauseToggle();
-
-        playIntro(ctxUI);
-
         reset();
 
         lastTime = Date.now();
@@ -346,7 +355,9 @@ var Engine = (function(global) {
 
         game_loop.play();
 
-        main()
+        main();
+
+
     }
 
     function levelSetup(){
@@ -359,7 +370,8 @@ var Engine = (function(global) {
         currArtifact = level[gameState.level][1];
         player.startPosition();
         for(var s=0;s<=currEnemy.length-1;s++) {
-            soundfx.play(currEnemy[s].soundIntro)
+            soundfx.play(currEnemy[s].soundIntro);
+            soundfx.play(currEnemy[s].soundEffect)
         }
 
     }
@@ -391,7 +403,6 @@ var Engine = (function(global) {
 
         //update player position according to the user input and game rules.
         player.update(dt,map);
-        //REMOVE: egometer.update(player.ego,"Ego");
 
         //update each enemy position for each enemy in the level.
         for (var e=0;e<=currEnemy.length-1;e++) {
@@ -400,8 +411,11 @@ var Engine = (function(global) {
 
         //Update the animation for any explosions that have been queued.
         for (var d=0;d<=currExplosion.length-1;d++) {
-            if(currExplosion[d].active = true) {
-                currExplosion[d].update(dt, map)
+            if(currExplosion[d].active === true) {
+                currExplosion[d].update(dt)
+            }
+            if(currExplosion[d].active === false){
+                currExplosion.splice(d)
             }
         }
     }
@@ -452,7 +466,6 @@ var Engine = (function(global) {
          */
 
         for (var a=0;a<=currArtifact.length-1;a++) {
-            //console.log(currArtifact[a]);
             currArtifact[a].render(ctxAction)
         }
 
@@ -479,6 +492,7 @@ var Engine = (function(global) {
             //console.log("gotArtifact :" + gotArtifact);
             if (gotArtifact) {
                 //debug
+                soundfx.play('artifact_capture');
                 soundfx.play('fired');
                 var target = currArtifact[f].enemyEffected;
 
@@ -502,7 +516,6 @@ var Engine = (function(global) {
                         if (currEnemy.length === 0){
                             gameState.playerState = 'beatLevel';
                             player.ego += 10;
-                            break
                         }
                     }
                 }
@@ -511,14 +524,9 @@ var Engine = (function(global) {
 
         for (var e=0;e<=currEnemy.length-1;e++) {
             gotHit = player.collisionCheck(currEnemy[e]);
-            //console.log("gotHit :" + gotHit);
             if(gotHit){
-                player.ego -= 10;
                 gameState.playerState = 'gotHit';
                 soundfx.play('collision');
-                for(var s=0;s<=currEnemy.length-1;s++) {
-                    soundfx.play(currEnemy[s].soundEffect)
-                }
             }
         }
     }
@@ -530,6 +538,11 @@ var Engine = (function(global) {
      */
     function reset() {
         //set starting game level
+        currEnemy = [];
+        currArtifact = [];
+        currExplosion = [];
+
+
         gameState.level=1;
         gameState.currentState = "running";
         gameState.playerState = "inLevel";
@@ -583,30 +596,6 @@ var Engine = (function(global) {
         'images/intro/start_screen.png',
         'images/outro/win_screen.jpg',
         'images/outro/lose_screen.jpg',
-        /*'images/tiles/grass.png',
-        'images/tiles/pavers.png',
-        'images/tiles/rock.png',
-        'images/tiles/tree.png',
-        'images/tiles/pink_tree.png',
-        'images/tiles/green_tree.png',
-        'images/tiles/wall_vertical.png', //20
-        'images/tiles/wall_horizontal.png', //21
-        'images/tiles/wall_corner.png', //22
-        'images/artifacts/birth_certificate.png',
-        'images/artifacts/debate_stand.png',
-        'images/artifacts/white_belt.png',
-        'images/artifacts/mail_server.png',
-        'images/artifacts/playbill.png',
-        'images/artifacts/bleeding_heart.png',
-        'images/artifacts/water_bottle.png',
-        'images/player/trump_suit.png',
-        'images/enemies/carson.png',
-        'images/enemies/kasich.png',
-        'images/enemies/cruz.png',
-        'images/enemies/hillary.png',
-        'images/enemies/romney.png',
-        'images/enemies/rubio.png',
-        'images/enemies/sanders.png',*/
         'images/effects/explosion.png',
         'images/effects/bang.png',
         'images/effects/level_up.png',

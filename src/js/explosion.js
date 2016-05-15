@@ -27,7 +27,7 @@ var Explosions = (function(global) {
                 repeats: false,
                 keyframe: 0
             };
-        this.length = 15;
+        this.length = 16;
         this.frame = this.frames[this.index];
         this.index = 0;
         this.elapsed = 0;
@@ -39,7 +39,7 @@ var Explosions = (function(global) {
     Explosion.prototype.frames = '';
     Explosion.prototype.active = true;
     Explosion.prototype.imgSrc = '';
-    Explosion.prototype.length=15;
+    Explosion.prototype.length=16;
     Explosion.prototype.frame = {};
     Explosion.prototype.index = 0;
     Explosion.prototype.elapsed = 0;
@@ -79,9 +79,8 @@ var Explosions = (function(global) {
         //explosion size increases with each progressing level.
         ctx.drawImage(Resources.get(this.imgSrc), this.frame.x, this.frame.y,
             this.frame.w, this.frame.h, this.targetX, this.targetY,
-            this.frame.w * gameState.level, this.frame.h * gameState.level
+            (this.frame.w * gameState.level * 2), (this.frame.h * gameState.level * 2)
         )
-
     };
 
 
