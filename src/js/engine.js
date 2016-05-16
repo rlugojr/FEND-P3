@@ -117,10 +117,11 @@ var Engine = (function(global) {
             running: 'running',
             paused: 'paused'
         */
-        this.playerState = "inLevel";
+        this.playerState = "intro";
         /*values can be:
             pause:'pause',
             reset:'reset',
+            intro:'intro'
             inLevel:'inLevel'
             beatLevel:'beatLevel',
             lostLevel:'lostLevel',
@@ -280,6 +281,8 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
+        //if gamestate is intro then update the next image after 1 sec.
+
         if(gameState.currentState !=='paused') {
             update(dt);
         }
@@ -345,9 +348,19 @@ var Engine = (function(global) {
      */
     function init() {
 
+        gameState.currentState = "running";
+        gameState.currentState.playerState = "intro";
+
+
+        playIntro();
+
+
         gameState.currentState = 'initializing';
+        gameState.currentState.playerState = 'reset'
 
         reset();
+
+
 
         lastTime = Date.now();
 
@@ -355,6 +368,8 @@ var Engine = (function(global) {
 
         game_loop.play();
 
+        gameState.currentState = 'running';
+        gameState.currentState.playerState = 'inLevel'
         main();
 
 
