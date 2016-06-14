@@ -206,38 +206,6 @@ var Engine = (function(global) {
 
     }
 
-    function playIntro() {
-        var introScenes = [
-            /*
-            "images/intro/intro_0.png",
-            "images/intro/intro_1.png",
-            "images/intro/intro_2.png",
-            "images/intro/intro_3.png",
-            "images/intro/intro_4.png",
-            "images/intro/intro_5.png",
-            */
-            "images/outro/win_screen.jpg"];
-
-        var captions = [
-            "Caption 0",
-            "caption 1",
-            "caption 2",
-            "caption 3",
-            "caption 4",
-            "caption 5",
-            "caption start_screen"
-        ];
-
-        for(var i=0;i < introScenes.length-1 ;i++) {
-
-            ctxUI.drawImage(Resources.get(introScenes[i]),0, 0,800,431,0,0, ctxUI.canvas.width, ctxUI.canvas.height);
-
-            do {
-                //TODO: add elapsed time, update and render methods
-            }while(true)
-        }
-    }
-
     function showLoseScreen(){
 
         ctxUI.clearRect(0,0,ctxUI.canvas.width,ctxUI.canvas.height);
@@ -280,8 +248,6 @@ var Engine = (function(global) {
          */
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
-
-        //if gamestate is intro then update the next image after 1 sec.
 
         if(gameState.currentState !=='paused') {
             update(dt);
@@ -348,19 +314,10 @@ var Engine = (function(global) {
      */
     function init() {
 
-        gameState.currentState = "running";
-        gameState.currentState.playerState = "intro";
-
-
-        playIntro();
-
-
         gameState.currentState = 'initializing';
-        gameState.currentState.playerState = 'reset'
+        gameState.playerState = 'reset'
 
         reset();
-
-
 
         lastTime = Date.now();
 
@@ -369,7 +326,7 @@ var Engine = (function(global) {
         game_loop.play();
 
         gameState.currentState = 'running';
-        gameState.currentState.playerState = 'inLevel'
+        gameState.playerState = 'inLevel'
         main();
 
 
@@ -593,23 +550,7 @@ var Engine = (function(global) {
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
      */
-    Resources.load([
-        /*'images/keys/a.png',
-        'images/keys/d.png',
-        'images/keys/s.png',
-        'images/keys/w.png',
-        'images/keys/up.png',
-        'images/keys/down.png',
-        'images/keys/left.png',
-        'images/keys/right.png',
-        'images/keys/space.png',*/
-        'images/_textures/spritesheet.png',
-        'images/intro/intro_0.png',
-        'images/intro/intro_1.png',
-        'images/intro/intro_2.png',
-        'images/intro/intro_3.png',
-        'images/intro/intro_4.png',
-        'images/intro/start_screen.png',
+    Resources.load(['images/_textures/spritesheet.png',
         'images/outro/win_screen.jpg',
         'images/outro/lose_screen.jpg',
         'images/effects/explosion.png',
@@ -617,7 +558,6 @@ var Engine = (function(global) {
         'images/effects/level_up.png',
         'images/effects/pow.png',
         'images/effects/yeah.png'
-
     ]);
 
     Resources.onReady(init);
