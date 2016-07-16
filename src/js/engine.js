@@ -53,14 +53,7 @@ var Engine = (function(global) {
         }
     });
 
-    var intro_loop = new Howl({
-        src: ['audio/intro_loop.ogg', 'audio/intro_loop.mp3'],
-        autoplay: false,
-        html5: true,
-        loop: true,
-        preload: true,
-        volume: 0.25
-    });
+
 
     var win_loop = new Howl({
         src: ['audio/hail_to_the_chief.ogg', 'audio/hail_to_the_chief.mp3'],
