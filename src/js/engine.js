@@ -125,8 +125,8 @@ var Engine = (function(global) {
     };
 
 
-    window.addEventListener('resize', resizeCanvas, false);
-    window.addEventListener('orientationChange', resizeCanvas, false);
+    'window.addEventListener('resize', resizeCanvas, false);
+    'window.addEventListener('orientationChange', resizeCanvas, false);
 
 
     function drawMap(layer, ctxGeo) {
