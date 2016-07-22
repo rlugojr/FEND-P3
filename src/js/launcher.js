@@ -4,7 +4,7 @@ var launchScreen = (function(global) {
 
     var intro_loop = new Howl({
         src: ['audio/intro_loop.ogg', 'audio/intro_loop.mp3'],
-        autoplay: false,
+        autoplay: true,
         html5: true,
         loop: true,
         preload: true,
