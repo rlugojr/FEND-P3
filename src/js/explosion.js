@@ -64,7 +64,7 @@ var Explosions = (function(global) {
             if (this.options.repeats) {
                 this.index = this.options.keyframe;
             } else {
-                this.active = false
+                this.active = false;
             }
         }else {
             this.frame = this.frames[this.index]
@@ -72,7 +72,7 @@ var Explosions = (function(global) {
     };
 
     Explosion.prototype.playSounds = function(){
-        soundfx.play('explosion')
+        soundfx.play('explosion');
     };
 
     Explosion.prototype.render = function (ctx) {
@@ -91,7 +91,7 @@ var Explosions = (function(global) {
     newExplosion.prototype = Object.create(Explosion.prototype);
     newExplosion.prototype.constructor = Explosion;
 
-    global.newExplosion = newExplosion
+    global.newExplosion = newExplosion;
 
 })(this);
 

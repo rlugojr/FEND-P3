@@ -255,17 +255,17 @@ var Engine = (function(global) {
                     gameState.level++;
                     soundfx.play('levelUp');
                     levelSetup(gameState.level);
-                    gameState.playerState = 'inLevel'
+                    gameState.playerState = 'inLevel';
                 }
             }
 
             if (gameState.playerState === 'gotHit') {
                 lives = lives - 1;
                 if(lives===0){
-                    gameState.playerState="lostGame"
+                    gameState.playerState="lostGame";
                 }
                 else {
-                    gameState.playerState = 'inLevel'
+                    gameState.playerState = 'inLevel';
                 }
                 levelSetup(gameState.level)
             }
@@ -308,7 +308,7 @@ var Engine = (function(global) {
     function init() {
 
         gameState.currentState = 'initializing';
-        gameState.playerState = 'reset'
+        gameState.playerState = 'reset';
 
         reset();
 
@@ -319,7 +319,7 @@ var Engine = (function(global) {
         game_loop.play();
 
         gameState.currentState = 'running';
-        gameState.playerState = 'inLevel'
+        gameState.playerState = 'inLevel';
         main();
 
 
@@ -567,6 +567,6 @@ var Engine = (function(global) {
     //add gameState to global for access from any other js file.
     global.gameState = gameState;
     global.pauseToggle = pauseToggle;
-    global.soundfx = soundfx
+    global.soundfx = soundfx;
 
 })(this);
