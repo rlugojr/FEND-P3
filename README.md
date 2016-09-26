@@ -8,33 +8,27 @@
 
 ### Purpose
 
-The purpose of this project is to learn Javascript in more depth by learning about intermediate topics such as scopes, "this", prototype chains and Image\\Video manipulation using Canvas.  Applying these concepts through the development of a video game, not only helped to make very complex topics easy to understand but also made the entire process enjoyable and rewarding.
+The purpose of this project is to learn Javascript in more depth by applying intermediate concepts such as scopes, clojures, "this", OOP with prototype chains and Image+Video manipulation using Canvas.  Applying these concepts through the development of a video game, not only helped to make very complex topics easy to understand but also made the entire process enjoyable and rewarding.
 
-_Note: This repository contains my version of the solution to complete Udacity's Front End Web Developer's Project #05._
+_Note: This repository contains my version of the solution to complete Udacity's Front End Web Developer's Project #05.
 
 * * *
 
 ### Features
 
--   Full screen, single page app with close attention placed to minimal but intuitive UX.
--   Uses Google Maps, Google Places and WikiPedia API's.
--   Custom Styled map at higher zoom level switches to "satellite" on lower levels.
--   Filter box with auto-hiding results, to give more room on smaller screens.
--   Photos of sites used as markers on the maps.
--   Click displays instant information in InfoWindow.
--   Double-Click on the marker to zoom in and get a closer look at the site and surroundings.
--   Double click the marker again to zoom back out to the world map level.
--   Choice of 4 Map types and tour the sites using Google Street View.
--   Drop on in and bounce around a while, just like our site markers.
--   More sites added every month...use often and collect the all.
+-   Full screen gameplay.
+-   Custom sprites.
+-   Custom levels, and designed to add on new levels.
+-   Waves of enemies, each progressively more "intelligent".
+-   Audio soundtrack to add to the action.
+-   Audio sprites for specific events.
+
 
 * * *
 
-### Video Clips
+### Game Notes:
 
-FEND-P07 in Chrome Desktop
-
-![FEND-P07 in Chrome Desktop](doc/Desktop.mp4.gif "FEND-P07 in Chrome Desktop")
+Due to CORS limitation on browser, running game locally is best in FireFox.  If you setup a web server, Chrome should work just as well.
 
 
 * * *
@@ -46,8 +40,7 @@ To run this project:
 ```english
 1. Download or Fork this repository.
 2. Open "dist/index.html" in a modern browser.
-3. Explore, learn, enjoy and explore some more.
-4. Add your favorite latLngs to the database or post your favorites on my github project page to share with others.
+3. Have fun!
 ```
 
 TODO: ~~Also, you can view a running instance of my [version](https://rlugojr.github.io/FEND-P05/), hosted on GitHub Pages.~~
@@ -63,7 +56,7 @@ please refer to this excellent online source => [Project Technical Docs](https:/
 
 ### License
 
-The original source code was created using jQuery, KnockoutJS, HammerJS, Awesomplete, Google Maps API, WikiPedia API and several long nights.  Please refer to the repositories for the attributed software for any applicable license information or technical issues with their respective products.
+The original source code was created using VanillaJS and MANY long nights and weekends.   This was a labor of love, not because of the subject, but because I found a true love for developing games.  I would have taken a few more months to keep adding on if I didn't worry about time limitations.  Please refer to the repositories for the attributed software for any applicable license information or technical issues with their respective products.
 
 My solution to the assignment is free for use by anyone, especially other Udacity FEND students who could benefit from the examples provided.
 [Free Public License 1.0.0](https://opensource.org/licenses/FPL-1.0.0)
