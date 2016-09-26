@@ -39,7 +39,7 @@ To run this project:
 
 ```english
 1. Download or Fork this repository.
-2. Open "dist/index.html" in a modern browser.
+2. Open "src/index.html" in a modern browser.
 3. Have fun!
 ```
 
